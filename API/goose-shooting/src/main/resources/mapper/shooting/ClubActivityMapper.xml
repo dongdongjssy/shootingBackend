@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubActivityMapper">
+
+    <resultMap type="ClubActivity" id="ClubActivityResult">
+        <result property="id" column="id"/>
+        <result property="clubId" column="club_id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="title" column="title"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="price" column="price"/>
+        <result property="address" column="address"/>
+        <result property="content" column="content"/>
+        <result property="rankings" column="rankings"/>
+        <result property="releaseStatus" column="release_status"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enrollDeadline" column="enroll_deadline"/>
+        <result property="paymentCodeId" column="payment_code_id"/>
+        <result property="draft" column="draft"/>
+        <result property="recommend" column="recommend"/>
+        <association property="club" column="club_id" javaType="Club" resultMap="ClubResult"/>
+        <association property="area" column="area_id" javaType="Area" resultMap="AreaResult"/>
+        <association property="course" column="course_id" javaType="Course" resultMap="CourseResult"/>
+        <association property="type" column="type_id" javaType="Type" resultMap="TypeResult"/>
+        <association property="paymentCode" column="payment_code_id" javaType="PaymentCode" resultMap="PaymentCodeResult"/>
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id" column="a_id"/>
+        <result property="areaId" column="a_area_id"/>
+        <result property="title" column="a_title"/>
+        <result property="profile" column="a_profile"/>
+        <result property="image" column="a_image"/>
+        <result property="coachCount" column="a_coach_count"/>
+        <result property="studentCount" column="a_student_count"/>
+        <result property="fansCount" column="a_fans_count"/>
+        <result property="category" column="a_category"/>
+        <result property="rankings" column="a_rankings"/>
+        <result property="status" column="a_status"/>
+        <result property="createBy" column="a_create_by"/>
+        <result property="createTime" column="a_create_time"/>
+        <result property="updateBy" column="a_update_by"/>
+        <result property="updateTime" column="a_update_time"/>
+        <result property="jgUsername" column="a_jg_username"/>
+        <result property="jgGroupId" column="a_jg_groupId"/>
+    </resultMap>
+    <resultMap type="Area" id="AreaResult">
+        <result property="id" column="b_id"/>
+        <result property="name" column="b_name"/>
+    </resultMap>
+    <resultMap type="Course" id="CourseResult">
+        <result property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+    </resultMap>
+    <resultMap type="Type" id="TypeResult">
+        <result property="id" column="d_id"/>
+        <result property="name" column="d_name"/>
+    </resultMap>
+    <resultMap type="PaymentCode" id="PaymentCodeResult">
+        <result property="id" column="e_id"/>
+        <result property="title" column="e_title"/>
+        <result property="pictureUrl" column="e_picture_url"/>
+        <result property="detail" column="e_detail"/>
+    </resultMap>
+
+    <sql id="selectClubActivityVoNoJoin">
+        SELECT tb.id,
+               tb.club_id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.release_status,
+               tb.payment_code_id,
+               tb.draft,
+               tb.recommend,
+               tb.enroll_deadline
+        FROM shooting_club_activity tb
+    </sql>
+
+    <sql id="selectClubActivityVo">
+        SELECT tb.id,
+               tb.draft,
+               tb.club_id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.enroll_deadline,
+               tb.release_status,
+               tb.payment_code_id,
+               tb.draft,
+               tb.recommend,
+               a.id            AS a_id,
+               a.area_id       AS a_area_id,
+               a.title         AS a_title,
+               a.profile       AS a_profile,
+               a.image         AS a_image,
+               a.coach_count   AS a_coach_count,
+               a.student_count AS a_student_count,
+               a.fans_count    AS a_fans_count,
+               a.category      AS a_category,
+               a.rankings      AS a_rankings,
+               a.status        AS a_status,
+               a.create_by     AS a_create_by,
+               a.create_time   AS a_create_time,
+               a.update_by     AS a_update_by,
+               a.update_time   AS a_update_time,
+               a.jg_groupId    AS a_jg_groupId,
+               a.jg_username   AS a_jg_username,
+               b.id            AS b_id,
+               b.name          AS b_name,
+               c.id            AS c_id,
+               c.name          AS c_name,
+               d.id            AS d_id,
+               d.name          AS d_name,
+               spc.id AS e_id,
+               spc.title AS e_title,
+               spc.detail AS e_detail,
+               spc.picture_url AS e_picture_url
+        FROM shooting_club_activity tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+                 JOIN shooting_area b ON tb.area_id = b.id
+                 JOIN shooting_course c ON tb.course_id = c.id
+                 JOIN shooting_type d ON tb.type_id = d.id
+                 left JOIN shooting_payment_code spc ON tb.payment_code_id = spc.id    </sql>
+
+    <select id="selectClubActivityAll" parameterType="ClubActivity" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityVo"/>
+        where tb.draft=0
+    </select>
+
+    <select id="selectClubActivityList" parameterType="ClubActivity" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+             <if test="ids != null and ids !=''">and tb.id in (${ids})</if>
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="courseId != null ">and tb.course_id = #{courseId}</if>
+            <if test="typeId != null ">and tb.type_id = #{typeId}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+            <if test="imageUrl != null  and imageUrl != '' ">and tb.image_url = #{imageUrl}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="price != null  and price != '' ">and tb.price = #{price}</if>
+            <if test="address != null  and address != '' ">and tb.address = #{address}</if>
+            <if test="content != null  and content != '' ">and tb.content = #{content}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+            <if test="enrollDeadline != null ">and tb.enroll_deadline = #{enrollDeadline}</if>
+        </where>
+        ORDER BY
+        CASE WHEN tb.start_date>NOW() THEN tb.recommend END desc ,
+
+        CASE WHEN tb.start_date&lt;=NOW() THEN tb.start_date END asc,
+        CASE WHEN tb.start_date>NOW() THEN tb.start_date END asc
+    </select>
+
+    <select id="selectClubActivityById" parameterType="Long" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertClubActivity" parameterType="ClubActivity" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="clubId != null  ">club_id,</if>
+            <if test="areaId != null  ">area_id,</if>
+            <if test="courseId != null  ">course_id,</if>
+            <if test="typeId != null  ">type_id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">image_url,</if>
+            <if test="startDate != null  ">start_date,</if>
+            <if test="endDate != null  ">end_date,</if>
+            <if test="price != null  and price != ''  ">price,</if>
+            <if test="address != null  and address != ''  ">address,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="rankings != null  ">rankings,</if>
+            <if test="status != null  ">status,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time,
+            release_status,
+            <if test="draft != null  ">draft,</if>
+            recommend,
+            <if test="paymentCodeId != null  ">payment_code_id,</if>
+            <if test="enrollDeadline != null  ">enroll_deadline,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="clubId != null  ">#{clubId},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="courseId != null  ">#{courseId},</if>
+            <if test="typeId != null  ">#{typeId},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">#{imageUrl},</if>
+            <if test="startDate != null  ">#{startDate},</if>
+            <if test="endDate != null  ">#{endDate},</if>
+            <if test="price != null  and price != ''  ">#{price},</if>
+            <if test="address != null  and address != ''  ">#{address},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="rankings != null  ">#{rankings},</if>
+            1,
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate(),
+            1,
+            <if test="draft != null  "> #{draft},</if>
+            #{recommend},
+            <if test="paymentCodeId != null  ">#{paymentCodeId},</if>
+            <if test="enrollDeadline != null ">#{enrollDeadline},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateClubActivity" parameterType="ClubActivity">
+        update shooting_club_activity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+            <if test="areaId != null  ">area_id = #{areaId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">image_url = #{imageUrl},</if>
+            <if test="startDate != null  ">start_date = #{startDate},</if>
+            <if test="endDate != null  ">end_date = #{endDate},</if>
+            <if test="price != null  and price != ''  ">price = #{price},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="enrollDeadline != null">enroll_deadline = #{enrollDeadline},</if>
+            <if test="releaseStatus != null">release_status = #{releaseStatus},</if>
+            update_time = sysdate(),
+            <if test="paymentCodeId != null  ">payment_code_id=#{paymentCodeId},</if>
+            <if test="draft != null  ">draft=#{draft},</if>
+            <if test="recommend != null  ">recommend=#{recommend},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClubActivityById" parameterType="Long">
+        DELETE
+        FROM shooting_club_activity
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteClubActivityByIds" parameterType="String">
+        delete from shooting_club_activity where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectClubActivityAssoc">
+        SELECT tb.id,
+               tb.club_id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.release_status,
+               tb.enroll_deadline,
+               tb.payment_code_id,
+               tb.draft,
+               tb.recommend,
+               a.id            AS a_id,
+               a.area_id       AS a_area_id,
+               a.title         AS a_title,
+               a.profile       AS a_profile,
+               a.image         AS a_image,
+               a.coach_count   AS a_coach_count,
+               a.student_count AS a_student_count,
+               a.fans_count    AS a_fans_count,
+               a.category      AS a_category,
+               a.rankings      AS a_rankings,
+               a.status        AS a_status,
+               a.create_by     AS a_create_by,
+               a.create_time   AS a_create_time,
+               a.update_by     AS a_update_by,
+               a.update_time   AS a_update_time,
+               a.jg_groupId    AS a_jg_groupId,
+               a.jg_username   AS a_jg_username,
+               b.id            AS b_id,
+               b.name          AS b_name,
+               c.id            AS c_id,
+               c.name          AS c_name,
+               d.id            AS d_id,
+               d.name          AS d_name,
+               spc.id AS e_id,
+               spc.title AS e_title,
+               spc.detail AS e_detail,
+               spc.picture_url AS e_picture_url
+        FROM shooting_club_activity tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+                 JOIN shooting_area b ON tb.area_id = b.id
+                 JOIN shooting_course c ON tb.course_id = c.id
+                 JOIN shooting_type d ON tb.type_id = d.id
+                 left JOIN shooting_payment_code spc ON tb.payment_code_id = spc.id     </sql>
+
+    <select id="selectClubActivityAllAssoc" parameterType="ClubActivity" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityAssoc"/>
+        where  tb.draft=0 and tb.status=0;
+    </select>
+
+    <select id="selectClubActivityListAssoc" parameterType="ClubActivity" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="courseId != null ">and tb.course_id = #{courseId}</if>
+            <if test="typeId != null ">and tb.type_id = #{typeId}</if>
+            <if test="title != null  and title != '' ">and tb.title like concat('%', #{title}, '%')</if>
+            <if test="imageUrl != null  and imageUrl != '' ">and tb.image_url = #{imageUrl}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="price != null  and price != '' ">and tb.price like concat('%', #{price}, '%')</if>
+            <if test="address != null  and address != '' ">and tb.address like concat('%', #{address}, '%')</if>
+            <if test="content != null  and content != '' ">and tb.content like concat('%', #{content}, '%')</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+            <if test="enrollDeadline != null ">and tb.enroll_deadline = #{enrollDeadline}</if>
+        </where>
+        ORDER BY
+        CASE WHEN tb.start_date>NOW() THEN tb.recommend END desc ,
+
+        CASE WHEN tb.start_date&lt;=NOW() THEN tb.start_date END asc,
+        CASE WHEN tb.start_date>NOW() THEN tb.start_date END asc
+    </select>
+
+    <select id="selectClubActivityByIdAssoc" parameterType="Long" resultMap="ClubActivityResult">
+        <include refid="selectClubActivityAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

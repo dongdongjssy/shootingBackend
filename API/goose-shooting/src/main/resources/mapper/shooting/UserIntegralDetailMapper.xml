@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserIntegralDetailMapper">
+    
+    <resultMap type="UserIntegralDetail" id="UserIntegralDetailResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="member"    column="member"    />
+        <result property="contest"    column="contest"    />
+        <result property="ranking"    column="ranking"    />
+        <result property="score"    column="score"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectUserIntegralDetailVoNoJoin">
+        select tb.id, tb.name, tb.member, tb.contest, tb.ranking, tb.score, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_user_integral_detail tb
+    </sql>
+    
+	<sql id="selectUserIntegralDetailVo">
+           select tb.id, tb.name, tb.member, tb.contest, tb.ranking, tb.score, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_user_integral_detail tb     </sql>
+    
+     <select id="selectUserIntegralDetailAll" parameterType="UserIntegralDetail" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailVo"/>
+     </select>    
+	
+    <select id="selectUserIntegralDetailList" parameterType="UserIntegralDetail" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="member != null  and member != '' "> and tb.member = #{member}</if>
+            <if test="contest != null "> and tb.contest = #{contest}</if>
+            <if test="ranking != null "> and tb.ranking = #{ranking}</if>
+            <if test="score != null "> and tb.score = #{score}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserIntegralDetailById" parameterType="Long" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertUserIntegralDetail" parameterType="UserIntegralDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_user_integral_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="member != null  and member != ''  ">member,</if>
+			<if test="contest != null  ">contest,</if>
+			<if test="ranking != null  ">ranking,</if>
+			<if test="score != null  ">score,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="member != null  and member != ''  ">#{member},</if>
+			<if test="contest != null  ">#{contest},</if>
+			<if test="ranking != null  ">#{ranking},</if>
+			<if test="score != null  ">#{score},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserIntegralDetail" parameterType="UserIntegralDetail">
+        update shooting_user_integral_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="member != null  and member != ''  ">member = #{member},</if>
+            <if test="contest != null  ">contest = #{contest},</if>
+            <if test="ranking != null  ">ranking = #{ranking},</if>
+            <if test="score != null  ">score = #{score},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserIntegralDetailById" parameterType="Long">
+        delete from shooting_user_integral_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserIntegralDetailByIds" parameterType="String">
+        delete from shooting_user_integral_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectUserIntegralDetailAssoc">
+        select tb.id, tb.name, tb.member, tb.contest, tb.ranking, tb.score, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_user_integral_detail tb     </sql>
+    
+     <select id="selectUserIntegralDetailAllAssoc" parameterType="UserIntegralDetail" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailAssoc"/>
+     </select>    
+	
+    <select id="selectUserIntegralDetailListAssoc" parameterType="UserIntegralDetail" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="member != null  and member != '' "> and tb.member = #{member}</if>
+            <if test="contest != null "> and tb.contest = #{contest}</if>
+            <if test="ranking != null "> and tb.ranking = #{ranking}</if>
+            <if test="score != null "> and tb.score = #{score}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserIntegralDetailByIdAssoc" parameterType="Long" resultMap="UserIntegralDetailResult">
+        <include refid="selectUserIntegralDetailAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+    <update id="updateUserIntegralDetailByMember" parameterType="UserIntegralDetail">
+        update shooting_user_integral_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="ranking != null  ">ranking = #{ranking},</if>
+            <if test="score != null  ">score = #{score},</if>
+            update_time = sysdate(),
+        </trim>
+        where member = #{member} and contest=#{contest}
+    </update>
+
+    
+</mapper>

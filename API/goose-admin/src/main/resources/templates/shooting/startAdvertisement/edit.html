@@ -1,0 +1,842 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-startAdvertisement-edit" th:object="${startAdvertisement}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-8">
+				    <input id="describes" name="describes" th:field="*{describes}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">广告类型：</label>
+				<div class="col-sm-8">
+					<select id="advertisementType" name="advertisementType" class="form-control m-b" th:with="type=${@dict.getType('shooting_advertisement_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{advertisementType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">上传时间：</label>
+				<div class="col-sm-8">
+					<input id="uploadTime" disabled  name="uploadTime" class="form-control time-input" type="text" th:value="${#dates.format(startAdvertisement.uploadTime, 'yyyy-MM-dd')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">生效时间：</label>
+				<div class="col-sm-8">
+					<input id="effectTime"  name="effectTime" class="form-control time-input" type="text" th:value="${#dates.format(startAdvertisement.effectTime, 'yyyy-MM-dd')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">失效时间：</label>
+				<div class="col-sm-8">
+					<input id="failureTime"  name="failureTime" class="form-control time-input" type="text" th:value="${#dates.format(startAdvertisement.failureTime, 'yyyy-MM-dd')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="advertisementStatus" name="advertisementStatus" class="form-control m-b" th:with="type=${@dict.getType('start_advertisement_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{advertisementStatus}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否跳转：</label>
+				<div class="col-sm-8">
+					<select id="jump" name="jump" class="form-control m-b" th:with="type=${@dict.getType('start_advertisement_jump')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{jump}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group" id="jumpTypeDiv">
+				<label class="col-sm-3 control-label">跳转类型：</label>
+				<div class="col-sm-8">
+					<select id="jumpType" name="jumpType" class="form-control m-b" th:with="type=${@dict.getType('advertisement_jump_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{jumpType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group" id="connectTypeDiv">
+				<label class="col-sm-3 control-label">内部关联：</label>
+				<div class="col-sm-8">
+					<select id="connectType" name="connectType" onchange="updateType()" class="form-control m-b" th:with="type=${@dict.getType('shooting_carousel_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{connectType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group" id="contestDiv">
+				<label class="col-sm-3 control-label">关联的赛事：</label>
+				<div class="col-sm-8">
+					<select id="contestId" name="contestId" class="form-control">
+						<option th:each="fkRow:${ contestIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{contestId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="trainingDiv">
+				<label class="col-sm-3 control-label">关联的培训：</label>
+				<div class="col-sm-8">
+					<select id="trainingId" name="trainingId" class="form-control">
+						<option th:each="fkRow:${ trainingIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{trainingId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="coachDiv">
+				<label class="col-sm-3 control-label">关联的教官：</label>
+				<div class="col-sm-8">
+					<select id="coachId" name="coachId" class="form-control">
+						<option th:each="fkRow:${ coachIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{coachId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="judgeDiv">
+				<label class="col-sm-3 control-label">关联的裁判：</label>
+				<div class="col-sm-8">
+					<select id="judgeId" name="judgeId" class="form-control">
+						<option th:each="fkRow:${ judgeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{judgeId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="recommendDiv">
+				<label class="col-sm-3 control-label">关联的总会推荐：</label>
+				<div class="col-sm-8">
+					<select id="recommendId" name="recommendId" class="form-control">
+						<option th:each="fkRow:${ recommendIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{recommendId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="clubPostDiv">
+				<label class="col-sm-3 control-label">关联的俱乐部动态：</label>
+				<div class="col-sm-8">
+					<select id="clubPostId" name="clubPostId" class="form-control">
+						<option th:each="fkRow:${ clubPostIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{clubPostId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="clubActivityDiv">
+				<label class="col-sm-3 control-label">关联的俱乐部赛事：</label>
+				<div class="col-sm-8">
+					<select id="clubActivityId" name="clubActivityId" class="form-control">
+						<option th:each="fkRow:${ clubActivityIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{clubActivityId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group" id="mediaUrlDiv">
+				<label class="col-sm-3 control-label">外部链接：</label>
+				<div class="col-sm-8">
+					<input id="mediaUrl" name="mediaUrl" th:field="*{mediaUrl}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group" id="describeDiv">
+				<label class="col-sm-3 control-label">广告详情：</label>
+				<div class="col-sm-8">
+				    <input id="detail" name="detail" th:field="*{detail}" type="hidden">
+				    <div id="detailId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片网址：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="pictureUrl" id="pictureUrl" accept="image/*"/>
+			       </div>
+					<div>
+						<p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：750*1334,格式：jpg、png、gif</p>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewpictureUrl" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(startAdvertisement.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(startAdvertisement.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/startAdvertisement"
+	    $("#detailId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]	,
+			placeholder: '请输入通知的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",16);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#detailId").summernote('insertImage',data)
+						}
+					});
+
+				}
+			}
+	    });
+		var content = $("#detail").val();
+		$('#detailId').summernote("code",content);
+
+		$("#form-startAdvertisement-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				describes: {
+					required: false,
+				},
+				advertisementType: {
+					required: false,
+				},
+				uploadTime: {
+					required: false,
+				},
+				effectTime: {
+					required: false,
+				},
+				failureTime: {
+					required: false,
+				},
+				advertisementStatus: {
+					required: false,
+				},
+				jump: {
+					required: false,
+				},
+				jumpType: {
+					required: false,
+				},
+				connectType: {
+					required: false,
+				},
+				contestId: {
+					required: false,
+				},
+				trainingId: {
+					required: false,
+				},
+				coachId: {
+					required: false,
+				},
+				judgeId: {
+					required: false,
+				},
+				recommendId: {
+					required: false,
+				},
+				clubPostId: {
+					required: false,
+				},
+				clubActivityId: {
+					required: false,
+				},
+				mediaUrl: {
+					required: false,
+				},
+				detail: {
+					required: false,
+				},
+				pictureUrl: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				describes: {
+				},		
+				advertisementType: {
+				},		
+				uploadTime: {
+				},		
+				effectTime: {
+				},		
+				failureTime: {
+				},		
+				advertisementStatus: {
+				},		
+				jump: {
+				},		
+				jumpType: {
+				},		
+				connectType: {
+				},		
+				contestId: {
+				},		
+				trainingId: {
+				},		
+				coachId: {
+				},		
+				judgeId: {
+				},		
+				recommendId: {
+				},		
+				clubPostId: {
+				},		
+				clubActivityId: {
+				},		
+				mediaUrl: {
+				},		
+				detail: {
+				},		
+				pictureUrl: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+
+				var sHTMLdetail = $("#detailId").summernote('code');
+				$("#detail").val(sHTMLdetail);
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());
+				formdata.append("describes", $("#describes").val());
+				formdata.append("advertisementType", $("#advertisementType").val());
+				formdata.append("effectTime", $("#effectTime").val());
+				formdata.append("failureTime", $("#failureTime").val());
+				formdata.append("advertisementStatus", $("#advertisementStatus").val());
+				formdata.append("jump", $("#jump").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+				var jumpIndex = $('#jump').prop('selectedIndex');
+				if(jumpIndex==0){
+					formdata.append("jumpType", $('#jumpType').val());
+					var jumpType=$("#jumpType").prop('selectedIndex');
+					if(jumpType==0){
+						formdata.append("mediaUrl","");
+						formdata.append("connectType",$('#connectType').val());
+						var selectedIndex = $('#connectType').prop('selectedIndex');
+						if (selectedIndex === 0) {
+							formdata.append("detail", $("#detail").val());
+							formdata.append("contestId", "-1");
+							formdata.append("trainingId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 1) {
+							formdata.append("contestId", $("#contestId").val());
+							formdata.append("trainingId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 2) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("trainingId", $("#trainingId").val());
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 3) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", $("#coachId").val());
+							formdata.append("judgeId", "-1");
+							formdata.append("trainingId","-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 4) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", $("#judgeId").val());
+							formdata.append("trainingId", "-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 5) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("trainingId", "-1");
+							formdata.append("recommendId",$("#recommendId").val());
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 6) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("trainingId", "-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId",$("#clubPostId").val());
+							formdata.append("clubActivityId","-1");
+						}
+						if (selectedIndex === 7) {
+							formdata.append("contestId", "-1");
+							formdata.append("coachId", "-1");
+							formdata.append("judgeId", "-1");
+							formdata.append("trainingId", "-1");
+							formdata.append("recommendId","-1");
+							formdata.append("clubPostId","-1");
+							formdata.append("clubActivityId",$("#clubActivityId").val());
+						}
+
+
+					}else {
+						formdata.append("mediaUrl",$("#mediaUrl").val());
+						formdata.append("connectType", "-1");
+						formdata.append("detail", "");
+						formdata.append("contestId", "-1");
+						formdata.append("trainingId", "-1");
+						formdata.append("coachId", "-1");
+						formdata.append("judgeId", "-1");
+						formdata.append("recommendId","-1");
+						formdata.append("clubPostId","-1");
+						formdata.append("clubActivityId","-1");
+					}
+				}else {
+					formdata.append("mediaUrl","");
+					formdata.append("jumpType", "-1");
+					formdata.append("connectType", "-1");
+					formdata.append("detail", "");
+					formdata.append("contestId", "-1");
+					formdata.append("trainingId", "-1");
+					formdata.append("coachId", "-1");
+					formdata.append("judgeId", "-1");
+					formdata.append("recommendId","-1");
+					formdata.append("clubPostId","-1");
+					formdata.append("clubActivityId","-1");
+				}
+
+
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("pictureUrlFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+		$(window).load(function() {		
+
+
+			var picturepictureUrl = '[[${startAdvertisement.pictureUrl}]]';
+			var optionspictureUrl = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl) ) {
+				$('#imgpreviewpictureUrl').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/startAdvertisement"+optionspictureUrl.imgSrc);
+			}				
+		    $('#pictureUrl').on('change', function() {	    
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		             optionspictureUrl.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionspictureUrl.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewpictureUrl').attr('src', e.target.result);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			$('#describeDiv').hide();
+			$('#mediaUrlDiv').hide();
+			$('#contestDiv').hide();
+			$('#trainingDiv').hide();
+			$('#coachDiv').hide();
+			$('#judgeDiv').hide();
+			$('#recommendDiv').hide();
+			$('#clubPostDiv').hide();
+			$('#clubActivityDiv').hide();
+			initType();
+		});
+		$("#jump").change(function (){
+			var jump=$("#jump").val();
+			if(jump==1){
+				$("#jumpTypeDiv").show();
+				var jumpType=$("#jumpType").val();
+
+				if(jumpType==1){
+					$("#mediaUrlDiv").hide();
+					$("#connectTypeDiv").show();
+					updateType();
+				}else {
+					$("#connectTypeDiv").hide();
+					$("#mediaUrlDiv").show();
+					updateType();
+				}
+			}else {
+				$("#jumpTypeDiv").hide();
+				$("#mediaUrlDiv").hide();
+				$("#connectTypeDiv").hide();
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+		})
+
+		$('#jumpType').change(function (){
+			var jumpType=$("#jumpType").val();
+			if(jumpType==1){
+				$("#mediaUrlDiv").hide();
+				$("#connectTypeDiv").show();
+			}else {
+				$("#connectTypeDiv").hide();
+				$("#mediaUrlDiv").show();
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+		})
+
+		function initType() {
+			var jumpIndex = '[[${startAdvertisement.jump}]]';
+			if(jumpIndex==1){
+				var jumpTypeIndex='[[${startAdvertisement.jumpType}]]';
+				if(jumpTypeIndex==1){
+					$("#mediaUrlDiv").hide();
+					$("#connectTypeDiv").show();
+					updateInitType();
+				}else if(jumpTypeIndex==2){
+					$("#connectTypeDiv").hide();
+					$("#mediaUrlDiv").show();
+				}else{
+					$("#connectTypeDiv").hide();
+					$("#mediaUrlDiv").hide();
+				}
+			}else {
+				$("#jumpTypeDiv").hide();
+				$("#mediaUrlDiv").hide();
+				$("#connectTypeDiv").hide();
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+		}
+
+		function updateInitType(){
+			var selectedIndex = '[[${startAdvertisement.connectType}]]';
+			// 自定义
+			if (selectedIndex == 1) {
+				$('#describeDiv').show();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+			// 关联赛事
+			if (selectedIndex == 2) {
+				$('#describeDiv').hide();
+				$('#contestDiv').show();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+			// 关联培训
+			if (selectedIndex == 3) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').show();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联教官
+			if (selectedIndex == 4) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').show();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联裁判
+			if (selectedIndex == 5) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').show();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联推荐
+			if (selectedIndex == 6) {
+				debugger
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').show();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联俱乐部赛事
+			if (selectedIndex == 7) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').show();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联俱乐部活动
+			if (selectedIndex == 8) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').show();
+			}
+		}
+
+		function updateType() {
+			var selectedIndex = $('#connectType').prop('selectedIndex');
+
+
+			// 自定义
+			if (selectedIndex === 0) {
+				$('#describeDiv').show();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+			// 关联赛事
+			if (selectedIndex === 1) {
+				$('#describeDiv').hide();
+				$('#contestDiv').show();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+			// 关联培训
+			if (selectedIndex === 2) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').show();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联教官
+			if (selectedIndex === 3) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').show();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联裁判
+			if (selectedIndex === 4) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').show();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联推荐
+			if (selectedIndex === 5) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').show();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联俱乐部赛事
+			if (selectedIndex === 6) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').show();
+				$('#clubActivityDiv').hide();
+			}
+
+			// 关联俱乐部活动
+			if (selectedIndex === 7) {
+				$('#describeDiv').hide();
+				$('#contestDiv').hide();
+				$('#trainingDiv').hide();
+				$('#coachDiv').hide();
+				$('#judgeDiv').hide();
+				$('#recommendDiv').hide();
+				$('#clubPostDiv').hide();
+				$('#clubActivityDiv').show();
+			}
+		}
+	</script>
+</body>
+</html>

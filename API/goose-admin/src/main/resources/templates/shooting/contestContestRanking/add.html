@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-contestContestRanking-add">
+			<!-- <input name="clientUserId"  type="hidden" id="treeId"/> -->
+<!-- 			<div class="form-group">
+				<label class="col-sm-3 control-label">用户：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div> -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">赛事：</label>
+				<div class="col-sm-8">
+					<select id="contestId" name="contestId" class="form-control">
+						<option th:each="fkRow:${ contestIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">导入：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="file" id="file" /> 
+				</div>
+			</div>
+<!-- 			<div class="form-group">
+				<label class="col-sm-3 control-label">组别ID：</label>
+				<div class="col-sm-8">
+					<select id="groupId" name="groupId" class="form-control">
+						<option th:each="fkRow:${ groupIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">CPSA名次：</label>
+				<div class="col-sm-8">
+					<input id="cpsaRank" name="cpsaRank" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总名次：</label>
+				<div class="col-sm-8">
+					<input id="totalRank" name="totalRank" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成绩：</label>
+				<div class="col-sm-8">
+					<input id="score" name="score" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">百分比：</label>
+				<div class="col-sm-8">
+					<input id="percentage" name="percentage" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">平均系数：</label>
+				<div class="col-sm-8">
+					<input id="avgCoeff" name="avgCoeff" class="form-control" type="text">
+				</div>
+			</div>
+
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">平均得分：</label>
+				<div class="col-sm-8">
+					<input id="avgScore" name="avgScore" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年龄组别：</label>
+				<div class="col-sm-8">
+					<select id="ageGroup" name="ageGroup" class="form-control m-b" th:with="type=${@dict.getType('age_group')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否DQ：</label>
+				<div class="col-sm-8">
+					<select id="isDq" name="isDq" class="form-control m-b" th:with="type=${@dict.getType('is_dq')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div> -->
+
+
+			<!-- <div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div> -->
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/contestContestRanking"
+	    		
+		$("#form-contestContestRanking-add").validate({
+			rules:{
+				/* id: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				}, */
+				contestId: {
+					required: false,
+				},
+			/* 	groupId: {
+					required: false,
+				},
+				cpsaRank: {
+					required: false,
+				},
+				totalRank: {
+					required: false,
+				},
+				score: {
+					required: false,
+				},
+				percentage: {
+					required: false,
+				},
+				avgCoeff: {
+					required: false,
+				},
+				avgTime: {
+					required: false,
+				},
+				avgScore: {
+					required: false,
+				},
+				ageGroup: {
+					required: false,
+				},
+				isDq: {
+					required: false,
+				},
+				note: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				}, */
+			},
+			messages: {
+				/* id: {
+				},	 */	
+	/* 			clientUserId: {
+				},	 */	
+				contestId: {
+				},		
+				/* groupId: {
+				},		
+				cpsaRank: {
+				},		
+				totalRank: {
+				},		
+				score: {
+				},		
+				percentage: {
+				},		
+				avgCoeff: {
+				},		
+				avgTime: {
+				},		
+				avgScore: {
+				},		
+				ageGroup: {
+				},		
+				isDq: {
+				},		
+				note: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		 */
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				/* formdata.append("clientUserId", $("#treeId").val()); */
+				formdata.append("contestId", $("#contestId").val());
+				formdata.append("file", $('input[type=file]')[0].files[0]);
+
+				/* formdata.append("groupId", $("#groupId").val());
+				formdata.append("cpsaRank", $("#cpsaRank").val());
+				formdata.append("totalRank", $("#totalRank").val());
+				formdata.append("score", $("#score").val());
+				formdata.append("percentage", $("#percentage").val());
+				formdata.append("avgCoeff", $("#avgCoeff").val());
+				formdata.append("avgTime", $("#avgTime").val());
+				formdata.append("avgScore", $("#avgScore").val());
+				formdata.append("ageGroup", $("#ageGroup").val());
+				formdata.append("isDq", $("#isDq").val());
+				formdata.append("note", $("#note").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+ */
+
+				 var loading = layer.load(1, {
+				     shade: false
+/* 				     time: 2*1000
+ */				 });
+ 
+		        $.ajax({
+		            url: prefix + "/importByContestId",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	  layer.close(loading);
+		            	  layer.confirm(result.msg, {
+		            		  btn: ['确定'] //按钮
+		            		}, function(){
+		            			 $.operate.saveSuccess(result);
+		            		})
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

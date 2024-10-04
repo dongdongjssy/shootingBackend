@@ -1,0 +1,186 @@
+package ${package}.service.impl;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+#if(${cachable} == 1)
+import org.springframework.cache.annotation.Cacheable; 
+#end
+import ${package}.mapper.${className}Mapper;
+import ${package}.domain.${className};
+
+import ${package}.service.I${className}Service;
+import io.goose.common.support.Convert;
+#foreach($column in $columns)
+#if($column.configInfo.checkUnique == 1)	
+import io.goose.common.constant.UserConstants;
+import io.goose.common.utils.StringUtils;
+#break
+#end
+#end
+
+/**
+ * ${tableComment} 服务层实现
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+public class ${className}ServiceImpl implements I${className}Service 
+{
+	@Autowired
+	private ${className}Mapper ${classname}Mapper;
+
+
+	/**
+     * 查询${tableComment}信息
+     * 
+     * @param ${primaryKey.attrname} ${tableComment}ID
+     * @return ${tableComment}信息
+     */
+    @Override
+	public ${className} select${className}ById(${primaryKey.attrType} ${primaryKey.attrname})
+	{
+	    return ${classname}Mapper.select${className}ById(${primaryKey.attrname});
+	}
+	
+	/**
+     * 查询${tableComment}信息 外键关联
+     * 
+     * @param ${primaryKey.attrname} ${tableComment}ID
+     * @return ${tableComment}信息
+     */
+    @Override
+	public ${className} select${className}ByIdAssoc(${primaryKey.attrType} ${primaryKey.attrname})
+	{
+	    return ${classname}Mapper.select${className}ByIdAssoc(${primaryKey.attrname});
+	}	
+	
+	/**
+     * 查询所有${tableComment}列表
+     * 
+     * @param 
+     * @return ${tableComment}集合
+     */
+	@Override 
+#if(${cachable} == 1)
+	@Cacheable(value = "${classname}")
+#end
+	public List<${className}> select${className}All()
+	{
+		return ${classname}Mapper.select${className}All();
+	}	
+	
+	/**
+     * 查询所有${tableComment}列表 外键关联
+     * 
+     * @param 
+     * @return ${tableComment}集合
+     */
+	@Override 
+#if(${cachable} == 1)
+	@Cacheable(value = "${classname}")
+#end
+	public List<${className}> select${className}AllAssoc()
+	{
+		return ${classname}Mapper.select${className}AllAssoc();
+	}		
+	
+	/**
+     * 查询${tableComment}列表
+     * 
+     * @param ${classname} ${tableComment}信息
+     * @return ${tableComment}集合
+     */
+	@Override
+	public List<${className}> select${className}List(${className} ${classname})
+	{
+	    return ${classname}Mapper.select${className}List(${classname});
+	}
+	
+	/**
+     * 查询${tableComment}列表 外键关联
+     * 
+     * @param ${classname} ${tableComment}信息
+     * @return ${tableComment}集合
+     */
+	@Override
+	public List<${className}> select${className}ListAssoc(${className} ${classname})
+	{
+	    return ${classname}Mapper.select${className}ListAssoc(${classname});
+	}	
+	
+    /**
+     * 新增${tableComment}
+     * 
+     * @param ${classname} ${tableComment}信息
+     * @return 结果
+     */
+	@Override
+	public int insert${className}(${className} ${classname})
+	{
+	    return ${classname}Mapper.insert${className}(${classname});
+	}
+	
+	/**
+     * 修改${tableComment}
+     * 
+     * @param ${classname} ${tableComment}信息
+     * @return 结果
+     */
+	@Override
+	public int update${className}(${className} ${classname})
+	{
+	    return ${classname}Mapper.update${className}(${classname});
+	}
+
+	/**
+     * 删除${tableComment}对象
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+	@Override
+	public int delete${className}ByIds(String ids)
+	{
+		return ${classname}Mapper.delete${className}ByIds(Convert.toStrArray(ids));
+	}
+	
+	/**
+     * 删除${tableComment}对象
+     * 
+     * @param id 需要删除的数据ID
+     * @return 结果
+     */
+	@Override
+	public int delete${className}ById(${primaryKey.attrType} ${primaryKey.attrname})
+	{
+		return ${classname}Mapper.delete${className}ById(id);
+	}
+	
+	
+#foreach($column in $columns)
+#if($column.configInfo.checkUnique == 1)	
+    /**
+     * 校验是否唯一
+     * 
+     * @param ${className}
+     * @return 结果
+     */
+	public String check${column.attrName}Unique(${className} ${classname})
+    {
+        Long id = StringUtils.isNull(${classname}.getId()) ? -1L : ${classname}.getId();
+        ${className} result = ${classname}Mapper.check${column.attrName}Unique(${classname});
+        if (StringUtils.isNotNull(result) && result.getId().longValue() != id.longValue())
+        {
+            return UserConstants.GENERAL_NOT_UNIQUE;
+        }
+        return UserConstants.GENERAL_UNIQUE;
+    }	
+    
+#end
+#end
+
+
+
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ScheduleMapper">
+
+    <resultMap type="Schedule" id="ScheduleResult">
+        <result property="id" column="id"/>
+        <result property="fkId" column="fk_id"/>
+        <result property="type" column="type"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+    </resultMap>
+
+
+    <sql id="selectSchedule">
+        select tb.id, tb.fk_id, tb.type, tb.start_date, tb.end_date
+        from shooting_schedule tb
+    </sql>
+
+    <select id="selectScheduleByFkIdAndType" parameterType="Schedule" resultMap="ScheduleResult">
+        <include refid="selectSchedule"/>
+        where
+        tb.fk_id = #{fkId} and
+        tb.type = #{type}
+    </select>
+
+    <select id="selectScheduleById" parameterType="Long" resultMap="ScheduleResult">
+        <include refid="selectSchedule"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertSchedule" parameterType="Schedule" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="fkId != null  and fkId != ''  ">fk_id,</if>
+            <if test="type != null  and type != ''  ">type,</if>
+            <if test="startDate != null ">start_date,</if>
+            <if test="endDate != null ">end_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="fkId != null  and fkId != ''  ">#{fkId},</if>
+            <if test="type != null  and type != ''  ">#{type},</if>
+            <if test="startDate != null ">#{startDate},</if>
+            <if test="endDate != null ">#{endDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSchedule" parameterType="Schedule">
+        update shooting_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fkId != null  and fkId != ''  ">fk_id = #{fkId},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="startDate != null  and startDate != ''  ">start_date = #{startDate},</if>
+            <if test="endDate != null  and endDate != ''  ">end_date = #{endDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteScheduleById" parameterType="Long">
+        delete
+        from shooting_schedule
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTimeRangeByIds" parameterType="String">
+        delete from shooting_schedule where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

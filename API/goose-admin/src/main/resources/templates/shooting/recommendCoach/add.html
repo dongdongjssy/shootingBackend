@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-recommendCoach-add">
+        <input name="clientUserId" type="hidden" id="treeId"/>
+        <!--			<div class="form-group">-->
+        <!--				<label class="col-sm-3 control-label">发布者：</label>-->
+        <!--				<div class="col-sm-8">-->
+        <!--					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					-->
+        <!--				</div>-->
+        <!--			</div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">类别：</label>
+            <div class="col-sm-8">
+                <select id="category" name="category" class="form-control m-b"
+                        th:with="type=${@dict.getType('shooting_recommend_coach_category')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">标题：</label>
+            <div class="col-sm-8">
+                <input id="title" name="title" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">内容：</label>
+            <div class="col-sm-8">
+                <input id="content" name="content" type="hidden">
+                <div id="contentId" class="summernote"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上传图片：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="image9" id="uploadFile" accept="image/*"/>
+                </div>
+                <div>
+                    <p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：710*360,格式：jpg、png、gif</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-8" id="sDiv">
+                <div class="col-sm-12" id="imgDiv">
+                </div>
+            </div>
+            <div class="col-sm-8" hidden id="hDiv">
+                <img src="" id="bgPic" style="width: 100%;height: 100%">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">视频：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传视频</label> </a>
+                    <input type="file" class="" name="video" id="video" accept="video/*"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">视频预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <video id="videopreviewmediaUrl" width="320" height="240" controls/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否存为草稿：</label>
+            <div class="col-sm-8">
+                <div>
+                    <label class="radio-inline"><input type="radio" id="draftYes" name="draft" value="1">是</label>
+                    <label class="radio-inline"><input type="radio" id="draftNo" name="draft" value="0" checked>否</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control m-b"
+                        th:with="type=${@dict.getType('sys_common_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+<script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+<script type="text/javascript">
+    var prefix = ctx + "shooting/recommendCoach"
+
+    var fileArr = []
+    $("#contentId").summernote({
+        height: '320px',
+        lang: 'zh-CN',
+        dialogsInBody: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link','picture']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        placeholder: '请输入通知的内容',
+        callbacks:{
+            onImageUpload:function(files, editor, $editable) {
+           	 var fd = new FormData();
+           	    fd.append("file", files[0]);
+           	    fd.append("type",1);
+           	    $.ajax({
+           	        type:"POST",
+           	        url:ctx + "shooting/oss/uploadRichText",
+           	        data: fd,
+           	        cache: false,
+           	        contentType: false,
+           	        processData: false,
+           	        success: function (data) {
+           	        	$("#contentId").summernote('insertImage',data)
+           	        }
+           	    });
+           	 
+           }
+        }					
+    });
+
+    function removePic(obj) {
+        var id = obj.parentNode.id
+        $("#" + id + "").hide()
+    }
+
+    var fileArr=[]
+    $("#uploadFile").on("change", function () {
+
+        var num = $("#imgDiv").children("div").length;
+        if (num >= 9) {
+            layer.msg("最多上传9张图片")
+            return
+        }
+        var ss = document.getElementById('uploadFile').files[0]
+        fileArr.push(ss)
+        var objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
+        if (objUrl) {
+            var pic = '<div id="imagepreview' + Math.floor(Math.random() * 1000000) + '" class="col-sm-4" style="position: relative; padding-top: 15px;"><img src="' + objUrl + '" width="100%" height="100px" class="smPic" ><span onclick="removePic(this)" data-name=" '+ss.name+'" style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span></div>'
+            $("#imgDiv").append(pic); //将图片路径存入src中，显示出图片
+        }
+
+        $(".smPic").click(function () {
+            var picSrc = $(this).attr('src')
+            $('#bgPic').attr('src', picSrc)
+            $('#sDiv').hide()
+            $("#hDiv").show()
+        })
+
+        $('#hDiv').on('click', function () {
+            $('#bgPic').removeAttr('src')
+            $('#hDiv').hide()
+            $('#sDiv').show()
+        })
+
+    });
+
+    function removePic(obj) {
+        var name = obj.dataset.name;
+        console.log(name)
+        $(obj).parent().remove();
+        for(var i in fileArr){
+            if(fileArr[i].name = name){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+    }
+
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+    $("#form-recommendCoach-add").validate({
+        rules: {
+            id: {
+                required: false,
+            },
+            clientUserId: {
+                required: false,
+            },
+            category: {
+                required: false,
+            },
+            title: {
+                required: false,
+            },
+            content: {
+                required: false,
+            },
+            image1: {
+                required: false,
+            },
+            image2: {
+                required: false,
+            },
+            image3: {
+                required: false,
+            },
+            image4: {
+                required: false,
+            },
+            image5: {
+                required: false,
+            },
+            image6: {
+                required: false,
+            },
+            image7: {
+                required: false,
+            },
+            image8: {
+                required: false,
+            },
+            image9: {
+                required: false,
+            },
+            video: {
+                required: false,
+            },
+            likeCount: {
+                required: false,
+            },
+            commentCount: {
+                required: false,
+            },
+            readCount: {
+                required: false,
+            },
+            onTop: {
+                required: false,
+            },
+            rankings: {
+                required: false,
+            },
+            status: {
+                required: false,
+            },
+            createBy: {
+                required: false,
+            },
+            createTime: {
+                required: false,
+            },
+            updateBy: {
+                required: false,
+            },
+            updateTime: {
+                required: false,
+            },
+            adTitle: {
+                required: false,
+            },
+            adContent: {
+                required: false,
+            },
+            adMediaUrl: {
+                required: false,
+            },
+            contentShort: {
+                required: false,
+            },
+            videoCover: {
+                required: false,
+            },
+        },
+        messages: {
+            id: {},
+            clientUserId: {},
+            category: {},
+            title: {},
+            content: {},
+            image1: {},
+            image2: {},
+            image3: {},
+            image4: {},
+            image5: {},
+            image6: {},
+            image7: {},
+            image8: {},
+            image9: {},
+            video: {},
+            likeCount: {},
+            commentCount: {},
+            readCount: {},
+            onTop: {},
+            rankings: {},
+            status: {},
+            createBy: {},
+            createTime: {},
+            updateBy: {},
+            updateTime: {},
+            adTitle: {},
+            adContent: {},
+            adMediaUrl: {},
+            contentShort: {},
+            videoCover: {},
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+        	
+            var sHTMLcontent = $("#contentId").summernote('code');
+            $("#content").val(sHTMLcontent);
+            // var sHTMLadContent = $("#adContentId").code();
+            // $("#adContent").val(sHTMLadContent);
+
+            var formdata = new FormData();
+            // formdata.append("clientUserId", $("#treeId").val());
+            formdata.append("category", $("#category").val());
+            formdata.append("title", $("#title").val());
+            formdata.append("content", $("#content").val());
+            // formdata.append("likeCount", $("#likeCount").val());
+            // formdata.append("commentCount", $("#commentCount").val());
+            // formdata.append("readCount", $("#readCount").val());
+            // formdata.append("onTop", $("#onTop").val());
+            // formdata.append("rankings", $("#rankings").val());
+            formdata.append("draft",$("input[name='draft']:checked").val())
+            formdata.append("status", $("#status").val());
+            // formdata.append("createBy", $("#createBy").val());
+            // formdata.append("createTime", $("#createTime").val());
+            // formdata.append("updateBy", $("#updateBy").val());
+            // formdata.append("updateTime", $("#updateTime").val());
+            // formdata.append("adTitle", $("#adTitle").val());
+            // formdata.append("adContent", $("#adContent").val());
+            // formdata.append("contentShort", $("#contentShort").val());
+            // formdata.append("videoCover", $("#videoCover").val());
+            for (var i in fileArr) {
+                var data = fileArr[i]
+                i++
+                var fileName = 'image' + i + 'File'
+                formdata.append(fileName, data);
+            }
+
+            var ss = document.getElementById('video').files[0]
+            formdata.append("videoFile", ss);
+
+            // var fileIdx = 0;
+            // fileIdx = $('input[type=file]').length-11;
+            // formdata.append("image1File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-10;
+            // formdata.append("image2File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-9;
+            // formdata.append("image3File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-8;
+            // formdata.append("image4File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-7;
+            // formdata.append("image5File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-6;
+            // formdata.append("image6File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-5;
+            // formdata.append("image7File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-4;
+            // formdata.append("image8File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-3;
+            // formdata.append("image9File", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-2;
+            // formdata.append("videoFile", $('input[type=file]')[fileIdx].files[0]);
+            // fileIdx = $('input[type=file]').length-1;
+            // formdata.append("adMediaUrlFile", $('input[type=file]')[fileIdx].files[0]);
+
+            $.ajax({
+                url: prefix + "/add",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                beforeSend: function (XMLHttpRequest) {
+                    //注意，layer.msg默认3秒自动关闭，如果数据加载耗时比较长，需要设置time
+                    $.modal.loading("提交中...");
+                },
+                success: function (result) {
+                    $.modal.closeLoading();
+                    $.operate.saveSuccess(result);
+                }
+            })
+
+        }
+    }
+
+    $(window).load(function () {
+        var optionsvideo = {}
+        $('#video').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsvideo.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是视频类型
+                if ((optionsvideo.imgSrc).indexOf("video/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传视频类型,如：MP4后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#videopreviewmediaUrl').attr('src', e.target.result);
+                    $('#videopreviewmediaUrl').attr('hidden', false);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+    });
+
+    function selectUserTree() {
+        //var treeId = $("#treeId").val();
+        //var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        //var url = ctx + "/clientUser/searchUserList/" + deptId;
+        var options = {
+            title: '选择用户',
+            width: "380",
+            url: ctx + "loc/clientUser/searchPopup",
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var tree = layero.find("iframe")[0].contentWindow.$._tree;
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+</script>
+</body>
+</html>

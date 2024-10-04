@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ContestLevelCoeffMapper">
+    
+    <resultMap type="ContestLevelCoeff" id="ContestLevelCoeffResult">
+        <result property="id"    column="id"    />
+        <result property="levelName"    column="level_name"    />
+        <result property="levelCoeff"    column="level_coeff"    />
+    </resultMap>
+
+	
+	<sql id="selectContestLevelCoeffVoNoJoin">
+        select tb.id, tb.level_name, tb.level_coeff        from shooting_contest_level_coeff tb
+    </sql>
+    
+	<sql id="selectContestLevelCoeffVo">
+           select tb.id, tb.level_name, tb.level_coeff from shooting_contest_level_coeff tb     </sql>
+    
+     <select id="selectContestLevelCoeffAll" parameterType="ContestLevelCoeff" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffVo"/>
+     </select>    
+	
+    <select id="selectContestLevelCoeffList" parameterType="ContestLevelCoeff" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="levelName != null  and levelName != '' "> and tb.level_name = #{levelName}</if>
+            <if test="levelCoeff != null "> and tb.level_coeff = #{levelCoeff}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestLevelCoeffById" parameterType="Long" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertContestLevelCoeff" parameterType="ContestLevelCoeff" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_contest_level_coeff
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="levelName != null  and levelName != ''  ">level_name,</if>
+			<if test="levelCoeff != null  ">level_coeff,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="levelName != null  and levelName != ''  ">#{levelName},</if>
+			<if test="levelCoeff != null  ">#{levelCoeff},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContestLevelCoeff" parameterType="ContestLevelCoeff">
+        update shooting_contest_level_coeff
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="levelName != null  and levelName != ''  ">level_name = #{levelName},</if>
+            <if test="levelCoeff != null  ">level_coeff = #{levelCoeff},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteContestLevelCoeffById" parameterType="Long">
+        delete from shooting_contest_level_coeff where id = #{id}
+    </delete>
+	
+    <delete id="deleteContestLevelCoeffByIds" parameterType="String">
+        delete from shooting_contest_level_coeff where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectContestLevelCoeffAssoc">
+        select tb.id, tb.level_name, tb.level_coeff                 from shooting_contest_level_coeff tb     </sql>
+    
+     <select id="selectContestLevelCoeffAllAssoc" parameterType="ContestLevelCoeff" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffAssoc"/>
+     </select>    
+	
+    <select id="selectContestLevelCoeffListAssoc" parameterType="ContestLevelCoeff" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="levelName != null  and levelName != '' "> and tb.level_name like concat('%', #{levelName}, '%')</if>
+            <if test="levelCoeff != null "> and tb.level_coeff = #{levelCoeff}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestLevelCoeffByIdAssoc" parameterType="Long" resultMap="ContestLevelCoeffResult">
+        <include refid="selectContestLevelCoeffAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ContestGroupMapper">
+    
+    <resultMap type="ContestGroup" id="ContestGroupResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+	
+	<sql id="selectContestGroupVoNoJoin">
+        select tb.id, tb.name        from shooting_contest_group tb
+    </sql>
+    
+	<sql id="selectContestGroupVo">
+           select tb.id, tb.name from shooting_contest_group tb     </sql>
+    
+     <select id="selectContestGroupAll" parameterType="ContestGroup" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupVo"/>
+     </select>    
+	
+    <select id="selectContestGroupList" parameterType="ContestGroup" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestGroupById" parameterType="Long" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertContestGroup" parameterType="ContestGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_contest_group
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContestGroup" parameterType="ContestGroup">
+        update shooting_contest_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteContestGroupById" parameterType="Long">
+        delete from shooting_contest_group where id = #{id}
+    </delete>
+	
+    <delete id="deleteContestGroupByIds" parameterType="String">
+        delete from shooting_contest_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectContestGroupAssoc">
+        select tb.id, tb.name                 from shooting_contest_group tb     </sql>
+    
+     <select id="selectContestGroupAllAssoc" parameterType="ContestGroup" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupAssoc"/>
+     </select>    
+	
+    <select id="selectContestGroupListAssoc" parameterType="ContestGroup" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectContestGroupByIdAssoc" parameterType="Long" resultMap="ContestGroupResult">
+        <include refid="selectContestGroupAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

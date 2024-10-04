@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubImageMapper">
+    
+    <resultMap type="ClubImage" id="ClubImageResult">
+        <result property="id"    column="id"    />
+        <result property="clubId"    column="club_id"    />
+        <result property="image1"    column="image1"    />
+        <result property="image2"    column="image2"    />
+        <result property="image3"    column="image3"    />
+        <result property="image4"    column="image4"    />
+        <result property="image5"    column="image5"    />
+        <result property="image6"    column="image6"    />
+        <result property="image7"    column="image7"    />
+        <result property="image8"    column="image8"    />
+        <result property="image9"    column="image9"    />
+        <association property="club" column="club_id"  javaType="Club"  resultMap="ClubResult" />
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id"    column="a_id"    />
+        <result property="areaId"    column="a_area_id"    />
+        <result property="title"    column="a_title"    />
+        <result property="profile"    column="a_profile"    />
+        <result property="image"    column="a_image"    />
+        <result property="coachCount"    column="a_coach_count"    />
+        <result property="studentCount"    column="a_student_count"    />
+        <result property="fansCount"    column="a_fans_count"    />
+        <result property="category"    column="a_category"    />
+        <result property="rankings"    column="a_rankings"    />
+        <result property="status"    column="a_status"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+    </resultMap>
+	
+	<sql id="selectClubImageVoNoJoin">
+        select tb.id, tb.club_id, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9        from shooting_club_image tb
+    </sql>
+    
+	<sql id="selectClubImageVo">
+           select tb.id, tb.club_id, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9 from shooting_club_image tb     </sql>
+    
+     <select id="selectClubImageAll" parameterType="ClubImage" resultMap="ClubImageResult">
+        <include refid="selectClubImageVo"/>
+     </select>    
+	
+    <select id="selectClubImageList" parameterType="ClubImage" resultMap="ClubImageResult">
+        <include refid="selectClubImageVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="image1 != null  and image1 != '' "> and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' "> and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' "> and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' "> and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' "> and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' "> and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' "> and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' "> and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' "> and tb.image9 = #{image9}</if>
+        </where>
+    </select>
+    
+    <select id="selectClubImageById" parameterType="Long" resultMap="ClubImageResult">
+        <include refid="selectClubImageVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertClubImage" parameterType="ClubImage" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club_image
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clubId != null  ">club_id,</if>
+			<if test="image1 != null  and image1 != ''  ">image1,</if>
+			<if test="image2 != null  and image2 != ''  ">image2,</if>
+			<if test="image3 != null  and image3 != ''  ">image3,</if>
+			<if test="image4 != null  and image4 != ''  ">image4,</if>
+			<if test="image5 != null  and image5 != ''  ">image5,</if>
+			<if test="image6 != null  and image6 != ''  ">image6,</if>
+			<if test="image7 != null  and image7 != ''  ">image7,</if>
+			<if test="image8 != null  and image8 != ''  ">image8,</if>
+			<if test="image9 != null  and image9 != ''  ">image9,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clubId != null  ">#{clubId},</if>
+			<if test="image1 != null  and image1 != ''  ">#{image1},</if>
+			<if test="image2 != null  and image2 != ''  ">#{image2},</if>
+			<if test="image3 != null  and image3 != ''  ">#{image3},</if>
+			<if test="image4 != null  and image4 != ''  ">#{image4},</if>
+			<if test="image5 != null  and image5 != ''  ">#{image5},</if>
+			<if test="image6 != null  and image6 != ''  ">#{image6},</if>
+			<if test="image7 != null  and image7 != ''  ">#{image7},</if>
+			<if test="image8 != null  and image8 != ''  ">#{image8},</if>
+			<if test="image9 != null  and image9 != ''  ">#{image9},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateClubImage" parameterType="ClubImage">
+        update shooting_club_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+             image1 = #{image1},
+             image2 = #{image2},
+             image3 = #{image3},
+             image4 = #{image4},
+             image5 = #{image5},
+             image6 = #{image6},
+             image7 = #{image7},
+             image8 = #{image8},
+             image9 = #{image9},
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteClubImageById" parameterType="Long">
+        delete from shooting_club_image where id = #{id}
+    </delete>
+	
+    <delete id="deleteClubImageByIds" parameterType="String">
+        delete from shooting_club_image where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectClubImageAssoc">
+        select tb.id, tb.club_id, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9 ,         a.id as a_id , a.area_id as a_area_id , a.title as a_title , a.profile as a_profile , a.image as a_image , a.coach_count as a_coach_count , a.student_count as a_student_count , a.fans_count as a_fans_count , a.category as a_category , a.rankings as a_rankings , a.status as a_status , a.create_by as a_create_by , a.create_time as a_create_time , a.update_by as a_update_by , a.update_time as a_update_time 		                from shooting_club_image tb  join shooting_club a on tb.club_id = a.id    </sql>
+    
+     <select id="selectClubImageAllAssoc" parameterType="ClubImage" resultMap="ClubImageResult">
+        <include refid="selectClubImageAssoc"/>
+     </select>    
+	
+    <select id="selectClubImageListAssoc" parameterType="ClubImage" resultMap="ClubImageResult">
+        <include refid="selectClubImageAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="image1 != null  and image1 != '' "> and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' "> and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' "> and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' "> and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' "> and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' "> and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' "> and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' "> and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' "> and tb.image9 = #{image9}</if>
+        </where>
+    </select>
+    
+    <select id="selectClubImageByIdAssoc" parameterType="Long" resultMap="ClubImageResult">
+        <include refid="selectClubImageAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

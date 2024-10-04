@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ContestContestRankingMapper">
+    
+    <resultMap type="ContestContestRanking" id="ContestContestRankingResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="contestId"    column="contest_id"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="cpsaRank"    column="cpsa_rank"    />
+        <result property="totalRank"    column="total_rank"    />
+        <result property="score"    column="score"    />
+        <result property="percentage"    column="percentage"    />
+        <result property="avgCoeff"    column="avg_coeff"    />
+        <result property="avgTime"    column="avg_time"    />
+        <result property="avgScore"    column="avg_score"    />
+        <result property="ageGroup"    column="age_group"    />
+                <result property="point"    column="point"    />
+        
+        <result property="isDq"    column="is_dq"    />
+        <result property="note"    column="note"    />
+        <result property="importName"    column="import_name"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+        <association property="contest" column="contest_id"  javaType="Contest"  resultMap="ContestResult" />
+        <association property="contestGroup" column="group_id"  javaType="ContestGroup"  resultMap="ContestGroupResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+        <result property="status"    column="a_status"    />
+        <result property="idFront"    column="a_id_front"    />
+        <result property="idBack"    column="a_id_back"    />
+        <result property="idNumber"    column="a_id_number"    />
+        <result property="realName"    column="a_real_name"    />
+        <result property="jgUsername"    column="a_jg_username"    />
+        <result property="memberId"    column="a_member_id"    />
+        <result property="englishName"    column="a_english_name"    />
+        <result property="certExpireDate"    column="a_cert_expire_date"    />
+    </resultMap>
+    <resultMap type="Contest" id="ContestResult">
+        <result property="id"    column="b_id"    />
+        <result property="areaId"    column="b_area_id"    />
+        <result property="areaName"    column="areaName"    />
+        <result property="courseId"    column="b_course_id"    />
+        <result property="typeId"    column="b_type_id"    />
+        <result property="levelId"    column="b_level_id"    />
+        <result property="title"    column="b_title"    />
+        <result property="imageUrl"    column="b_image_url"    />
+        <result property="startDate"    column="b_start_date"    />
+        <result property="endDate"    column="b_end_date"    />
+        <result property="price"    column="b_price"    />
+        <result property="address"    column="b_address"    />
+        <result property="content"    column="b_content"    />
+        <result property="rankings"    column="b_rankings"    />
+        <result property="status"    column="b_status"    />
+        <result property="createBy"    column="b_create_by"    />
+        <result property="createTime"    column="b_create_time"    />
+        <result property="updateBy"    column="b_update_by"    />
+        <result property="updateTime"    column="b_update_time"    />
+    </resultMap>
+    <resultMap type="ContestGroup" id="ContestGroupResult">
+        <result property="id"    column="c_id"    />
+        <result property="name"    column="c_name"    />
+    </resultMap>
+	
+	<sql id="selectContestContestRankingVoNoJoin">
+        select tb.id, tb.client_user_id,tb.point, tb.contest_id, tb.group_id, tb.cpsa_rank, tb.total_rank, tb.score, tb.percentage, tb.avg_coeff, tb.avg_time, tb.avg_score, tb.age_group, tb.is_dq, tb.note, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_contest_contest_ranking tb
+    </sql>
+    
+	<sql id="selectContestContestRankingVo">
+           select tb.id, tb.client_user_id, tb.point,tb.contest_id, tb.group_id, tb.cpsa_rank, 
+           tb.total_rank, tb.score, tb.percentage, tb.avg_coeff, tb.avg_time, 
+           tb.avg_score, tb.age_group, tb.is_dq, tb.note, tb.status, tb.create_by,tb.import_name,
+           tb.create_time, tb.update_by, tb.update_time, a.id as a_id , 
+           a.nickname as a_nickname , a.user_name as a_user_name , 
+           a.email as a_email , a.phone as a_phone , 
+           a.password as a_password , a.user_type as a_user_type , 
+           a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , 
+           a.address as a_address , a.password_reset_date as a_password_reset_date , 
+           a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , 
+           a.id_number as a_id_number , a.real_name as a_real_name , a.jg_username as a_jg_username , 
+           a.member_id as a_member_id , a.english_name as a_english_name , a.cert_expire_date as a_cert_expire_date  
+           from shooting_contest_contest_ranking tb left join client_user a on tb.client_user_id = a.id
+    </sql>
+    
+     <select id="selectContestContestRankingAll" parameterType="ContestContestRanking" resultMap="ContestContestRankingResult">
+        <include refid="selectContestContestRankingVo"/>
+     </select>    
+	
+    <select id="selectContestContestRankingList" parameterType="ContestContestRanking" resultMap="ContestContestRankingResult">
+        <include refid="selectContestContestRankingVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="contestId != null "> and tb.contest_id = #{contestId}</if>
+            <if test="groupId != null "> and tb.group_id = #{groupId}</if>
+            <if test="cpsaRank != null "> and tb.cpsa_rank = #{cpsaRank}</if>
+            <if test="totalRank != null "> and tb.total_rank = #{totalRank}</if>
+            <if test="score != null "> and tb.score = #{score}</if>
+            <if test="percentage != null "> and tb.percentage = #{percentage}</if>
+            <if test="avgCoeff != null "> and tb.avg_coeff = #{avgCoeff}</if>
+            <if test="avgTime != null "> and tb.avg_time = #{avgTime}</if>
+            <if test="avgScore != null "> and tb.avg_score = #{avgScore}</if>
+            <if test="ageGroup != null "> and tb.age_group = #{ageGroup}</if>
+             <if test="point != null "> and tb.point = #{point}</if>
+            <if test="isDq != null "> and tb.is_dq = #{isDq}</if>
+            <if test="note != null  and note != '' "> and tb.note = #{note}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="isGroupNull != null "> and tb.group_id is null</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestContestRankingById" parameterType="Long" resultMap="ContestContestRankingResult">
+         <include refid="selectContestContestRankingAssoc"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertContestContestRanking" parameterType="ContestContestRanking" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_contest_contest_ranking
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="contestId != null  ">contest_id,</if>
+			<if test="groupId != null  ">group_id,</if>
+			<if test="cpsaRank != null  ">cpsa_rank,</if>
+			<if test="totalRank != null  ">total_rank,</if>
+			<if test="score != null  ">score,</if>
+			<if test="percentage != null  ">percentage,</if>
+			<if test="avgCoeff != null  ">avg_coeff,</if>
+			<if test="avgTime != null  ">avg_time,</if>
+			<if test="avgScore != null  ">avg_score,</if>
+			<if test="ageGroup != null  ">age_group,</if>
+			<if test="isDq != null  ">is_dq,</if>
+			<if test="note != null  and note != ''  ">note,</if>
+			<if test="importName != null  and importName != ''  ">import_name,</if>
+			<if test="point != null "> point,</if>
+			
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="contestId != null  ">#{contestId},</if>
+			<if test="groupId != null  ">#{groupId},</if>
+			<if test="cpsaRank != null  ">#{cpsaRank},</if>
+			<if test="totalRank != null  ">#{totalRank},</if>
+			<if test="score != null  ">#{score},</if>
+			<if test="percentage != null  ">#{percentage},</if>
+			<if test="avgCoeff != null  ">#{avgCoeff},</if>
+			<if test="avgTime != null  ">#{avgTime},</if>
+			<if test="avgScore != null  ">#{avgScore},</if>
+			<if test="ageGroup != null  ">#{ageGroup},</if>
+			<if test="isDq != null  ">#{isDq},</if>
+			<if test="note != null  and note != ''  ">#{note},</if>
+			<if test="importName != null  and importName != ''  ">#{importName},</if>
+			<if test="point != null "> #{point},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContestContestRanking" parameterType="ContestContestRanking">
+        update shooting_contest_contest_ranking
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="contestId != null  ">contest_id = #{contestId},</if>
+            <if test="groupId != null  ">group_id = #{groupId},</if>
+            <if test="cpsaRank != null  ">cpsa_rank = #{cpsaRank},</if>
+            <if test="totalRank != null  ">total_rank = #{totalRank},</if>
+            <if test="score != null  ">score = #{score},</if>
+            <if test="percentage != null  ">percentage = #{percentage},</if>
+            <if test="avgCoeff != null  ">avg_coeff = #{avgCoeff},</if>
+            <if test="avgTime != null  ">avg_time = #{avgTime},</if>
+            <if test="avgScore != null  ">avg_score = #{avgScore},</if>
+            <if test="ageGroup != null  ">age_group = #{ageGroup},</if>
+            <if test="isDq != null  ">is_dq = #{isDq},</if>
+            <if test="note != null  and note != ''  ">note = #{note},</if>
+            <if test="point != null "> point = #{point},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteContestContestRankingById" parameterType="Long">
+        delete from shooting_contest_contest_ranking where id = #{id}
+    </delete>
+	
+    <delete id="deleteContestContestRankingByIds" parameterType="String">
+        delete from shooting_contest_contest_ranking where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectContestContestRankingAssoc">
+        select tb.id, tb.point,tb.client_user_id, tb.contest_id, tb.group_id,tb.import_name, tb.cpsa_rank, tb.total_rank, tb.score, tb.percentage, tb.avg_coeff, tb.avg_time, tb.avg_score, tb.age_group, tb.is_dq, tb.note, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time ,         
+        a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , a.id_number as a_id_number , a.real_name as a_real_name , a.jg_username as a_jg_username , a.member_id as a_member_id , a.english_name as a_english_name , a.cert_expire_date as a_cert_expire_date ,         
+        b.id as b_id , b.area_id as b_area_id , b.course_id as b_course_id , b.type_id as b_type_id , b.level_id as b_level_id , b.title as b_title , b.image_url as b_image_url , b.start_date as b_start_date , b.end_date as b_end_date , b.price as b_price , b.address as b_address , b.content as b_content , b.rankings as b_rankings , b.status as b_status , b.create_by as b_create_by , b.create_time as b_create_time , b.update_by as b_update_by , b.update_time as b_update_time ,         
+        c.id as c_id , c.name as c_name ,
+        d.name as areaName		                
+        from shooting_contest_contest_ranking tb  
+        left join 
+        client_user a on tb.client_user_id = a.id  
+        left join 
+        shooting_contest b on tb.contest_id = b.id  
+        left join 
+        shooting_contest_group c on tb.group_id = c.id  
+        left join 
+        shooting_area d 
+        ON 
+        b.area_id = d.id  
+    </sql>
+    
+     <select id="selectContestContestRankingAllAssoc" parameterType="ContestContestRanking" resultMap="ContestContestRankingResult">
+        <include refid="selectContestContestRankingAssoc"/>
+     </select>    
+	
+    <select id="selectContestContestRankingListAssoc" parameterType="ContestContestRanking" resultMap="ContestContestRankingResult">
+        <include refid="selectContestContestRankingAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="contestId != null "> and tb.contest_id = #{contestId}</if>
+            <if test="groupId != null "> and tb.group_id = #{groupId}</if>
+            <if test="cpsaRank != null "> and tb.cpsa_rank = #{cpsaRank}</if>
+            <if test="totalRank != null "> and tb.total_rank = #{totalRank}</if>
+            <if test="score != null "> and tb.score = #{score}</if>
+            <if test="percentage != null "> and tb.percentage = #{percentage}</if>
+            <if test="avgCoeff != null "> and tb.avg_coeff = #{avgCoeff}</if>
+            <if test="avgTime != null "> and tb.avg_time = #{avgTime}</if>
+            <if test="avgScore != null "> and tb.avg_score = #{avgScore}</if>
+            <if test="ageGroup != null "> and tb.age_group = #{ageGroup}</if>
+            <if test="isDq != null "> and tb.is_dq = #{isDq}</if>
+            <if test="note != null  and note != '' "> and tb.note = #{note}</if>
+            <if test="point != null "> and tb.point = #{point}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestContestRankingByIdAssoc" parameterType="Long" resultMap="ContestContestRankingResult">
+        <include refid="selectContestContestRankingAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+	<select id="selectContestGroupByContestId" parameterType="Long" resultType="GroupAndRanking">
+		SELECT 
+		b.id as contestGroupId,b.`name` as cateName
+		FROM 
+		`shooting_contest_contest_ranking` a 
+		left join 
+		shooting_contest_group b 
+		ON 
+		a.group_id = b.id
+		where 
+		a.contest_id = #{contestId}
+		and 
+		a.group_id is not null
+		GROUP BY b.id
+	</select>
+    
+</mapper>

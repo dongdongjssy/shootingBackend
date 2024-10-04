@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-role-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">具体角色：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">一级角色：</label>
+				<div class="col-sm-8">
+					<input id="description" name="description" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片：</label>
+				<div class="col-sm-8">
+					<div class="new-contentarea">
+						<a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+						<input type="file" class="" name="pictureUrl" id="pictureUrl" accept="image/*"/>
+					</div>
+					<div>
+						<p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：300*300,格式：jpg、png、gif</p>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+						<img id="imgpreviewpictureUrl" class='imageBox' />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">排序：</label>
+				<div class="col-sm-8">
+					<input id="sort" name="sort" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "client/role"
+	    		
+		$("#form-role-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				name: {
+					required: true,
+				},
+				description: {
+					required: true,
+				},
+				pictureUrl: {
+					required: true,
+				},
+				sort: {
+					required: true,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				name: {
+				},		
+				description: {
+				},
+				pictureUrl: {
+				},
+				sort: {
+				},
+			}
+		});
+		$(window).load(function() {
+			var optionspictureUrl = {
+			}
+			$('#pictureUrl').on('change', function() {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					optionspictureUrl.imgSrc = e.target.result;
+					//根据MIME判断上传的文件是不是图片类型
+					if((optionspictureUrl.imgSrc).indexOf("image/")==-1){
+						parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+					} else {
+						$('#imgpreviewpictureUrl').attr('src', e.target.result);
+						$('#imgpreviewpictureUrl').attr('hidden', false);
+					}
+				}
+				reader.readAsDataURL(this.files[0]);
+			})
+
+
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("name", $("#name").val());
+				formdata.append("description", $("#description").val());
+				formdata.append("sort", $("#sort").val());
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;
+				formdata.append("pictureUrlFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+	    
+	</script>
+</body>
+</html>

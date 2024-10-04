@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.CarouselMapper">
+    
+    <resultMap type="Carousel" id="CarouselResult">
+        <result property="id"    column="id"    />
+        <result property="onPage"    column="on_page"    />
+        <result property="title"    column="title"    />
+        <result property="subTitle"    column="sub_title"    />
+        <result property="mediaUrl"    column="media_url"    />
+        <result property="mediaType"    column="media_type"    />
+        <result property="rankings"    column="rankings"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="clubId"    column="club_id"    />
+        <result property="contestId"    column="contest_id"    />
+        <result property="trainingId"    column="training_id"    />
+        <result property="coachId"    column="coach_id"    />
+        <result property="judgeId"    column="judge_id"    />
+        <result property="recommendId"    column="recommend_id"    />
+        <result property="clubPostId"    column="club_post_id"    />
+        <result property="clubActivityId"    column="club_activity_id"    />
+        <result property="draft" column="draft"/>
+        <association property="club" column="club_id"  javaType="Club"  resultMap="ClubResult" />
+        <association property="contest" column="contest_id"  javaType="Contest"  resultMap="ContestResult" />
+        <association property="training" column="training_id"  javaType="Training"  resultMap="TrainingResult" />
+        <association property="recommendCoach" column="coach_id"  javaType="RecommendCoach"  resultMap="RecommendCoachResult" />
+        <association property="recommendJudge" column="judge_id"  javaType="RecommendJudge"  resultMap="RecommendJudgeResult" />
+        <association property="recommend" column="recommend_id"  javaType="Recommend"  resultMap="RecommendResult" />
+        <association property="clubPost" column="club_post_id"  javaType="ClubPost"  resultMap="ClubPostResult" />
+        <association property="clubActivity" column="club_activity_id"  javaType="ClubActivity"  resultMap="ClubActivityResult" />
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id"    column="a_id"    />
+        <result property="areaId"    column="a_area_id"    />
+        <result property="title"    column="a_title"    />
+        <result property="profile"    column="a_profile"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="image"    column="a_image"    />
+        <result property="coachCount"    column="a_coach_count"    />
+        <result property="studentCount"    column="a_student_count"    />
+        <result property="fansCount"    column="a_fans_count"    />
+        <result property="category"    column="a_category"    />
+        <result property="rankings"    column="a_rankings"    />
+        <result property="status"    column="a_status"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+        <result property="jgUsername"    column="a_jg_username"    />
+        <result property="jgGroupid"    column="a_jg_groupId"    />
+    </resultMap>
+    <resultMap type="Contest" id="ContestResult">
+        <result property="id"    column="b_id"    />
+        <result property="areaId"    column="b_area_id"    />
+        <result property="courseId"    column="b_course_id"    />
+        <result property="typeId"    column="b_type_id"    />
+        <result property="levelId"    column="b_level_id"    />
+        <result property="title"    column="b_title"    />
+        <result property="imageUrl"    column="b_image_url"    />
+        <result property="startDate"    column="b_start_date"    />
+        <result property="endDate"    column="b_end_date"    />
+        <result property="price"    column="b_price"    />
+        <result property="address"    column="b_address"    />
+        <result property="content"    column="b_content"    />
+        <result property="rankings"    column="b_rankings"    />
+        <result property="status"    column="b_status"    />
+        <result property="createBy"    column="b_create_by"    />
+        <result property="createTime"    column="b_create_time"    />
+        <result property="updateBy"    column="b_update_by"    />
+        <result property="updateTime"    column="b_update_time"    />
+        <result property="enrollDeadline"    column="b_enroll_deadline"    />
+    </resultMap>
+    <resultMap type="Training" id="TrainingResult">
+        <result property="id"    column="c_id"    />
+        <result property="areaId"    column="c_area_id"    />
+        <result property="courseId"    column="c_course_id"    />
+        <result property="typeId"    column="c_type_id"    />
+        <result property="title"    column="c_title"    />
+        <result property="imageUrl"    column="c_image_url"    />
+        <result property="startDate"    column="c_start_date"    />
+        <result property="endDate"    column="c_end_date"    />
+        <result property="price"    column="c_price"    />
+        <result property="address"    column="c_address"    />
+        <result property="content"    column="c_content"    />
+        <result property="rankings"    column="c_rankings"    />
+        <result property="status"    column="c_status"    />
+        <result property="createBy"    column="c_create_by"    />
+        <result property="createTime"    column="c_create_time"    />
+        <result property="updateBy"    column="c_update_by"    />
+        <result property="updateTime"    column="c_update_time"    />
+        <result property="enrollDeadline"    column="c_enroll_deadline"    />
+    </resultMap>
+    <resultMap type="RecommendCoach" id="RecommendCoachResult">
+        <result property="id"    column="d_id"    />
+        <result property="clientUserId"    column="d_client_user_id"    />
+        <result property="category"    column="d_category"    />
+        <result property="title"    column="d_title"    />
+        <result property="content"    column="d_content"    />
+        <result property="image1"    column="d_image1"    />
+        <result property="image2"    column="d_image2"    />
+        <result property="image3"    column="d_image3"    />
+        <result property="image4"    column="d_image4"    />
+        <result property="image5"    column="d_image5"    />
+        <result property="image6"    column="d_image6"    />
+        <result property="image7"    column="d_image7"    />
+        <result property="image8"    column="d_image8"    />
+        <result property="image9"    column="d_image9"    />
+        <result property="video"    column="d_video"    />
+        <result property="likeCount"    column="d_like_count"    />
+        <result property="commentCount"    column="d_comment_count"    />
+        <result property="readCount"    column="d_read_count"    />
+        <result property="onTop"    column="d_on_top"    />
+        <result property="rankings"    column="d_rankings"    />
+        <result property="status"    column="d_status"    />
+        <result property="createBy"    column="d_create_by"    />
+        <result property="createTime"    column="d_create_time"    />
+        <result property="updateBy"    column="d_update_by"    />
+        <result property="updateTime"    column="d_update_time"    />
+        <result property="adTitle"    column="d_ad_title"    />
+        <result property="adContent"    column="d_ad_content"    />
+        <result property="adMediaUrl"    column="d_ad_media_url"    />
+        <result property="contentShort"    column="d_content_short"    />
+        <result property="videoCover"    column="d_video_cover"    />
+    </resultMap>
+    <resultMap type="RecommendJudge" id="RecommendJudgeResult">
+        <result property="id"    column="e_id"    />
+        <result property="clientUserId"    column="e_client_user_id"    />
+        <result property="category"    column="e_category"    />
+        <result property="title"    column="e_title"    />
+        <result property="content"    column="e_content"    />
+        <result property="image1"    column="e_image1"    />
+        <result property="image2"    column="e_image2"    />
+        <result property="image3"    column="e_image3"    />
+        <result property="image4"    column="e_image4"    />
+        <result property="image5"    column="e_image5"    />
+        <result property="image6"    column="e_image6"    />
+        <result property="image7"    column="e_image7"    />
+        <result property="image8"    column="e_image8"    />
+        <result property="image9"    column="e_image9"    />
+        <result property="video"    column="e_video"    />
+        <result property="likeCount"    column="e_like_count"    />
+        <result property="commentCount"    column="e_comment_count"    />
+        <result property="readCount"    column="e_read_count"    />
+        <result property="onTop"    column="e_on_top"    />
+        <result property="rankings"    column="e_rankings"    />
+        <result property="status"    column="e_status"    />
+        <result property="createBy"    column="e_create_by"    />
+        <result property="createTime"    column="e_create_time"    />
+        <result property="updateBy"    column="e_update_by"    />
+        <result property="updateTime"    column="e_update_time"    />
+        <result property="adTitle"    column="e_ad_title"    />
+        <result property="adContent"    column="e_ad_content"    />
+        <result property="adMediaUrl"    column="e_ad_media_url"    />
+        <result property="contentShort"    column="e_content_short"    />
+        <result property="videoCover"    column="e_video_cover"    />
+    </resultMap>
+    <resultMap type="Recommend" id="RecommendResult">
+        <result property="id"    column="e_id"    />
+        <result property="clientUserId"    column="e_client_user_id"    />
+        <result property="category"    column="e_category"    />
+        <result property="title"    column="e_title"    />
+        <result property="content"    column="e_content"    />
+        <result property="image1"    column="e_image1"    />
+        <result property="image2"    column="e_image2"    />
+        <result property="image3"    column="e_image3"    />
+        <result property="image4"    column="e_image4"    />
+        <result property="image5"    column="e_image5"    />
+        <result property="image6"    column="e_image6"    />
+        <result property="image7"    column="e_image7"    />
+        <result property="image8"    column="e_image8"    />
+        <result property="image9"    column="e_image9"    />
+        <result property="video"    column="e_video"    />
+        <result property="likeCount"    column="e_like_count"    />
+        <result property="commentCount"    column="e_comment_count"    />
+        <result property="readCount"    column="e_read_count"    />
+        <result property="onTop"    column="e_on_top"    />
+        <result property="rankings"    column="e_rankings"    />
+        <result property="status"    column="e_status"    />
+        <result property="createBy"    column="e_create_by"    />
+        <result property="createTime"    column="e_create_time"    />
+        <result property="updateBy"    column="e_update_by"    />
+        <result property="updateTime"    column="e_update_time"    />
+        <result property="adTitle"    column="e_ad_title"    />
+        <result property="adContent"    column="e_ad_content"    />
+        <result property="adMediaUrl"    column="e_ad_media_url"    />
+        <result property="contentShort"    column="e_content_short"    />
+        <result property="videoCover"    column="e_video_cover"    />
+    </resultMap>
+    <resultMap type="ClubPost" id="ClubPostResult">
+        <result property="id"    column="f_id"    />
+        <result property="clubId"    column="f_club_id"    />
+        <result property="clientUserId"    column="f_client_user_id"    />
+        <result property="title"    column="f_title"    />
+        <result property="content"    column="f_content"    />
+        <result property="image1"    column="f_image1"    />
+        <result property="image2"    column="f_image2"    />
+        <result property="image3"    column="f_image3"    />
+        <result property="image4"    column="f_image4"    />
+        <result property="image5"    column="f_image5"    />
+        <result property="image6"    column="f_image6"    />
+        <result property="image7"    column="f_image7"    />
+        <result property="image8"    column="f_image8"    />
+        <result property="image9"    column="f_image9"    />
+        <result property="video"    column="f_video"    />
+        <result property="likeCount"    column="f_like_count"    />
+        <result property="commentCount"    column="f_comment_count"    />
+        <result property="readCount"    column="f_read_count"    />
+        <result property="onTop"    column="f_on_top"    />
+        <result property="rankings"    column="f_rankings"    />
+        <result property="status"    column="f_status"    />
+        <result property="createBy"    column="f_create_by"    />
+        <result property="createTime"    column="f_create_time"    />
+        <result property="updateBy"    column="f_update_by"    />
+        <result property="updateTime"    column="f_update_time"    />
+        <result property="contentShort"    column="f_content_short"    />
+        <result property="videoCover"    column="f_video_cover"    />
+    </resultMap>
+    <resultMap type="ClubActivity" id="ClubActivityResult">
+        <result property="id"    column="g_id"    />
+        <result property="clubId"    column="g_club_id"    />
+        <result property="areaId"    column="g_area_id"    />
+        <result property="courseId"    column="g_course_id"    />
+        <result property="typeId"    column="g_type_id"    />
+        <result property="title"    column="g_title"    />
+        <result property="imageUrl"    column="g_image_url"    />
+        <result property="startDate"    column="g_start_date"    />
+        <result property="endDate"    column="g_end_date"    />
+        <result property="price"    column="g_price"    />
+        <result property="address"    column="g_address"    />
+        <result property="content"    column="g_content"    />
+        <result property="rankings"    column="g_rankings"    />
+        <result property="status"    column="g_status"    />
+        <result property="createBy"    column="g_create_by"    />
+        <result property="createTime"    column="g_create_time"    />
+        <result property="updateBy"    column="g_update_by"    />
+        <result property="updateTime"    column="g_update_time"    />
+        <result property="enrollDeadline"    column="g_enroll_deadline"    />
+    </resultMap>
+	
+	<sql id="selectCarouselVoNoJoin">
+        select tb.id, tb.on_page, tb.title, tb.sub_title, tb.media_url, tb.media_type, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.club_id, tb.contest_id, tb.training_id, tb.coach_id, tb.judge_id, tb.recommend_id, tb.club_post_id, tb.club_activity_id        from shooting_carousel tb
+    </sql>
+    
+	<sql id="selectCarouselVo">
+           select tb.id,tb.draft, tb.on_page, tb.title, tb.sub_title, tb.media_url, tb.media_type, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.club_id, tb.contest_id, tb.training_id, tb.coach_id, tb.judge_id, tb.recommend_id, tb.club_post_id, tb.club_activity_id from shooting_carousel tb     </sql>
+    
+     <select id="selectCarouselAll" parameterType="Carousel" resultMap="CarouselResult">
+        <include refid="selectCarouselVo"/>
+        where draft=0
+     </select>    
+	
+    <select id="selectCarouselList" parameterType="Carousel" resultMap="CarouselResult">
+        <include refid="selectCarouselVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="onPage != null "> and tb.on_page = #{onPage}</if>
+            <if test="title != null  and title != '' "> and tb.title = #{title}</if>
+            <if test="subTitle != null  and subTitle != '' "> and tb.sub_title = #{subTitle}</if>
+            <if test="mediaUrl != null  and mediaUrl != '' "> and tb.media_url = #{mediaUrl}</if>
+            <if test="mediaType != null "> and tb.media_type = #{mediaType}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="contestId != null "> and tb.contest_id = #{contestId}</if>
+            <if test="trainingId != null "> and tb.training_id = #{trainingId}</if>
+            <if test="coachId != null "> and tb.coach_id = #{coachId}</if>
+            <if test="judgeId != null "> and tb.judge_id = #{judgeId}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="recommendId != null "> and tb.recommend_id = #{recommendId}</if>
+            <if test="clubPostId != null "> and tb.club_post_id = #{clubPostId}</if>
+            <if test="clubActivityId != null "> and tb.club_activity_id = #{clubActivityId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCarouselById" parameterType="Long" resultMap="CarouselResult">
+        <include refid="selectCarouselVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertCarousel" parameterType="Carousel" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_carousel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="onPage != null  ">on_page,</if>
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="subTitle != null  and subTitle != ''  ">sub_title,</if>
+			<if test="mediaUrl != null  and mediaUrl != ''  ">media_url,</if>
+			<if test="mediaType != null  ">media_type,</if>
+			<if test="rankings != null  ">rankings,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="clubId != null  ">club_id,</if>
+			<if test="contestId != null  ">contest_id,</if>
+			<if test="trainingId != null  ">training_id,</if>
+			<if test="coachId != null  ">coach_id,</if>
+			<if test="judgeId != null  ">judge_id,</if>
+            <if test="recommendId != null  ">recommend_id,</if>
+            <if test="clubPostId != null  ">club_post_id,</if>
+            <if test="clubActivityId != null  ">club_activity_id,</if>
+            <if test="draft != null  ">draft,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="onPage != null  ">#{onPage},</if>
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="subTitle != null  and subTitle != ''  ">#{subTitle},</if>
+			<if test="mediaUrl != null  and mediaUrl != ''  ">#{mediaUrl},</if>
+			<if test="mediaType != null  ">#{mediaType},</if>
+			<if test="rankings != null  ">#{rankings},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="clubId != null  ">#{clubId},</if>
+			<if test="contestId != null  ">#{contestId},</if>
+			<if test="trainingId != null  ">#{trainingId},</if>
+			<if test="coachId != null  ">#{coachId},</if>
+			<if test="judgeId != null  ">#{judgeId},</if>
+            <if test="recommendId != null  ">#{recommendId},</if>
+            <if test="clubPostId != null  ">#{clubPostId},</if>
+            <if test="clubActivityId != null  ">#{clubActivityId},</if>
+            <if test="draft != null  "> #{draft},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCarousel" parameterType="Carousel">
+        update shooting_carousel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="onPage != null  ">on_page = #{onPage},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="subTitle != null  and subTitle != ''  ">sub_title = #{subTitle},</if>
+            <if test="mediaUrl != null  and mediaUrl != ''  ">media_url = #{mediaUrl},</if>
+            <if test="mediaType != null  ">media_type = #{mediaType},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+            <if test="contestId != null  ">contest_id = #{contestId},</if>
+            <if test="trainingId != null  ">training_id = #{trainingId},</if>
+            <if test="coachId != null  ">coach_id = #{coachId},</if>
+            <if test="judgeId != null  ">judge_id = #{judgeId},</if>
+            <if test="recommendId != null  ">recommend_id = #{recommendId},</if>
+            <if test="clubPostId != null  ">club_post_id = #{clubPostId},</if>
+            <if test="clubActivityId != null  ">club_activity_id = #{clubActivityId},</if>
+            <if test="draft != null  ">draft=#{draft},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCarouselById" parameterType="Long">
+        delete from shooting_carousel where id = #{id}
+    </delete>
+	
+    <delete id="deleteCarouselByIds" parameterType="String">
+        delete from shooting_carousel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectCarouselAssoc">
+        select tb.id,tb.draft, tb.on_page, tb.title, tb.sub_title, tb.media_url, tb.media_type, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.club_id, tb.contest_id, tb.training_id, tb.coach_id, tb.judge_id , tb.recommend_id, tb.club_post_id, tb.club_activity_id,         a.id as a_id , a.area_id as a_area_id , a.title as a_title , a.profile as a_profile , a.avatar as a_avatar , a.image as a_image , a.coach_count as a_coach_count , a.student_count as a_student_count , a.fans_count as a_fans_count , a.category as a_category , a.rankings as a_rankings , a.status as a_status , a.create_by as a_create_by , a.create_time as a_create_time , a.update_by as a_update_by , a.update_time as a_update_time , a.jg_username as a_jg_username , a.jg_groupId as a_jg_groupId 		,         b.id as b_id , b.area_id as b_area_id , b.course_id as b_course_id , b.type_id as b_type_id , b.level_id as b_level_id , b.title as b_title , b.image_url as b_image_url , b.start_date as b_start_date , b.end_date as b_end_date , b.price as b_price , b.address as b_address , b.content as b_content , b.rankings as b_rankings , b.status as b_status , b.create_by as b_create_by , b.create_time as b_create_time , b.update_by as b_update_by , b.update_time as b_update_time , b.enroll_deadline as b_enroll_deadline 		,         c.id as c_id , c.area_id as c_area_id , c.course_id as c_course_id , c.type_id as c_type_id , c.title as c_title , c.image_url as c_image_url , c.start_date as c_start_date , c.end_date as c_end_date , c.price as c_price , c.address as c_address , c.content as c_content , c.rankings as c_rankings , c.status as c_status , c.create_by as c_create_by , c.create_time as c_create_time , c.update_by as c_update_by , c.update_time as c_update_time , c.enroll_deadline as c_enroll_deadline 		,         d.id as d_id , d.client_user_id as d_client_user_id , d.category as d_category , d.title as d_title , d.content as d_content , d.image1 as d_image1 , d.image2 as d_image2 , d.image3 as d_image3 , d.image4 as d_image4 , d.image5 as d_image5 , d.image6 as d_image6 , d.image7 as d_image7 , d.image8 as d_image8 , d.image9 as d_image9 , d.video as d_video , d.like_count as d_like_count , d.comment_count as d_comment_count , d.read_count as d_read_count , d.on_top as d_on_top , d.rankings as d_rankings , d.status as d_status , d.create_by as d_create_by , d.create_time as d_create_time , d.update_by as d_update_by , d.update_time as d_update_time , d.ad_title as d_ad_title , d.ad_content as d_ad_content , d.ad_media_url as d_ad_media_url , d.content_short as d_content_short , d.video_cover as d_video_cover 		,         e.id as e_id , e.client_user_id as e_client_user_id , e.category as e_category , e.title as e_title , e.content as e_content , e.image1 as e_image1 , e.image2 as e_image2 , e.image3 as e_image3 , e.image4 as e_image4 , e.image5 as e_image5 , e.image6 as e_image6 , e.image7 as e_image7 , e.image8 as e_image8 , e.image9 as e_image9 , e.video as e_video , e.like_count as e_like_count , e.comment_count as e_comment_count , e.read_count as e_read_count , e.on_top as e_on_top , e.rankings as e_rankings , e.status as e_status , e.create_by as e_create_by , e.create_time as e_create_time , e.update_by as e_update_by , e.update_time as e_update_time , e.ad_title as e_ad_title , e.ad_content as e_ad_content , e.ad_media_url as e_ad_media_url , e.content_short as e_content_short , e.video_cover as e_video_cover 		                from shooting_carousel tb  join shooting_club a on tb.club_id = a.id  join shooting_contest b on tb.contest_id = b.id  join shooting_training c on tb.training_id = c.id  join shooting_recommend_coach d on tb.coach_id = d.id  join shooting_recommend_judge e on tb.judge_id = e.id    </sql>
+    
+     <select id="selectCarouselAllAssoc" parameterType="Carousel" resultMap="CarouselResult">
+        <include refid="selectCarouselAssoc"/>
+         where  draft=0;
+     </select>    
+	
+    <select id="selectCarouselListAssoc" parameterType="Carousel" resultMap="CarouselResult">
+        <include refid="selectCarouselAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="onPage != null "> and tb.on_page = #{onPage}</if>
+            <if test="title != null  and title != '' "> and tb.title like concat('%', #{title}, '%')</if>
+            <if test="subTitle != null  and subTitle != '' "> and tb.sub_title like concat('%', #{subTitle}, '%')</if>
+            <if test="mediaUrl != null  and mediaUrl != '' "> and tb.media_url = #{mediaUrl}</if>
+            <if test="mediaType != null "> and tb.media_type = #{mediaType}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="contestId != null "> and tb.contest_id = #{contestId}</if>
+            <if test="trainingId != null "> and tb.training_id = #{trainingId}</if>
+            <if test="coachId != null "> and tb.coach_id = #{coachId}</if>
+            <if test="judgeId != null "> and tb.judge_id = #{judgeId}</if>
+            <if test="recommendId != null "> and tb.recommend_id = #{recommendId}</if>
+            <if test="clubPostId != null "> and tb.club_post_id = #{clubPostId}</if>
+            <if test="clubActivityId != null "> and tb.club_activity_id = #{clubActivityId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCarouselByIdAssoc" parameterType="Long" resultMap="CarouselResult">
+        <include refid="selectCarouselAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

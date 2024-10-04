@@ -1,0 +1,2 @@
+ALTER TABLE client_user add blood_type int(3) DEFAULT NULL COMMENT '{"title": "血型", "type": "dict", "value": "blood_type", "data":{"1":"A", "2":"B", "3":"AB","4":"O"}, "searchable": "0"}';
+ALTER TABLE client_user add introduction varchar(512) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '{"title": "个人简介"}';

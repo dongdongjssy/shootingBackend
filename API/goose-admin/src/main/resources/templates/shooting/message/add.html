@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-message-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通告标题：</label>
+				<div class="col-sm-8">
+				    <input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通告内容：</label>
+				<div class="col-sm-8">
+				    <input id="content" name="content" type="hidden">
+				    <div id="contentId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发送类型：</label>
+				<div class="col-sm-8">
+					<select id="type" name="type" class="form-control m-b">
+						<option value="1" >全部用户</option>
+						<option value="2" selected="selected">指定用户</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group yinc">	
+				<label class="col-sm-3 control-label">选择用户：</label>
+				<div class="col-sm-8">
+					<select id="userList" class="form-control m-b" multiple="multiple">
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class=" col-sm-3 control-label">是否重要通知</label>
+				<div class="col-sm-8">
+					<label class="radio-inline"><input type="radio" id="isImportantY" name="isImportant" value="1">是</label>
+					<label class="radio-inline"><input type="radio" id="isImportantN" checked name="isImportant" value="2">否</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/message"
+
+		$(function(){
+			$('.yinc').show();
+			$("#userList").select2({
+				  ajax : {
+			          url: ctx + "client/clientUser/list",
+			          type:'post',
+			          dataType : 'json',
+			          delay : 250,// 延迟显示
+			          data : function(params) {
+			              return {
+			            	  nickname : params.term, // 搜索框内输入的内容，传递到Java后端的parameter为username
+			                  page: params.page
+			              }; 
+			          },
+			          processResults : function(data, params) {
+			          	var arr = [];
+			              data.rows.map(x => arr.push({ id: x.id, text: x.nickname }));  //整理绑定格式 ， 放到arr里
+			              return {
+			                results: arr,
+			              };
+			          },
+			          cache : false
+			      },
+			       escapeMarkup : function(markup) {
+			          return markup;
+			      },  // let our custom formatter work
+			       templateResult : function(repo) {// 显示的结果集格式，这里需要自己写css样式，可参照demo
+			      	 if (repo.loading) return repo.text;
+			           return "<div>" + repo.text + "</div>";
+			      },  
+			      templateSelection : function(repo) {
+			      	return repo.text;
+			      }
+				})
+		})
+	  
+		$('#type').on('change',function(){
+			if($('#type').val() == 1){
+				$('.yinc').hide();
+			}else{
+				$('.yinc').show();
+			}
+		})
+		    
+	    $("#contentId").summernote({
+			height : '320px',
+			lang : 'zh-CN',
+			dialogsInBody: true,
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link','picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ],
+		        placeholder: '请输入通知的内容',
+		        callbacks:{
+		            onImageUpload:function(files, editor, $editable) {
+		           	 var fd = new FormData();
+		           	    fd.append("file", files[0]);
+		           	    fd.append("type",8);
+		           	    $.ajax({
+		           	        type:"POST",
+		           	        url:ctx + "shooting/oss/uploadRichText",
+		           	        data: fd,
+		           	        cache: false,
+		           	        contentType: false,
+		           	        processData: false,
+		           	        success: function (data) {
+		           	        	$("#contentId").summernote('insertImage',data)
+		           	        }
+		           	    });
+		           	 
+		           }
+		        }				
+	    }); 
+				
+	    		
+		$("#form-message-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				content: {
+					required: false,
+				},
+				type: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				title: {
+				},		
+				content: {
+				},		
+				type: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+				
+				 var loading = layer.load(1, {
+				     shade: false
+/* 				     time: 2*1000
+ */				 });
+				 
+	            var sHTMLcontent = $("#contentId").summernote('code');
+
+				$("#content").val(sHTMLcontent);
+		        var formdata = new FormData();
+				formdata.append("title", $("#title").val());
+				formdata.append("content", $("#content").val());
+				formdata.append("type", $("#type").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+				formdata.append("userList", $("#userList").val());
+				var isImportant = $("input[name='isImportant']:checked").val()
+				formdata.append("isImportant", isImportant);
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	 layer.close(loading);
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+	    
+	</script>
+</body>
+</html>

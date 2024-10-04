@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-advertisement-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详情：</label>
+				<div class="col-sm-8">
+				    <input id="detail" name="detail" type="hidden">
+				    <div id="detailId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">上传图片：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图片</label> </a>
+			           <input type="file" class="" name="mediaUrl" id="mediaUrl" accept="image/*,video/*"/>
+			       </div>
+					<div>
+						<p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：710*360,格式：jpg、png、gif</p>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewmediaUrl" class='imageBox' />
+			       		<video id="videopreviewmediaUrl" width="320" height="240" controls/>
+			        </div>				
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">媒体类别：</label>
+				<div class="col-sm-8">
+					<select id="mediaType" name="mediaType" class="form-control m-b" th:with="type=${@dict.getType('shooting_carousel_category')}" disabled>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">排名：</label>
+				<div class="col-sm-8">
+					<input id="rankings" name="rankings" class="form-control" type="text">
+				</div>
+			</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/advertisement"
+
+	    $("#detailId").summernote({
+			height : '320px',
+			lang : 'zh-CN',
+			dialogsInBody: true,
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link','picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ],
+		        placeholder: '请输入通知的内容',
+		        callbacks:{
+		            onImageUpload:function(files, editor, $editable) {
+		           	 var fd = new FormData();
+		           	    fd.append("file", files[0]);
+		           	    fd.append("type",2);
+		           	    $.ajax({
+		           	        type:"POST",
+		           	        url:ctx + "shooting/oss/uploadRichText",
+		           	        data: fd,
+		           	        cache: false,
+		           	        contentType: false,
+		           	        processData: false,
+		           	        success: function (data) {
+		           	        	$("#detailId").summernote('insertImage',data)
+		           	        }
+		           	    });
+		           	 
+		           }
+		        }		
+	    }); 
+				
+	    		
+		$("#form-advertisement-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				detail: {
+					required: false,
+				},
+				mediaUrl: {
+					required: false,
+				},
+				mediaType: {
+					required: false,
+				},
+				rankings: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				title: {
+				},		
+				detail: {
+				},		
+				mediaUrl: {
+				},		
+				mediaType: {
+				},		
+				rankings: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+	            var sHTMLcontent = $("#detailId").summernote('code');
+				$("#detail").val(sHTMLcontent);
+		        var formdata = new FormData();
+				formdata.append("title", $("#title").val());
+				formdata.append("detail", $("#detail").val());
+			/*	formdata.append("mediaType", $("#mediaType").val());
+				formdata.append("rankings", $("#rankings").val());*/
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("mediaUrlFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+		function showMedia(mediaSource) {
+			
+			// when upload, the media source is the media content start with "data:image", 
+			// otherwise this is on edit page to show the saved media, so media source is file name.
+			var isMediaContent = mediaSource.startsWith("data:");
+			var isImage = isMediaContent ? (mediaSource.indexOf('image/') != -1) : (mediaSource.split('.')[1].toUpperCase() === 'JPG');
+        	
+		    if (isImage) {
+		    	$('#videopreviewmediaUrl').hide();
+		    	$('#imgpreviewmediaUrl').show();
+		    	$('#imgpreviewmediaUrl').attr('src', mediaSource);
+		    	$('#mediaType').val(1);
+		    } else { 
+			   	$('#imgpreviewmediaUrl').hide();
+			   	$('#videopreviewmediaUrl').show();
+				$('#videopreviewmediaUrl').attr('src', mediaSource);
+				$('#mediaType').val(2);
+		    }			
+		}		
+		
+		$(window).load(function() {		
+			
+			$('#videopreviewmediaUrl').hide();
+			
+			var optionsmediaUrl = {	
+			}	
+		    $('#mediaUrl').on('change', function() {	    
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsmediaUrl.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsmediaUrl.imgSrc).indexOf("image/")==-1 && (optionsmediaUrl.imgSrc).indexOf("video/")==-1 ){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	showMedia(e.target.result);            	
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })	
+
+
+		});
+
+	    
+	</script>
+</body>
+</html>

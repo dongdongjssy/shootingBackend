@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.TrainingMapper">
+
+    <resultMap type="Training" id="TrainingResult">
+        <result property="id" column="id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="title" column="title"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="price" column="price"/>
+        <result property="address" column="address"/>
+        <result property="content" column="content"/>
+        <result property="rankings" column="rankings"/>
+        <result property="releaseStatus" column="release_status"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enrollDeadline" column="enroll_deadline"/>
+        <result property="paymentCodeId" column="payment_code_id"/>
+        <result property="draft" column="draft"/>
+        <result property="recommend" column="recommend"/>
+        <association property="area" column="area_id" javaType="Area" resultMap="AreaResult"/>
+        <association property="course" column="course_id" javaType="Course" resultMap="CourseResult"/>
+        <association property="type" column="type_id" javaType="Type" resultMap="TypeResult"/>
+        <association property="paymentCode" column="payment_code_id" javaType="PaymentCode" resultMap="PaymentCodeResult"/>
+    </resultMap>
+
+    <resultMap type="Area" id="AreaResult">
+        <result property="id" column="a_id"/>
+        <result property="name" column="a_name"/>
+    </resultMap>
+    <resultMap type="Course" id="CourseResult">
+        <result property="id" column="b_id"/>
+        <result property="name" column="b_name"/>
+    </resultMap>
+    <resultMap type="Type" id="TypeResult">
+        <result property="id" column="c_id"/>
+        <result property="name" column="c_name"/>
+    </resultMap>
+    <resultMap type="PaymentCode" id="PaymentCodeResult">
+        <result property="id" column="d_id"/>
+        <result property="title" column="d_title"/>
+        <result property="pictureUrl" column="d_picture_url"/>
+        <result property="detail" column="d_detail"/>
+    </resultMap>
+
+    <sql id="selectTrainingVoNoJoin">
+        SELECT tb.id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.enroll_deadline,
+               tb.release_status
+        FROM shooting_training tb
+    </sql>
+
+    <sql id="selectTrainingVo">
+        SELECT tb.id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.release_status,
+               tb.enroll_deadline,
+               sa.id   AS a_id,
+               sa.name AS a_name,
+               sc.id   AS b_id,
+               sc.name AS b_name,
+               st.id   AS c_id,
+               st.name AS c_name,
+               spc.id AS d_id,
+               spc.title AS d_title,
+               spc.detail AS d_detail,
+               spc.picture_url AS d_picture_url
+        FROM shooting_training tb
+                 LEFT JOIN shooting_area sa ON tb.area_id = sa.id
+                 LEFT JOIN shooting_course sc ON tb.course_id = sc.id
+                 LEFT JOIN shooting_type st ON tb.type_id = st.id
+                 LEFT JOIN shooting_payment_code spc ON tb.payment_code_id = spc.id
+    </sql>
+
+    <select id="selectTrainingAll" parameterType="Training" resultMap="TrainingResult">
+        <include refid="selectTrainingVo"/>
+        where tb.status = 0
+    </select>
+
+    <select id="selectTrainingList" parameterType="Training" resultMap="TrainingResult">
+        <include refid="selectTrainingVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="courseId != null ">and tb.course_id = #{courseId}</if>
+            <if test="typeId != null ">and tb.type_id = #{typeId}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+            <if test="imageUrl != null  and imageUrl != '' ">and tb.image_url = #{imageUrl}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="price != null  and price != '' ">and tb.price = #{price}</if>
+            <if test="address != null  and address != '' ">and tb.address = #{address}</if>
+            <if test="content != null  and content != '' ">and tb.content = #{content}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="timeType == 1 ">
+            and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 2 ">
+            and DATE_SUB(CURDATE(), INTERVAL 3 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 3 ">
+            and DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 4 ">
+            and DATE_SUB(CURDATE(), INTERVAL 1 YEAR) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+            <if test="enrollDeadline != null ">and tb.enroll_deadline = #{enrollDeadline}</if>
+        </where>
+        ORDER BY
+        CASE WHEN tb.start_date>NOW() THEN tb.recommend END desc ,
+
+        CASE WHEN tb.start_date&lt;=NOW() THEN tb.start_date END asc,
+        CASE WHEN tb.start_date>NOW() THEN tb.start_date END asc
+    </select>
+
+    <select id="selectTrainingById" parameterType="Long" resultMap="TrainingResult">
+        <include refid="selectTrainingVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertTraining" parameterType="Training" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_training
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="areaId != null  ">area_id,</if>
+            <if test="courseId != null  ">course_id,</if>
+            <if test="typeId != null  ">type_id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">image_url,</if>
+            <if test="startDate != null  ">start_date,</if>
+            <if test="endDate != null  ">end_date,</if>
+            <if test="price != null  and price != ''  ">price,</if>
+            <if test="address != null  and address != ''  ">address,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="rankings != null  ">rankings,</if>
+            <if test="status != null  ">status,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time,
+            release_status,
+            <if test="draft != null  ">draft,</if>
+            recommend,
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="enrollDeadline != null  ">enroll_deadline,</if>
+            <if test="paymentCodeId != null  ">payment_code_id,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="courseId != null  ">#{courseId},</if>
+            <if test="typeId != null  ">#{typeId},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">#{imageUrl},</if>
+            <if test="startDate != null  ">#{startDate},</if>
+            <if test="endDate != null  ">#{endDate},</if>
+            <if test="price != null  and price != ''  ">#{price},</if>
+            <if test="address != null  and address != ''  ">#{address},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="rankings != null  ">#{rankings},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate(),
+            1,
+            <if test="draft != null  ">#{draft},</if>
+            #{recommend},
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="enrollDeadline != null">#{enrollDeadline},</if>
+            <if test="paymentCodeId != null  ">#{paymentCodeId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTraining" parameterType="Training">
+        update shooting_training
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null  ">area_id = #{areaId},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="imageUrl != null  and imageUrl != ''  ">image_url = #{imageUrl},</if>
+            <if test="startDate != null  ">start_date = #{startDate},</if>
+            <if test="endDate != null  ">end_date = #{endDate},</if>
+            <if test="price != null  and price != ''  ">price = #{price},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="releaseStatus != null">release_status = #{releaseStatus},</if>
+            <if test="enrollDeadline != null">enroll_deadline = #{enrollDeadline},</if>
+            update_time = sysdate(),
+            <if test="paymentCodeId != null  ">payment_code_id=#{paymentCodeId},</if>
+            <if test="draft != null  ">draft=#{draft},</if>
+            <if test="recommend != null  ">recommend=#{recommend},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainingById" parameterType="Long">
+        DELETE
+        FROM shooting_training
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteTrainingByIds" parameterType="String">
+        delete from shooting_training where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectTrainingAssoc">
+        SELECT tb.id,
+               tb.area_id,
+               tb.course_id,
+               tb.type_id,
+               tb.title,
+               tb.image_url,
+               tb.start_date,
+               tb.end_date,
+               tb.price,
+               tb.address,
+               tb.content,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.enroll_deadline,
+               tb.release_status,
+               tb.payment_code_id,
+               tb.draft,
+               tb.recommend,
+               a.id   AS a_id,
+               a.name AS a_name,
+               b.id   AS b_id,
+               b.name AS b_name,
+               c.id   AS c_id,
+               c.name AS c_name,
+               spc.id AS d_id,
+               spc.title AS d_title,
+               spc.detail AS d_detail,
+               spc.picture_url AS d_picture_url
+        FROM shooting_training tb
+                 JOIN shooting_area a ON tb.area_id = a.id
+                 JOIN shooting_course b ON tb.course_id = b.id
+                 JOIN shooting_type c ON tb.type_id = c.id
+                left JOIN shooting_payment_code spc ON tb.payment_code_id = spc.id    </sql>
+
+    <select id="selectTrainingAllAssoc" parameterType="Training" resultMap="TrainingResult">
+        <include refid="selectTrainingAssoc"/>
+        where tb.status = 0 and draft=0;
+    </select>
+
+    <select id="selectTrainingListAssoc" parameterType="Training" resultMap="TrainingResult">
+        <include refid="selectTrainingAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="courseId != null ">and tb.course_id = #{courseId}</if>
+            <if test="typeId != null ">and tb.type_id = #{typeId}</if>
+            <if test="title != null  and title != '' ">and tb.title like concat('%', #{title}, '%')</if>
+            <if test="imageUrl != null  and imageUrl != '' ">and tb.image_url = #{imageUrl}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.start_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.end_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="price != null  and price != '' ">and tb.price like concat('%', #{price}, '%')</if>
+            <if test="address != null  and address != '' ">and tb.address like concat('%', #{address}, '%')</if>
+            <if test="content != null  and content != '' ">and tb.content like concat('%', #{content}, '%')</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="timeType == 1 ">
+            and DATE_SUB(CURDATE(), INTERVAL 1 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 2 ">
+            and DATE_SUB(CURDATE(), INTERVAL 3 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 3 ">
+            and DATE_SUB(CURDATE(), INTERVAL 6 MONTH) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="timeType == 4 ">
+            and DATE_SUB(CURDATE(), INTERVAL 1 YEAR) &lt;= date(tb.enroll_deadline)
+            </if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+            <if test="enrollDeadline != null ">and tb.enroll_deadline = #{enrollDeadline}</if>
+        </where>
+        ORDER BY
+        CASE WHEN tb.start_date>NOW() THEN tb.recommend END desc ,
+
+        CASE WHEN tb.start_date&lt;=NOW() THEN tb.start_date END asc,
+        CASE WHEN tb.start_date>NOW() THEN tb.start_date END asc
+    </select>
+
+    <select id="selectTrainingByIdAssoc" parameterType="Long" resultMap="TrainingResult">
+        <include refid="selectTrainingAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsAttribute-edit" th:object="${goodsAttribute}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">属性名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">上级：</label>
+				<div class="col-sm-8">
+<!--
+					<input id="parentId" name="parentId" th:field="*{parentId}" class="form-control" type="text">
+-->
+					<select id="parentId" name="parentId" class="form-control m-b" th:with="type=${@dict.getType('goods_parent_attributes')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{parentId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商品：</label>
+				<div class="col-sm-8">
+					<select id="goodsId" name="goodsId" class="form-control">
+						<option th:each="fkRow:${ goodsIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{goodsId}"></option>
+					</select>					
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">商品类型：</label>
+				<div class="col-sm-8">
+					<select id="goodsTypeId" name="goodsTypeId" class="form-control">
+						<option th:each="fkRow:${ goodsTypeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{goodsTypeId}"></option>
+					</select>					
+				</div>
+			</div>-->
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsAttribute"
+
+		$("#form-goodsAttribute-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				name: {
+					required: false,
+				},
+				parentId: {
+					required: false,
+				},
+				goodsId: {
+					required: false,
+				},
+			/*	goodsTypeId: {
+					required: false,
+				},*/
+			},
+			messages: {
+				id: {
+				},		
+				name: {
+				},		
+				parentId: {
+				},		
+				goodsId: {
+				},		
+			/*	goodsTypeId: {
+				},	*/
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("name", $("#name").val());
+				formdata.append("parentId", $("#parentId").val());
+				formdata.append("goodsId", $("#goodsId").val());
+				//formdata.append("goodsTypeId", $("#goodsTypeId").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

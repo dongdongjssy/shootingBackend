@@ -1,0 +1,87 @@
+server:
+    port: 9006
+    tomcat:
+        # tomcat的URI编码
+        uri-encoding: UTF-8
+        # tomcat最大线程数，默认为200
+        max-threads: 800
+        # Tomcat启动初始化的线程数，默认值25
+        min-spare-threads: 30
+        
+#http:
+#    port: 9006        
+        
+# 数据源配置
+spring:
+    application:
+        name: gateway-service
+    profiles:
+        active: test
+    jpa:
+        show-sql: true
+    # 文件上传
+    servlet:
+        multipart:
+            max-file-size:  30MB
+            max-request-size:  30MB
+
+# JWT
+jwt:
+    header: Authorization
+    prefix: "Bearer "
+    secret: mySecret
+    accessTokenHeader: "access_token"
+    refreshTokenHeader: "refresh_token"
+    accessTokenExpiration: 604800
+    refreshTokenExpiration: 86400
+
+ribbon:
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 1
+
+zuul:
+    host:
+        socket-timeout-millis: 60000
+        connect-timeout-millis: 30000
+
+hystrix:
+    command:
+        security-service:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 8000
+
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 260000
+
+#sms:
+#  username: jingxianlim
+#  password: jingxian5
+#  url: https://www.isms.com.my/isms_send.php
+#  type: 2
+#  sendid: HANSHAN
+#  # 3 minutes
+#  expire: 180000
+
+sms:
+    username: TBD
+    password: TBD
+    url: TBD
+    type: 2
+    sendid: TBD
+    # 3 minutes
+    expire: 180000
+
+aliyun:
+    product : xxx
+    domain : dysmsapi.aliyuncs.com
+    accessKeyId: aa
+    accessKeySecret: aa
+    templateCode: SMS_190890005
+    signName: CPSA

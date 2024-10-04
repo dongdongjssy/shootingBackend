@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-gt-add">
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">属性1：</label>
+				<div class="col-sm-8">
+					<select id="attributeId1" name="attributeId1" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性2：</label>
+				<div class="col-sm-8">
+					<select id="attributeId2" name="attributeId2" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性3：</label>
+				<div class="col-sm-8">
+					<select id="attributeId3" name="attributeId3" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性4：</label>
+				<div class="col-sm-8">
+					<select id="attributeId4" name="attributeId4" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性5：</label>
+				<div class="col-sm-8">
+					<select id="attributeId5" name="attributeId5" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性6：</label>
+				<div class="col-sm-8">
+					<select id="attributeId6" name="attributeId6" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性7：</label>
+				<div class="col-sm-8">
+					<select id="attributeId7" name="attributeId7" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性8：</label>
+				<div class="col-sm-8">
+					<select id="attributeId8" name="attributeId8" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">属性9：</label>
+				<div class="col-sm-8">
+					<select id="attributeId9" name="attributeId9" class="form-control">
+						<option th:each="fkRow:${ attributeId1List}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商品：</label>
+				<div class="col-sm-8">
+					<select id="goodsId" name="goodsId" class="form-control">
+						<option value="">请选择商品</option>
+						<option th:each="fkRow:${ goodsIdList}"  th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>
+				</div>
+			</div>
+			<div  class="form-group" id="attributeDiv"></div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品库存：</label>
+				<div class="col-sm-8">
+					<input id="num" name="num" class="form-control" type="text" style="display: flex,align-items: center"/>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<script th:inline="javascript">
+		var prefix = ctx + "shooting/gt"
+		var attrArr = []
+		var goods_parent_attributes = [[${@dict.getType('goods_parent_attributes')}]];
+		var ss=0;
+
+		$("#form-gt-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				attributeId1: {
+					required: false,
+				},
+				attributeId2: {
+					required: false,
+				},
+				attributeId3: {
+					required: false,
+				},
+				attributeId4: {
+					required: false,
+				},
+				attributeId5: {
+					required: false,
+				},
+				attributeId6: {
+					required: false,
+				},
+				attributeId7: {
+					required: false,
+				},
+				attributeId8: {
+					required: false,
+				},
+				attributeId9: {
+					required: false,
+				},
+				goodsId: {
+					required: false,
+				},
+				num: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				attributeId1: {
+				},		
+				attributeId2: {
+				},		
+				attributeId3: {
+				},		
+				attributeId4: {
+				},		
+				attributeId5: {
+				},		
+				attributeId6: {
+				},		
+				attributeId7: {
+				},		
+				attributeId8: {
+				},		
+				attributeId9: {
+				},		
+				goodsId: {
+				},		
+				num: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        debugger
+				if( $("input[name='attributeId1']:checked").val()!=null){
+					formdata.append("attributeId1", $("input[name='attributeId1']:checked").val());
+				}
+				if( $("input[name='attributeId2']:checked").val()!=null){
+					formdata.append("attributeId2", $("input[name='attributeId2']:checked").val());
+				}
+				if( $("input[name='attributeId3']:checked").val()!=null){
+					formdata.append("attributeId3", $("input[name='attributeId3']:checked").val());
+				}
+				if( $("input[name='attributeId4']:checked").val()!=null){
+					formdata.append("attributeId4", $("input[name='attributeId4']:checked").val());
+				}
+				if( $("input[name='attributeId5']:checked").val()!=null){
+					formdata.append("attributeId5", $("input[name='attributeId5']:checked").val());
+				}
+				if( $("input[name='attributeId6']:checked").val()!=null){
+					formdata.append("attributeId6", $("input[name='attributeId6']:checked").val());
+				}
+				if( $("input[name='attributeId7']:checked").val()!=null){
+					formdata.append("attributeId7", $("input[name='attributeId7']:checked").val());
+				}
+				if( $("input[name='attributeId8']:checked").val()!=null){
+					formdata.append("attributeId8", $("input[name='attributeId8']:checked").val());
+				}
+				if( $("input[name='attributeId9']:checked").val()!=null){
+					formdata.append("attributeId9", $("input[name='attributeId9']:checked").val());
+				}
+				/*formdata.append("attributeId2", $("#attributeId2").val());
+				formdata.append("attributeId3", $("#attributeId3").val());
+				formdata.append("attributeId4", $("#attributeId4").val());
+				formdata.append("attributeId5", $("#attributeId5").val());
+				formdata.append("attributeId6", $("#attributeId6").val());
+				formdata.append("attributeId7", $("#attributeId7").val());
+				formdata.append("attributeId8", $("#attributeId8").val());
+				formdata.append("attributeId9", $("#attributeId9").val());*/
+				formdata.append("goodsId", $("#goodsId").val());
+				formdata.append("num", $("#num").val());
+console.log(formdata);
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+
+	$('#goodsId').change(function(){
+		$('.parentAttr').html('');
+		$('.parentAttr').append('<option value="">请选择父属性</option>');
+		$('.childAttr').html('');
+		$('.childAttr').append('<option value="">请选择子属性</option>');
+
+		var goodsId=$('#goodsId').val();
+		if(goodsId!=null){
+			$.post("/shooting/goodsAttribute/selectAllGoodsAttributeByGoodsId",{"goodsId":goodsId},function (res){
+				attrArr = res;
+				console.log(res)
+				if(res){
+					//var index = 0;
+					var option;
+					for(var i in res) {
+						var s=parseInt(i)+1
+
+						var newRow = '<div class="form-group">' +
+							'<label class="col-sm-3 control-label">'+res[i].name+'</label>' +
+							'<div class="col-sm-8" id="attributeId'+s+'" style="padding-top: 7px;display: flex;flex-direction: row;"></div>' +
+							'</div>';
+						$('#attributeDiv').append(newRow);
+					}
+					
+					for(var i in res) {
+						for(var j in res[i].item){
+							var s=parseInt(i)+1
+							if(res[i].name == res[i].item[j].label){
+								var goods = '<label style="display: flex;align-items: center;margin: 0 10px;"><input type="radio" style="margin: 0 3px 0 0" value='+res[i].item[j].id+' name="attributeId'+s+'" >' + res[i].item[j].name + '</label>';
+								$("#attributeId"+parseInt(s)).append(goods);
+							}
+						}
+
+					}
+				}
+			})
+
+
+		}
+
+
+/*
+			$(window).load(function() {
+
+			})
+		}*/
+	})
+
+	/*$("#attr_1").change(function (e){
+		$('#attr_children_1').html('')
+		var option;
+		for(var i in attrArr) {
+			console.log(attrArr[i].name,$(this).find("option:selected").text())
+			if(attrArr[i].name == $(this).find("option:selected").text()){
+				console.log(attrArr[i].item)
+				for(var j in attrArr[i].item){
+					option = '<option value="'+(attrArr[i].item)[j].id+'" >'+(attrArr[i].item)[j].name+'</option>';
+					$('#attr_children_1').append(option);
+				}
+			}
+
+		}
+	})*/
+
+	/*$(".addBtn").click(function(){
+		var oindex = $("#attributeDiv>div").index()
+		console.log(oindex)
+		/!*var odiv = '<div>\n' +
+				'<label class="col-sm-3 control-label"></label>\n' +
+				'<div class="col-sm-4">\n' +
+				'<select id="attr_1" name="" class="form-control attr_'+oindex+'"></select>\n' +
+				'</div>\n' +
+				'<div class="col-sm-4">\n' +
+				'<select id="attr_children_1" name="" class="form-control attr_children_1"></select>\n' +
+				'</div>\n' +
+				'<button class="delBtn">删除</button>\n' +
+				'</div>';
+
+		$("#attributeDiv").append(odiv);*!/
+
+	})*/
+		/*$('#parentAttr').change(function(){
+			$('#childAttr').html('');
+			$('#childAttr').append('<option value="">请选择子属性</option>');
+
+			var ss=$(this).find("option:selected").text();
+			var parent;
+			console.log(goods_parent_attributes)
+			for(var j in goods_parent_attributes){
+				if(ss==goods_parent_attributes[j].dictLabel){
+					parent=goods_parent_attributes[j].dictValue;
+				}
+			}
+			var option;
+			for(var i in attrArr){
+				for (var j in attrArr[i].item){
+					if(parent==attrArr[i].item[j].parentId){
+						option = '<option value="'+attrArr[i].item[j].id+'" >'+attrArr[i].item[j].name+'</option>';
+						$('#childAttr').append(option);
+					}
+				}
+			}
+		})*/
+		/*$('#addScheduleBtn').click(function () {
+			debugger
+			ss++;
+			if(ss>=9){
+				alert("最多只能选择9个属性");
+				return
+			}
+			var genId =ss;
+			var newRow =
+					'<div id="attr_' + genId + '">\n' +
+					'<label class="col-sm-3 control-label"></label>\n' +
+					'<div class="col-sm-3" style="margin:10px 0 0 0;">\n' +
+					'<select id="parentAttr' + genId + '" name="parentAttr' + genId + '" class="form-control parentAttr">' +
+					'<option>请选择父属性</option>\n'+
+					'</select>\n' +
+					'</div>\n' +
+					'<div class="col-sm-1" style="margin:18px 0 0 0;text-align:center;">-</div>\n' +
+					'<div class="col-sm-3" style="margin:10px 0 0 0;">\n' +
+					'<select id="childAttr' + genId + '" name="childAttr' + genId + '" class="form-control childAttr">\n' +
+					'<option>请选择子属性</option>\n'+
+					'</select>\n' +
+					'</div>\n' +
+					'<div class="col-sm-1" style="margin:16px 0 0 0;">\n' +
+					'<input type="button" id="delScheduleBtn_' + genId + '" name="delScheduleBtn_' + genId + '" value="X" style="border:none;background-color:transparent;color:red;outline:none;font-size:14px;">\n' +
+					'</div>\n' +
+					'</div>';
+
+			$('#schedule').append(newRow);
+			var option;
+			for(var i in attrArr) {
+				console.log(attrArr[i].name)
+				option = '<option value="'+attrArr[i].name+'" >'+attrArr[i].name+'</option>';
+				$('#parentAttr'+genId).append(option);
+			}
+			$('#delScheduleBtn_' + genId).click(function () {
+				$('#attr_' + genId).remove();
+			});
+
+			$('#parentAttr'+genId).change(function(){
+				$('#childAttr'+genId).html('');
+				$('#childAttr'+genId).append('<option value="">请选择子属性</option>');
+
+				var ss=$(this).find("option:selected").text();
+				var parent;
+				console.log(goods_parent_attributes)
+				for(var j in goods_parent_attributes){
+					if(ss==goods_parent_attributes[j].dictLabel){
+						parent=goods_parent_attributes[j].dictValue;
+					}
+				}
+				var option;
+				for(var i in attrArr){
+					for (var j in attrArr[i].item){
+						if(parent==attrArr[i].item[j].parentId){
+							option = '<option value="'+attrArr[i].item[j].id+'" >'+attrArr[i].item[j].name+'</option>';
+							$('#childAttr'+genId).append(option);
+						}
+					}
+				}
+			})
+		})*/
+	</script>
+</body>
+</html>

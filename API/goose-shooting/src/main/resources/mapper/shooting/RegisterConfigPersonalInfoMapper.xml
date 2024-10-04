@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterConfigPersonalInfoMapper">
+
+    <resultMap type="RegisterConfigPersonalInfo" id="RegisterConfigPersonalInfoResult">
+        <result property="id" column="id"/>
+        <result property="registerConfigId" column="register_config_id"/>
+        <result property="infoName" column="info_name"/>
+        <result property="isRequired" column="is_required"/>
+        <result property="infoText" column="info_text"/>
+    </resultMap>
+
+
+    <sql id="selectRegisterConfigPersonalInfoVoNoJoin">
+        select tb.id, tb.register_config_id, tb.info_name, tb.is_required, tb.info_text
+        from shooting_register_config_personal_info tb
+    </sql>
+
+    <sql id="selectRegisterConfigPersonalInfoVo">
+        select tb.id, tb.register_config_id, tb.info_name, tb.is_required, tb.info_text
+        from shooting_register_config_personal_info tb     </sql>
+
+    <select id="selectRegisterConfigPersonalInfoAll" parameterType="RegisterConfigPersonalInfo"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoVo"/>
+    </select>
+
+    <select id="selectRegisterConfigPersonalInfoList" parameterType="RegisterConfigPersonalInfo"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="registerConfigId != null ">and tb.register_config_id = #{registerConfigId}</if>
+            <if test="infoName != null  and infoName != '' ">and tb.info_name = #{infoName}</if>
+            <if test="infoText != null  and infoText != '' ">and tb.info_text = #{infoText}</if>
+            <if test="isRequired != null ">and tb.is_required = #{isRequired}</if>
+        </where>
+    </select>
+
+    <select id="selectRegisterConfigPersonalInfoById" parameterType="Long" resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectRegisterConfigPersonalInfoByconfigId" parameterType="Long"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoVo"/>
+        where tb.register_config_id = #{id}
+    </select>
+
+    <insert id="insertRegisterConfigPersonalInfo" parameterType="RegisterConfigPersonalInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into shooting_register_config_personal_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="registerConfigId != null  ">register_config_id,</if>
+            <if test="infoName != null  and infoName != ''  ">info_name,</if>
+            <if test="infoText != null  and infoText != ''  ">info_text,</if>
+            <if test="isRequired != null  ">is_required,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="registerConfigId != null  ">#{registerConfigId},</if>
+            <if test="infoName != null  and infoName != ''  ">#{infoName},</if>
+            <if test="infoText != null  and infoText != ''  ">#{infoText},</if>
+            <if test="isRequired != null  ">#{isRequired},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRegisterConfigPersonalInfo" parameterType="RegisterConfigPersonalInfo">
+        update shooting_register_config_personal_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registerConfigId != null  ">register_config_id = #{registerConfigId},</if>
+            <if test="infoName != null  and infoName != ''  ">info_name = #{infoName},</if>
+            <if test="infoText != null  and infoText != ''  ">info_text = #{infoText},</if>
+            <if test="isRequired != null  ">is_required = #{isRequired},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRegisterConfigPersonalInfoById" parameterType="Long">
+        delete
+        from shooting_register_config_personal_info
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterConfigPersonalInfoByConfigId" parameterType="Long">
+        delete
+        from shooting_register_config_personal_info
+        where register_config_id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterConfigPersonalInfoByIds" parameterType="String">
+        delete from shooting_register_config_personal_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectRegisterConfigPersonalInfoAssoc">
+        select tb.id, tb.register_config_id, tb.info_name, tb.is_required, tb.info_text
+        from shooting_register_config_personal_info tb     </sql>
+
+    <select id="selectRegisterConfigPersonalInfoAllAssoc" parameterType="RegisterConfigPersonalInfo"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoAssoc"/>
+    </select>
+
+    <select id="selectRegisterConfigPersonalInfoListAssoc" parameterType="RegisterConfigPersonalInfo"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="registerConfigId != null ">and tb.register_config_id = #{registerConfigId}</if>
+            <if test="infoName != null  and infoName != '' ">and tb.info_name = #{infoName}</if>
+            <if test="infoText != null  and infoText != '' ">and tb.info_text = #{infoText}</if>
+            <if test="isRequired != null ">and tb.is_required = #{isRequired}</if>
+        </where>
+    </select>
+
+    <select id="selectRegisterConfigPersonalInfoByIdAssoc" parameterType="Long"
+            resultMap="RegisterConfigPersonalInfoResult">
+        <include refid="selectRegisterConfigPersonalInfoAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

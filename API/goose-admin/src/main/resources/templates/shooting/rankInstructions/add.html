@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-rankInstructions-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">我的成绩：</label>
+				<div class="col-sm-8">
+				    <input id="myRank" name="myRank" type="hidden">
+				    <div id="myRankId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">赛事成绩：</label>
+				<div class="col-sm-8">
+				    <input id="matchRank" name="matchRank" type="hidden">
+				    <div id="matchRankId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年度积分：</label>
+				<div class="col-sm-8">
+				    <input id="annualIntegral" name="annualIntegral" type="hidden">
+				    <div id="annualIntegralId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/rankInstructions"
+	    $("#myRankId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]		,
+			placeholder: '请输入通知的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",1);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#myRankId").summernote('insertImage',data)
+						}
+					});
+
+				}
+			}
+	    }); 
+				
+	    $("#matchRankId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]	,
+			placeholder: '请输入通知的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",1);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#matchRankId").summernote('insertImage',data)
+						}
+					});
+
+				}
+			}
+	    }); 
+				
+	    $("#annualIntegralId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]	,
+			placeholder: '请输入通知的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",1);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#annualIntegralId").summernote('insertImage',data)
+						}
+					});
+
+				}
+			}
+	    }); 
+				
+	    		
+		$("#form-rankInstructions-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				myRank: {
+					required: false,
+				},
+				matchRank: {
+					required: false,
+				},
+				annualIntegral: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				myRank: {
+				},		
+				matchRank: {
+				},		
+				annualIntegral: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+				var sHTMLmyRank = $("#myRankId").summernote('code');
+				$("#myRank").val(sHTMLmyRank);
+				var sHTMLmatchRank = $("#matchRankId").summernote('code');
+				$("#matchRank").val(sHTMLmatchRank);
+				var sHTMLannualIntegral = $("#annualIntegralId").summernote('code');
+				$("#annualIntegral").val(sHTMLannualIntegral);
+		        var formdata = new FormData();
+				formdata.append("myRank", $("#myRank").val());
+				formdata.append("matchRank", $("#matchRank").val());
+				formdata.append("annualIntegral", $("#annualIntegral").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+	    
+	</script>
+</body>
+</html>

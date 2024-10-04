@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsOrderMapper">
+    
+    <resultMap type="GoodsOrder" id="GoodsOrderResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="remark"    column="remark"    />
+        <result property="attributes"    column="attributes"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="gtId"    column="gt_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="goodsAddressId"    column="goods_address_id"    />
+        <result property="name"    column="name"    />
+        <result property="num"    column="num"    />
+        <result property="price"    column="price"    />
+        <result property="postage"    column="postage"    />
+        <result property="description"    column="description"    />
+        <result property="courierCompany"    column="courier_company"    />
+        <result property="courierNumber"    column="courier_number"    />
+        <result property="placeTime"    column="place_time"    />
+        <result property="cancelTime"    column="cancel_time"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="deliveryTime"    column="delivery_time"    />
+        <result property="goodsTime"    column="goods_time"    />
+        <result property="ungoodsTime"    column="ungoods_time"    />
+        <result property="unpayTime"    column="unpay_time"    />
+        <result property="goodsOrderStatus"    column="goods_order_status"    />
+
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+        <association property="goodsInvoice" column="invoice_id"  javaType="GoodsInvoice"  resultMap="GoodsInvoiceResult" />
+        <association property="gt" column="gt_id"  javaType="Gt"  resultMap="GtResult" />
+        <association property="goods" column="goods_id"  javaType="Goods"  resultMap="GoodsResult" />
+        <association property="order" column="order_id"  javaType="Order"  resultMap="OrderResult" />
+        <association property="goodsAddress" column="goods_address_id"  javaType="GoodsAddress"  resultMap="GoodsAddressResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+        <result property="status"    column="a_status"    />
+        <result property="idFront"    column="a_id_front"    />
+        <result property="idBack"    column="a_id_back"    />
+        <result property="idNumber"    column="a_id_number"    />
+        <result property="realName"    column="a_real_name"    />
+        <result property="jgUsername"    column="a_jg_username"    />
+        <result property="memberId"    column="a_member_id"    />
+        <result property="englishName"    column="a_english_name"    />
+        <result property="certExpireDate"    column="a_cert_expire_date"    />
+        <result property="selfieImage"    column="a_selfie_image"    />
+        <result property="graduateDate"    column="a_graduate_date"    />
+        <result property="sex"    column="a_sex"    />
+        <result property="passportNo"    column="a_passport_no"    />
+        <result property="roleIds"    column="a_role_ids"    />
+        <result property="age"    column="a_age"    />
+        <result property="bloodType"    column="a_blood_type"    />
+        <result property="introduction"    column="a_introduction"    />
+    </resultMap>
+    <resultMap type="GoodsInvoice" id="GoodsInvoiceResult">
+        <result property="id"    column="b_id"    />
+        <result property="clientUserId"    column="b_client_user_id"    />
+        <result property="invoiceType"    column="b_invoice_type"    />
+        <result property="head"    column="b_head"    />
+        <result property="code"    column="b_code"    />
+        <result property="bank"    column="b_bank"    />
+        <result property="bankAccount"    column="b_bank_account"    />
+        <result property="address"    column="b_address"    />
+        <result property="phone"    column="b_phone"    />
+        <result property="defaultInvoice"    column="b_default_invoice"    />
+        <result property="status"    column="b_status"    />
+        <result property="createBy"    column="b_create_by"    />
+        <result property="createTime"    column="b_create_time"    />
+        <result property="updateBy"    column="b_update_by"    />
+        <result property="updateTime"    column="b_update_time"    />
+    </resultMap>
+    <resultMap type="Gt" id="GtResult">
+        <result property="id"    column="e_id"    />
+        <result property="attributeId1"    column="attribute_id1"    />
+        <result property="attributeId2"    column="attribute_id2"    />
+        <result property="attributeId3"    column="attribute_id3"    />
+        <result property="attributeId4"    column="attribute_id4"    />
+        <result property="attributeId5"    column="attribute_id5"    />
+        <result property="attributeId6"    column="attribute_id6"    />
+        <result property="attributeId7"    column="attribute_id7"    />
+        <result property="attributeId8"    column="attribute_id8"    />
+        <result property="attributeId9"    column="attribute_id9"    />
+        <result property="goodsId"    column="e_goods_id"    />
+        <result property="num"    column="e_num"    />
+    </resultMap>
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="c_id"    />
+        <result property="name"    column="c_name"    />
+        <result property="description"    column="c_description"    />
+        <result property="pictureUrl1"    column="c_picture_url1"    />
+        <result property="pictureUrl2"    column="c_picture_url2"    />
+        <result property="pictureUrl3"    column="c_picture_url3"    />
+        <result property="pictureUrl4"    column="c_picture_url4"    />
+        <result property="pictureUrl5"    column="c_picture_url5"    />
+        <result property="pictureUrl6"    column="c_picture_url6"    />
+        <result property="pictureUrl7"    column="c_picture_url7"    />
+        <result property="pictureUrl8"    column="c_picture_url8"    />
+        <result property="pictureUrl9"    column="c_picture_url9"    />
+        <result property="price"    column="c_price"    />
+        <result property="memberPrice"    column="c_member_price"    />
+        <result property="goodsTypeId"    column="c_goods_type_id"    />
+        <result property="mailMethod"    column="c_mail_method"    />
+        <result property="mailPrice"    column="c_mail_price"    />
+        <result property="invoice"    column="c_invoice"    />
+        <result property="comments"    column="c_comments"    />
+        <result property="status"    column="c_status"    />
+        <result property="createBy"    column="c_create_by"    />
+        <result property="createTime"    column="c_create_time"    />
+        <result property="updateBy"    column="c_update_by"    />
+        <result property="updateTime"    column="c_update_time"    />
+    </resultMap>
+    <resultMap type="GoodsAddress" id="GoodsAddressResult">
+        <result property="id"    column="d_id"    />
+        <result property="clientUserId"    column="d_client_user_id"    />
+        <result property="name"    column="d_name"    />
+        <result property="phone"    column="d_phone"    />
+        <result property="street"    column="d_street"    />
+        <result property="address"    column="d_address"    />
+        <result property="status"    column="d_status"    />
+        <result property="createBy"    column="d_create_by"    />
+        <result property="createTime"    column="d_create_time"    />
+        <result property="updateBy"    column="d_update_by"    />
+        <result property="updateTime"    column="d_update_time"    />
+        <result property="defaultAddress"    column="d_default_address"    />
+        <result property="province"    column="d_province"    />
+        <result property="city"    column="d_city"    />
+        <result property="area"    column="d_area"    />
+        <result property="areaNumber"    column="d_area_number"    />
+    </resultMap>
+    <resultMap type="Order" id="OrderResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="f_title"    />
+    </resultMap>
+	<sql id="selectGoodsOrderVoNoJoin">
+        select tb.id,tb.remark,tb.attributes, tb.title, tb.client_user_id, tb.invoice_id, tb.goods_id, tb.goods_address_id, tb.name, tb.num, tb.price, tb.postage, tb.description, tb.courier_company, tb.courier_number, tb.place_time, tb.cancel_time, tb.pay_time, tb.delivery_time, tb.goods_time, tb.ungoods_time, tb.unpay_time, tb.goods_order_status, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_goods_order tb
+    </sql>
+    
+	<sql id="selectGoodsOrderVo">
+           select tb.id, tb.title, tb.remark,tb.client_user_id,tb.order_id, tb.invoice_id, tb.goods_id, tb.goods_address_id, tb.name, tb.num, tb.price, tb.postage, tb.description, tb.courier_company, tb.courier_number, tb.place_time, tb.cancel_time, tb.pay_time, tb.delivery_time, tb.goods_time, tb.ungoods_time, tb.unpay_time, tb.goods_order_status, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , 
+           a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , 
+           a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , a.id_number as a_id_number , 
+           a.real_name as a_real_name , a.jg_username as a_jg_username , a.member_id as a_member_id , a.english_name as a_english_name , 
+           a.cert_expire_date as a_cert_expire_date , a.selfie_image as a_selfie_image , a.graduate_date as a_graduate_date , 
+           a.sex as a_sex , a.passport_no as a_passport_no , a.role_ids as a_role_ids , a.age as a_age , a.blood_type as a_blood_type , 
+           a.introduction as a_introduction,
+           e.id as e_id,e.attribute_id1,e.attribute_id2,e.attribute_id3,e.attribute_id4,e.attribute_id5,e.attribute_id6,e.attribute_id7,e.attribute_id8,e.attribute_id9,e.num as e_num  from shooting_goods_order tb left join client_user a on tb.client_user_id = a.id left join shooting_gt e on tb.gt_id=e.id
+    </sql>
+    
+     <select id="selectGoodsOrderAll" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderVo"/>
+     </select>    
+	
+    <select id="selectGoodsOrderList" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title = #{title}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="invoiceId != null "> and tb.invoice_id = #{invoiceId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="gtId != null "> and tb.gt_id = #{gtId}</if>
+            <if test="goodsAddressId != null "> and tb.goods_address_id = #{goodsAddressId}</if>
+            <if test="orderId != null "> and tb.order_id = #{orderId}</if>
+
+            <if test="name != null "> and tb.name = #{name}</if>
+            <if test="num != null "> and tb.num = #{num}</if>
+            <if test="price != null "> and tb.price = #{price}</if>
+            <if test="postage != null "> and tb.postage = #{postage}</if>
+            <if test="description != null  and description != '' "> and tb.description = #{description}</if>
+
+            <if test="courierCompany != null  and courierCompany != '' "> and tb.courier_company = #{courierCompany}</if>
+            <if test="courierNumber != null  and courierNumber != '' "> and tb.courier_number like concat('%',#{courierNumber},'%')</if>
+
+            <if test="placeTime != null "> and tb.place_time = #{placeTime}</if>
+            <if test="cancelTime != null "> and tb.cancel_time = #{cancelTime}</if>
+            <if test="payTime != null "> and tb.pay_time = #{payTime}</if>
+            <if test="deliveryTime != null "> and tb.delivery_time = #{deliveryTime}</if>
+            <if test="goodsTime != null "> and tb.goods_time = #{goodsTime}</if>
+            <if test="ungoodsTime != null "> and tb.ungoods_time = #{ungoodsTime}</if>
+            <if test="unpayTime != null "> and tb.unpay_time = #{unpayTime}</if>
+            <if test="goodsOrderStatus != null "> and tb.goods_order_status = #{goodsOrderStatus}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="startDate != null "><!-- ?????? -->
+                AND date_format(tb.place_time ,'%y%m%d') &gt;= date_format(#{startDate},'%y%m%d')
+            </if>
+            <if test="endDate != null "><!-- ?????? -->
+                AND date_format(tb.place_time ,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectGoodsOrderById" parameterType="Long" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoodsOrder" parameterType="GoodsOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+            <if test="attributes != null  and attributes != ''  ">attributes,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="invoiceId != null  ">invoice_id,</if>
+			<if test="goodsId != null  ">goods_id,</if>
+            <if test="gtId != null  ">gt_id,</if>
+            <if test="orderId != null  ">order_id,</if>
+			<if test="goodsAddressId != null  ">goods_address_id,</if>
+			<if test="name != null  ">name,</if>
+			<if test="num != null  ">num,</if>
+			<if test="price != null  ">price,</if>
+			<if test="postage != null  ">postage,</if>
+			<if test="description != null  and description != ''  ">description,</if>
+			<if test="courierCompany != null  and courierCompany != ''  ">courier_company,</if>
+			<if test="courierNumber != null  and courierNumber != ''  ">courier_number,</if>
+			<if test="placeTime != null  ">place_time,</if>
+			<if test="cancelTime != null  ">cancel_time,</if>
+			<if test="payTime != null  ">pay_time,</if>
+			<if test="deliveryTime != null  ">delivery_time,</if>
+			<if test="goodsTime != null  ">goods_time,</if>
+			<if test="ungoodsTime != null  ">ungoods_time,</if>
+			<if test="unpayTime != null  ">unpay_time,</if>
+			<if test="goodsOrderStatus != null  ">goods_order_status,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+            <if test="attributes != null  and attributes != ''  ">#{attributes},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="invoiceId != null  ">#{invoiceId},</if>
+			<if test="goodsId != null  ">#{goodsId},</if>
+            <if test="gtId != null  ">#{gtId},</if>
+            <if test="orderId != null  ">#{orderId},</if>
+			<if test="goodsAddressId != null  ">#{goodsAddressId},</if>
+			<if test="name != null  ">#{name},</if>
+			<if test="num != null  ">#{num},</if>
+			<if test="price != null  ">#{price},</if>
+			<if test="postage != null  ">#{postage},</if>
+			<if test="description != null  and description != ''  ">#{description},</if>
+			<if test="courierCompany != null  and courierCompany != ''  ">#{courierCompany},</if>
+			<if test="courierNumber != null  and courierNumber != ''  ">#{courierNumber},</if>
+			<if test="placeTime != null  ">#{placeTime},</if>
+			<if test="cancelTime != null  ">#{cancelTime},</if>
+			<if test="payTime != null  ">#{payTime},</if>
+			<if test="deliveryTime != null  ">#{deliveryTime},</if>
+			<if test="goodsTime != null  ">#{goodsTime},</if>
+			<if test="ungoodsTime != null  ">#{ungoodsTime},</if>
+			<if test="unpayTime != null  ">#{unpayTime},</if>
+			<if test="goodsOrderStatus != null  ">#{goodsOrderStatus},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsOrder" parameterType="GoodsOrder">
+        update shooting_goods_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="invoiceId != null  ">invoice_id = #{invoiceId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="gtId != null  ">gt_id=#{gtId},</if>
+            <if test="goodsAddressId != null  ">goods_address_id = #{goodsAddressId},</if>
+            <if test="name != null  ">name = #{name},</if>
+            <if test="num != null  ">num = #{num},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="postage != null  ">postage = #{postage},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+            <if test="courierCompany != null  and courierCompany != ''  ">courier_company = #{courierCompany},</if>
+            <if test="courierNumber != null  and courierNumber != ''  ">courier_number = #{courierNumber},</if>
+            <if test="placeTime != null  ">place_time = #{placeTime},</if>
+            <if test="cancelTime != null  ">cancel_time = #{cancelTime},</if>
+            <if test="payTime != null  ">pay_time = #{payTime},</if>
+            <if test="deliveryTime != null  ">delivery_time = #{deliveryTime},</if>
+            <if test="goodsTime != null  ">goods_time = #{goodsTime},</if>
+            <if test="ungoodsTime != null  ">ungoods_time = #{ungoodsTime},</if>
+            <if test="unpayTime != null  ">unpay_time = #{unpayTime},</if>
+            <if test="goodsOrderStatus != null  ">goods_order_status = #{goodsOrderStatus},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsOrderById" parameterType="Long">
+        delete from shooting_goods_order where id = #{id}
+    </delete>
+
+
+    <delete id="deleteGoodsOrderByOrderIds" parameterType="String">
+        delete from shooting_goods_order where order_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteGoodsOrderByIds" parameterType="String">
+        delete from shooting_goods_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGoodsOrderAssoc">
+        SELECT
+            tb.id,
+            tb.title,
+            tb.remark,
+            tb.attributes,
+            tb.client_user_id,
+            tb.order_id,
+            tb.invoice_id,
+            tb.goods_id,
+            tb.goods_address_id,
+            tb. NAME,
+            tb.num,
+            tb.price,
+            tb.postage,
+            tb.description,
+            tb.courier_company,
+            tb.courier_number,
+            tb.place_time,
+            tb.cancel_time,
+            tb.pay_time,
+            tb.delivery_time,
+            tb.goods_time,
+            tb.ungoods_time,
+            tb.unpay_time,
+            tb.goods_order_status,
+            tb. STATUS,
+            tb.create_by,
+            tb.create_time,
+            tb.update_by,
+            tb.update_time,
+            a.id AS a_id,
+            a.user_name AS a_user_name,
+            a.nickname AS a_nickname,
+            b.id AS b_id,
+            b.invoice_type AS b_invoice_type,
+            b.head AS b_head,
+            b. CODE AS b_code,
+            c.id AS c_id,
+            c.create_by AS c_create_by,
+            d.id AS d_id,
+            d. NAME AS d_name,
+            d.phone AS d_phone,
+            d.province as d_province,
+			d.city as d_city,
+			d.area as d_area,
+            d.address AS d_address,
+            f.title AS f_title
+        FROM
+            shooting_goods_order tb
+        LEFT JOIN client_user a ON tb.client_user_id = a.id
+        LEFT JOIN shooting_goods_invoice b ON tb.invoice_id = b.id
+        LEFT JOIN shooting_goods c ON tb.goods_id = c.id
+        LEFT JOIN shooting_goods_address d ON tb.goods_address_id = d.id
+        LEFT JOIN shooting_gt e ON tb.gt_id = e.id
+        LEFT JOIN shooting_order f ON tb.order_id = f.id
+    </sql>
+    
+     <select id="selectGoodsOrderAllAssoc" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsOrderListAssoc" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title like concat('%', #{title}, '%')</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="invoiceId != null "> and tb.invoice_id = #{invoiceId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="orderId != null "> and f.title like concat('%', #{orderId}, '%')</if>
+            <if test="goodsAddressId != null "> and tb.goods_address_id = #{goodsAddressId}</if>
+            <if test="name != null "> and tb.name = #{name}</if>
+            <if test="num != null "> and tb.num = #{num}</if>
+            <if test="price != null "> and tb.price = #{price}</if>
+            <if test="postage != null "> and tb.postage = #{postage}</if>
+            <if test="description != null  and description != '' "> and tb.description = #{description}</if>
+            <if test="courierCompany != null  and courierCompany != '' "> and tb.courier_company = #{courierCompany}</if>
+            <if test="courierNumber != null  and courierNumber != '' "> and tb.courier_number like concat('%', #{courierNumber}, '%')</if>
+            <if test="placeTime != null "> and tb.place_time = #{placeTime}</if>
+            <if test="cancelTime != null "> and tb.cancel_time = #{cancelTime}</if>
+            <if test="payTime != null "> and tb.pay_time = #{payTime}</if>
+            <if test="deliveryTime != null "> and tb.delivery_time = #{deliveryTime}</if>
+            <if test="goodsTime != null "> and tb.goods_time = #{goodsTime}</if>
+            <if test="ungoodsTime != null "> and tb.ungoods_time = #{ungoodsTime}</if>
+            <if test="unpayTime != null "> and tb.unpay_time = #{unpayTime}</if>
+            <if test="goodsOrderStatus != null "> and tb.goods_order_status = #{goodsOrderStatus}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="merchants != null  and merchants != ''"> and c.create_by = #{merchants}</if>
+
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="startDate != null "><!-- ?????? -->
+                AND date_format(tb.place_time ,'%y%m%d') &gt;= date_format(#{startDate},'%y%m%d')
+            </if>
+            <if test="endDate != null "><!-- ?????? -->
+                AND date_format(tb.place_time ,'%y%m%d') &lt;= date_format(#{endDate},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsOrderByIdAssoc" parameterType="Long" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectGoodStatusByUserId" parameterType="Long" resultMap="GoodsOrderResult">
+        SELECT
+            goods_order_status,
+            COUNT(*) as num
+        FROM
+            shooting_goods_order
+        WHERE
+            client_user_id = #{userId}
+        GROUP BY
+            goods_order_status
+    </select>
+
+    <select id="selectGoodsOrdersByOrderId" parameterType="Long" resultMap="GoodsOrderResult">
+        SELECT id,client_user_id,goods_order_status FROM shooting_goods_order WHERE order_id=#{orderId}
+    </select>
+
+    
+</mapper>

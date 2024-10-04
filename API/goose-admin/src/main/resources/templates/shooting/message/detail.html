@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-message-edit" th:object="${message}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通告标题：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" th:field="*{title}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">通告内容：</label>
+				<div class="col-sm-8">
+				    <input id="content" name="content" th:field="*{content}" type="hidden">
+				    <div id="contentId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发送类型：</label>
+				<div class="col-sm-8">
+					<input id="type" name="type" th:field="*{type}" class="form-control" type="text" disabled="disabled">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}" disabled="disabled">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(message.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(message.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/message"
+
+
+		$(function(){
+			var type = $('#type').val();
+			
+			if(type == 1){
+				$('#type').val("全部用户");
+			}else{
+				$('#type').val("指定用户");
+			}
+		    $("#contentId").summernote({
+				height : '320px',
+				lang : 'zh-CN',
+				dialogsInBody: true,
+			    toolbar: [
+			        ['style', ['style']],
+			        ['font', ['bold', 'underline', 'clear']],
+			        ['fontname', ['fontname']],
+			        ['color', ['color']],
+			        ['para', ['ul', 'ol', 'paragraph']],
+			        ['table', ['table']],
+			        ['insert', ['link','picture']],
+			        ['view', ['fullscreen',  'help']]
+				  ]	,
+			        placeholder: '请输入通知的内容',	
+	        	callbacks:{
+	            onImageUpload:function(files, editor, $editable) {
+	           	 var fd = new FormData();
+	           	    fd.append("file", files[0]);
+	           	    fd.append("type",8);
+	           	    $.ajax({
+	           	        type:"POST",
+	           	        url:ctx + "shooting/oss/uploadRichText",
+	           	        data: fd,
+	           	        cache: false,
+	           	        contentType: false,
+	           	        processData: false,
+	           	        success: function (data) {
+	           	        	$("#contentId").summernote('insertImage',data)
+	           	        }
+	           	    });
+	           	 
+	           }	
+	        }
+		    }); 
+			var content = $("#content").val();
+		    $('#contentId').summernote("code",content);
+			
+		})
+    
+	    		
+	</script>
+</body>
+</html>

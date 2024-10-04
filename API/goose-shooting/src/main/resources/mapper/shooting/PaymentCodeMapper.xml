@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.PaymentCodeMapper">
+    
+    <resultMap type="PaymentCode" id="PaymentCodeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="pictureUrl"    column="picture_url"    />
+        <result property="detail"    column="detail"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectPaymentCodeVoNoJoin">
+        select tb.id, tb.title, tb.picture_url, tb.detail, tb.status,tb.type, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_payment_code tb
+    </sql>
+    
+	<sql id="selectPaymentCodeVo">
+           select tb.id, tb.title, tb.picture_url, tb.detail, tb.status,tb.type, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_payment_code tb     </sql>
+    
+     <select id="selectPaymentCodeAll" parameterType="PaymentCode" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeVo"/>
+     </select>    
+	
+    <select id="selectPaymentCodeList" parameterType="PaymentCode" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title = #{title}</if>
+            <if test="pictureUrl != null  and pictureUrl != '' "> and tb.picture_url = #{pictureUrl}</if>
+            <if test="detail != null  and detail != '' "> and tb.detail = #{detail}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="type != null "> and tb.type = #{type}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPaymentCodeById" parameterType="Long" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertPaymentCode" parameterType="PaymentCode" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_payment_code
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="pictureUrl != null  and pictureUrl != ''  ">picture_url,</if>
+			<if test="detail != null  and detail != ''  ">detail,</if>
+			<if test="status != null  ">status,</if>
+            <if test="type != null  ">type,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="pictureUrl != null  and pictureUrl != ''  ">#{pictureUrl},</if>
+			<if test="detail != null  and detail != ''  ">#{detail},</if>
+			<if test="status != null  ">#{status},</if>
+            <if test="type != null  ">#{type},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePaymentCode" parameterType="PaymentCode">
+        update shooting_payment_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="pictureUrl != null  and pictureUrl != ''  ">picture_url = #{pictureUrl},</if>
+            <if test="detail != null  and detail != ''  ">detail = #{detail},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePaymentCodeById" parameterType="Long">
+        delete from shooting_payment_code where id = #{id}
+    </delete>
+	
+    <delete id="deletePaymentCodeByIds" parameterType="String">
+        delete from shooting_payment_code where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectPaymentCodeAssoc">
+        select tb.id, tb.title, tb.picture_url, tb.detail, tb.status,tb.type, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_payment_code tb     </sql>
+    
+     <select id="selectPaymentCodeAllAssoc" parameterType="PaymentCode" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeAssoc"/>
+     </select>    
+	
+    <select id="selectPaymentCodeListAssoc" parameterType="PaymentCode" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title like concat('%', #{title}, '%')</if>
+            <if test="pictureUrl != null  and pictureUrl != '' "> and tb.picture_url = #{pictureUrl}</if>
+            <if test="detail != null  and detail != '' "> and tb.detail like concat('%', #{detail}, '%')</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="type != null "> and tb.type = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPaymentCodeByIdAssoc" parameterType="Long" resultMap="PaymentCodeResult">
+        <include refid="selectPaymentCodeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

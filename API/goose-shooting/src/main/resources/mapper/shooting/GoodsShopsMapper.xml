@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsShopsMapper">
+    
+    <resultMap type="GoodsShops" id="GoodsShopsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="star"    column="star"    />
+        <result property="comment"    column="comment"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectGoodsShopsVoNoJoin">
+        select tb.id, tb.name, tb.star, tb.comment, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_goods_shops tb
+    </sql>
+    
+	<sql id="selectGoodsShopsVo">
+           select tb.id, tb.name, tb.star, tb.comment, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_goods_shops tb     </sql>
+    
+     <select id="selectGoodsShopsAll" parameterType="GoodsShops" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsVo"/>
+     </select>    
+	
+    <select id="selectGoodsShopsList" parameterType="GoodsShops" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="star != null "> and tb.star = #{star}</if>
+            <if test="comment != null  and comment != '' "> and tb.comment = #{comment}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsShopsById" parameterType="Long" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoodsShops" parameterType="GoodsShops" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods_shops
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="star != null  ">star,</if>
+			<if test="comment != null  and comment != ''  ">comment,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="star != null  ">#{star},</if>
+			<if test="comment != null  and comment != ''  ">#{comment},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsShops" parameterType="GoodsShops">
+        update shooting_goods_shops
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="star != null  ">star = #{star},</if>
+            <if test="comment != null  and comment != ''  ">comment = #{comment},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsShopsById" parameterType="Long">
+        delete from shooting_goods_shops where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsShopsByIds" parameterType="String">
+        delete from shooting_goods_shops where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGoodsShopsAssoc">
+        select tb.id, tb.name, tb.star, tb.comment, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_goods_shops tb     </sql>
+    
+     <select id="selectGoodsShopsAllAssoc" parameterType="GoodsShops" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsShopsListAssoc" parameterType="GoodsShops" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="star != null "> and tb.star = #{star}</if>
+            <if test="comment != null  and comment != '' "> and tb.comment like concat('%', #{comment}, '%')</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsShopsByIdAssoc" parameterType="Long" resultMap="GoodsShopsResult">
+        <include refid="selectGoodsShopsAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

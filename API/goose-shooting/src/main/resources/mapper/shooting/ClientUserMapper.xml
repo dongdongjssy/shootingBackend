@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClientUserMapper">
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="userName"    column="user_name"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="password"    column="password"    />
+        <result property="userType"    column="user_type"    />
+        <result property="openId"    column="open_id"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="city"    column="city"    />
+        <result property="address"    column="address"    />
+        <result property="passwordResetDate"    column="password_reset_date"    />
+        <result property="status"    column="status"    />
+        <result property="idFront"    column="id_front"    />
+        <result property="idBack"    column="id_back"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="realName"    column="real_name"    />
+        <result property="jgUsername"    column="jg_username"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="englishName"    column="english_name"    />
+        <result property="certExpireDate"    column="cert_expire_date"    />
+        <result property="selfieImage"    column="selfie_image"    />
+        <result property="graduateDate"    column="graduate_date"    />
+        <result property="sex"    column="sex"    />
+        <result property="passportNo"    column="passport_no"    />
+        <result property="roleIds"    column="role_ids"    />
+        <result property="age"    column="age"    />
+        <result property="bloodType"    column="blood_type"    />
+        <result property="introduction"    column="introduction"    />
+        
+    </resultMap>
+
+
+	<sql id="selectClientUserVoNoJoin">
+        select tb.id, tb.nickname, tb.user_name,tb.blood_type,tb.introduction, tb.email, tb.phone, tb.password, tb.user_type, tb.open_id, tb.avatar, tb.city, tb.address, tb.password_reset_date,tb.age, tb.status, tb.id_front, tb.id_back, tb.id_number, tb.real_name, tb.jg_username, tb.member_id, tb.english_name, tb.cert_expire_date, tb.selfie_image, tb.graduate_date, tb.sex, tb.passport_no, tb.role_ids        from client_user tb
+    </sql>
+
+	<sql id="selectClientUserVo">
+           select tb.id, tb.nickname, tb.user_name,tb.blood_type,tb.introduction, tb.email, tb.phone, tb.password, tb.user_type, tb.open_id, tb.avatar, tb.city, tb.address, tb.password_reset_date,tb.age, tb.status, tb.id_front, tb.id_back, tb.id_number, tb.real_name, tb.jg_username, tb.member_id, tb.english_name, tb.cert_expire_date, tb.selfie_image, tb.graduate_date, tb.sex, tb.passport_no, tb.role_ids from client_user tb     </sql>
+
+     <select id="selectClientUserAll" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+     </select>
+
+    <select id="selectClientUserList" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+                        <if test="ids != null  and ids != '' "> and tb.id in (${ids})</if>
+            
+            <if test="nickname != null  and nickname != '' "> and tb.nickname = #{nickname}</if>
+            <if test="userName != null  and userName != '' "> and tb.user_name = #{userName}</if>
+            <if test="email != null  and email != '' "> and tb.email = #{email}</if>
+            <if test="phone != null  and phone != '' "> and tb.phone = #{phone}</if>
+            <if test="password != null  and password != '' "> and tb.password = #{password}</if>
+            <if test="userType != null  and userType != '' "> and tb.user_type = #{userType}</if>
+            <if test="openId != null  and openId != '' "> and tb.open_id = #{openId}</if>
+            <if test="avatar != null  and avatar != '' "> and tb.avatar = #{avatar}</if>
+            <if test="city != null  and city != '' "> and tb.city = #{city}</if>
+            <if test="address != null  and address != '' "> and tb.address = #{address}</if>
+            <if test="passwordResetDate != null "> and tb.password_reset_date = #{passwordResetDate}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="idFront != null  and idFront != '' "> and tb.id_front = #{idFront}</if>
+            <if test="idBack != null  and idBack != '' "> and tb.id_back = #{idBack}</if>
+            <if test="idNumber != null  and idNumber != '' "> and tb.id_number = #{idNumber}</if>
+            <if test="realName != null  and realName != '' "> and tb.real_name = #{realName}</if>
+            <if test="jgUsername != null  and jgUsername != '' "> and tb.jg_username = #{jgUsername}</if>
+            <if test="memberId != null  and memberId != '' "> and tb.member_id = #{memberId}</if>
+            <if test="englishName != null  and englishName != '' "> and tb.english_name = #{englishName}</if>
+            <if test="certExpireDate != null "> and tb.cert_expire_date = #{certExpireDate}</if>
+            <if test="selfieImage != null  and selfieImage != '' "> and tb.selfie_image = #{selfieImage}</if>
+            <if test="graduateDate != null "> and tb.graduate_date = #{graduateDate}</if>
+            <if test="sex != null "> and tb.sex = #{sex}</if>
+            <if test="passportNo != null  and passportNo != '' "> and tb.passport_no = #{passportNo}</if>
+            <if test="roleIds != null  and roleIds != '' "> and tb.role_ids = #{roleIds}</if>   
+            <if test="bloodType != null "> and tb.blood_type = #{bloodType}</if>
+                     
+        </where>
+    </select>
+
+    <select id="selectClientUserById" parameterType="Long" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectClientUserByPhone" parameterType="String" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+        where tb.phone = #{phone}
+    </select>
+
+    <select id="selectClientUserByUsername" parameterType="String" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+        where tb.user_name = #{userName}
+    </select>
+
+    <select id="selectClientUserByRealName" parameterType="String" resultMap="ClientUserResult">
+        <include refid="selectClientUserVo"/>
+        where tb.real_name = #{realName}
+    </select>
+
+    <insert id="insertClientUser" parameterType="ClientUser" useGeneratedKeys="true" keyProperty="id">
+        insert into client_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="nickname != null  and nickname != ''  ">nickname,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="email != null  and email != ''  ">email,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="password != null  and password != ''  ">password,</if>
+			<if test="userType != null  and userType != ''  ">user_type,</if>
+			<if test="openId != null  and openId != ''  ">open_id,</if>
+			<if test="avatar != null  and avatar != ''  ">avatar,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			<if test="passwordResetDate != null  ">password_reset_date,</if>
+            <if test="age != null  ">age,</if>
+			<if test="status != null  ">status,</if>
+			<if test="idFront != null  and idFront != ''  ">id_front,</if>
+			<if test="idBack != null  and idBack != ''  ">id_back,</if>
+			<if test="idNumber != null  and idNumber != ''  ">id_number,</if>
+			<if test="realName != null  and realName != ''  ">real_name,</if>
+			<if test="jgUsername != null  and jgUsername != ''  ">jg_username,</if>
+			<if test="memberId != null  and memberId != ''  ">member_id,</if>
+			<if test="englishName != null  and englishName != ''  ">english_name,</if>
+			<if test="certExpireDate != null  ">cert_expire_date,</if>
+			<if test="selfieImage != null  and selfieImage != ''  ">selfie_image,</if>
+			<if test="graduateDate != null  ">graduate_date,</if>
+			<if test="sex != null  ">sex,</if>
+			<if test="passportNo != null  and passportNo != ''  ">passport_no,</if>
+			<if test="roleIds != null  and roleIds != ''  ">role_ids,</if>		
+			<if test="bloodType != null "> blood_type,</if>
+			<if test="introduction != null  and introduction != ''  ">introduction,</if>		
+			
+				
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="nickname != null  and nickname != ''  ">#{nickname},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="email != null  and email != ''  ">#{email},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="password != null  and password != ''  ">#{password},</if>
+			<if test="userType != null  and userType != ''  ">#{userType},</if>
+			<if test="openId != null  and openId != ''  ">#{openId},</if>
+			<if test="avatar != null  and avatar != ''  ">#{avatar},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			<if test="passwordResetDate != null  ">#{passwordResetDate},</if>
+            <if test="age != null  ">#{age},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="idFront != null  and idFront != ''  ">#{idFront},</if>
+			<if test="idBack != null  and idBack != ''  ">#{idBack},</if>
+			<if test="idNumber != null  and idNumber != ''  ">#{idNumber},</if>
+			<if test="realName != null  and realName != ''  ">#{realName},</if>
+			<if test="jgUsername != null  and jgUsername != ''  ">#{jgUsername},</if>
+			<if test="memberId != null  and memberId != ''  ">#{memberId},</if>
+			<if test="englishName != null  and englishName != ''  ">#{englishName},</if>
+			<if test="certExpireDate != null  ">#{certExpireDate},</if>
+			<if test="selfieImage != null  and selfieImage != ''  ">#{selfieImage},</if>
+			<if test="graduateDate != null  ">#{graduateDate},</if>
+			<if test="sex != null  ">#{sex},</if>
+			<if test="passportNo != null  and passportNo != ''  ">#{passportNo},</if>
+			<if test="roleIds != null  and roleIds != ''  ">#{roleIds},</if>		
+			<if test="bloodType != null "> #{bloodType},</if>
+			<if test="introduction != null  and introduction != ''  ">#{introduction},</if>		
+         </trim>
+    </insert>
+
+    <update id="updateClientUser" parameterType="ClientUser">
+        update client_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null  and nickname != ''  ">nickname = #{nickname},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
+            <if test="userType != null  and userType != ''  ">user_type = #{userType},</if>
+            <if test="openId != null  and openId != ''  ">open_id = #{openId},</if>
+            <if test="avatar != null  and avatar != ''  ">avatar = #{avatar},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="passwordResetDate != null  ">password_reset_date = #{passwordResetDate},</if>
+            <if test="age != null  ">age = #{age},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="idFront != null  and idFront != ''  ">id_front = #{idFront},</if>
+            <if test="idBack != null  and idBack != ''  ">id_back = #{idBack},</if>
+            <if test="idNumber != null  and idNumber != ''  ">id_number = #{idNumber},</if>
+            <if test="realName != null  and realName != ''  ">real_name = #{realName},</if>
+            <if test="jgUsername != null  and jgUsername != ''  ">jg_username = #{jgUsername},</if>
+            <if test="memberId != null  and memberId != ''  ">member_id = #{memberId},</if>
+            <if test="englishName != null  and englishName != ''  ">english_name = #{englishName},</if>
+            <if test="certExpireDate != null  ">cert_expire_date = #{certExpireDate},</if>
+            <if test="selfieImage != null  and selfieImage != ''  ">selfie_image = #{selfieImage},</if>
+            <if test="graduateDate != null  ">graduate_date = #{graduateDate},</if>
+            <if test="sex != null  ">sex = #{sex},</if>
+            <if test="passportNo != null  and passportNo != ''  ">passport_no = #{passportNo},</if>
+            <if test="roleIds != null  ">role_ids = #{roleIds},</if>     
+            <if test="bloodType != null "> blood_type = #{bloodType},</if>
+			<if test="introduction != null  and introduction != ''  ">introduction = #{introduction},</if>		       
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateClientUserList" parameterType="ClientUser">
+        update client_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null  and nickname != ''  ">nickname = #{nickname},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
+            <if test="userType != null  and userType != ''  ">user_type = #{userType},</if>
+            <if test="openId != null  and openId != ''  ">open_id = #{openId},</if>
+            <if test="avatar != null  and avatar != ''  ">avatar = #{avatar},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="passwordResetDate != null  ">password_reset_date = #{passwordResetDate},</if>
+            <if test="age != null  ">age = #{age},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="idFront != null  and idFront != ''  ">id_front = #{idFront},</if>
+            <if test="idBack != null  and idBack != ''  ">id_back = #{idBack},</if>
+            <if test="idNumber != null  and idNumber != ''  ">id_number = #{idNumber},</if>
+            <if test="realName != null  and realName != ''  ">real_name = #{realName},</if>
+            <if test="jgUsername != null  and jgUsername != ''  ">jg_username = #{jgUsername},</if>
+            <if test="memberId != null  and memberId != ''  ">member_id = #{memberId},</if>
+            <if test="englishName != null  and englishName != ''  ">english_name = #{englishName},</if>
+            <if test="certExpireDate != null  ">cert_expire_date = #{certExpireDate},</if>
+            <if test="selfieImage != null  and selfieImage != ''  ">selfie_image = #{selfieImage},</if>
+            <if test="graduateDate != null  ">graduate_date = #{graduateDate},</if>
+            <if test="sex != null  ">sex = #{sex},</if>
+            <if test="passportNo != null  and passportNo != ''  ">passport_no = #{passportNo},</if>
+            <if test="roleIds != null  ">role_ids = #{roleIds},</if>
+            <if test="bloodType != null "> blood_type = #{bloodType},</if>
+            <if test="introduction != null  and introduction != ''  ">introduction = #{introduction},</if>
+        </trim>
+    </update>
+
+	<delete id="deleteClientUserById" parameterType="Long">
+        delete from client_user where id = #{id}
+    </delete>
+
+    <delete id="deleteClientUserByIds" parameterType="String">
+        delete from client_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+ 	<select id="checkUserNameUnique" parameterType="ClientUser" resultMap="ClientUserResult">
+         <include refid="selectClientUserVo"/>
+		 where tb.user_name = #{userName}
+
+	</select>
+
+	<sql id="selectClientUserAssoc">
+        select tb.id, tb.nickname, tb.user_name,tb.blood_type,tb.introduction, tb.email, tb.phone, tb.password, tb.user_type, tb.open_id, tb.avatar, tb.city, tb.address, tb.password_reset_date,tb.age, tb.status, tb.id_front, tb.id_back, tb.id_number, tb.real_name, tb.jg_username, tb.member_id, tb.english_name, tb.cert_expire_date, tb.selfie_image, tb.graduate_date, tb.sex, tb.passport_no, tb.role_ids                 from client_user tb     </sql>
+
+     <select id="selectClientUserAllAssoc" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserAssoc"/>
+     </select>
+
+    <select id="selectClientUserListRemind" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserAssoc"/>
+        <where>
+            DATEDIFF(cert_expire_date,NOW()) &lt;=30 and status=2
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="bloodType != null "> and tb.blood_type = #{bloodType}</if>
+            
+            <if test="nickname != null  and nickname != '' "> and tb.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="userName != null  and userName != '' "> and tb.user_name like concat('%', #{userName}, '%')</if>
+            <if test="email != null  and email != '' "> and tb.email like concat('%', #{email}, '%')</if>
+            <if test="phone != null  and phone != '' "> and tb.phone like concat('%', #{phone}, '%')</if>
+            <if test="password != null  and password != '' "> and tb.password = #{password}</if>
+            <if test="userType != null  and userType != '' "> and tb.user_type = #{userType}</if>
+            <if test="openId != null  and openId != '' "> and tb.open_id = #{openId}</if>
+            <if test="avatar != null  and avatar != '' "> and tb.avatar = #{avatar}</if>
+            <if test="city != null  and city != '' "> and tb.city = #{city}</if>
+            <if test="address != null  and address != '' "> and tb.address = #{address}</if>
+            <if test="passwordResetDate != null "> and tb.password_reset_date = #{passwordResetDate}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="idFront != null  and idFront != '' "> and tb.id_front = #{idFront}</if>
+            <if test="idBack != null  and idBack != '' "> and tb.id_back = #{idBack}</if>
+            <if test="idNumber != null  and idNumber != '' "> and tb.id_number = #{idNumber}</if>
+            <if test="realName != null  and realName != '' "> and tb.real_name like concat('%', #{realName}, '%')</if>
+            <if test="jgUsername != null  and jgUsername != '' "> and tb.jg_username = #{jgUsername}</if>
+            <if test="memberId != null  and memberId != '' "> and tb.member_id = #{memberId}</if>
+            <if test="englishName != null  and englishName != '' "> and tb.english_name = #{englishName}</if>
+            <if test="certExpireDate != null "> and tb.cert_expire_date = #{certExpireDate}</if>
+            <if test="selfieImage != null  and selfieImage != '' "> and tb.selfie_image = #{selfieImage}</if>
+            <if test="graduateDate != null "> and tb.graduate_date = #{graduateDate}</if>
+            <if test="sex != null "> and tb.sex = #{sex}</if>
+            <if test="passportNo != null  and passportNo != '' "> and tb.passport_no = #{passportNo}</if>
+            <if test="roleIds != null  and roleIds != '' "> and tb.role_ids = #{roleIds}</if>
+        </where>
+        ORDER BY cert_expire_date DESC
+    </select>
+
+    <select id="selectClientUserListAssoc" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserAssoc"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="bloodType != null "> and tb.blood_type = #{bloodType}</if>
+            <if test="nickname != null  and nickname != '' "> and tb.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="userName != null  and userName != '' "> and tb.user_name like concat('%', #{userName}, '%')</if>
+            <if test="email != null  and email != '' "> and tb.email like concat('%', #{email}, '%')</if>
+            <if test="phone != null  and phone != '' "> and tb.phone like concat('%', #{phone}, '%')</if>
+            <if test="password != null  and password != '' "> and tb.password = #{password}</if>
+            <if test="userType != null  and userType != '' "> and tb.user_type = #{userType}</if>
+            <if test="openId != null  and openId != '' "> and tb.open_id = #{openId}</if>
+            <if test="avatar != null  and avatar != '' "> and tb.avatar = #{avatar}</if>
+            <if test="city != null  and city != '' "> and tb.city = #{city}</if>
+            <if test="address != null  and address != '' "> and tb.address = #{address}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.cert_expire_date ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.cert_expire_date ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="passwordResetDate != null "> and tb.password_reset_date = #{passwordResetDate}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="idFront != null  and idFront != '' "> and tb.id_front = #{idFront}</if>
+            <if test="idBack != null  and idBack != '' "> and tb.id_back = #{idBack}</if>
+            <if test="idNumber != null  and idNumber != '' "> and tb.id_number = #{idNumber}</if>
+            <if test="realName != null  and realName != '' "> and tb.real_name like concat('%', #{realName}, '%')</if>
+            <if test="jgUsername != null  and jgUsername != '' "> and tb.jg_username = #{jgUsername}</if>
+            <if test="memberId != null  and memberId != '' "> and tb.member_id = #{memberId}</if>
+            <if test="englishName != null  and englishName != '' "> and tb.english_name = #{englishName}</if>
+            <if test="certExpireDate != null "> and tb.cert_expire_date = #{certExpireDate}</if>
+            <if test="selfieImage != null  and selfieImage != '' "> and tb.selfie_image = #{selfieImage}</if>
+            <if test="graduateDate != null "> and tb.graduate_date = #{graduateDate}</if>
+            <if test="sex != null "> and tb.sex = #{sex}</if>
+            <if test="passportNo != null  and passportNo != '' "> and tb.passport_no = #{passportNo}</if>
+            <if test="roleIds != null  and roleIds != '' "> and tb.role_ids = #{roleIds}</if>            
+        </where>
+    </select>
+
+    <select id="selectClientUserByIdAssoc" parameterType="Long" resultMap="ClientUserResult">
+        <include refid="selectClientUserAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectClientUserAllByIsVip" resultType="Stats">
+	    select
+		tb.id as clientUserId,tb.nickname as nickName,tb.english_name as englishName,tb.real_name as realName
+		from client_user tb
+		where
+		tb.status = 2
+		and
+		tb.cert_expire_date &gt;= now()
+     </select>
+
+    <select id="selectClientUserCountByMemberId" parameterType="String" resultType="int">
+        select count(*) from client_user where member_id=#{memberId}
+    </select>
+
+    <select id="selectRemindMessage" parameterType="ClientUser" resultMap="ClientUserResult">
+        <include refid="selectClientUserAssoc"/>
+        where DATEDIFF(cert_expire_date,NOW())=30 or DATEDIFF(cert_expire_date,NOW())=7 or DATEDIFF(cert_expire_date,NOW())=0 and status=2
+    </select>
+
+
+</mapper>

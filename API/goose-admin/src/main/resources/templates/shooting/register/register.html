@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								活动类别：<select id="fkTable" name="fkTable" th:with="type=${@dict.getType('shooting_register_fk_table')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								活动名称：<select id="actName" name="fkId">
+
+							</select>
+							</li>
+							<li>报名者：</li>
+							<li class="col-sm-3">
+								<select id="clientUserId" name="clientUserId" class="form-control">
+									<option value="">所有</option>
+									<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.realName}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								状态：<select name="status" th:with="type=${@dict.getType('release_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+	        	<!--  
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:register:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				-->
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:register:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:register:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="exportRegister()" shiro:hasPermission="shooting:register:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:register:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:register:remove')}]];
+        var prefix = ctx + "shooting/register";
+        var datas_shooting_register_fk_table = [[${@dict.getType('shooting_register_fk_table')}]];
+        var release_status = [[${@dict.getType('release_status')}]];
+		var club_release_status = [[${@dict.getType('club_release_status')}]];
+
+        $(function() {
+			$('#actName').append("<option value=''>所有</option>");
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "报名",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'remark', 
+					title : '活动名称',
+				},
+				{
+					field : 'fkTable', 
+					title : '活动类别',
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_shooting_register_fk_table, value);
+		            }
+				},
+				{
+					field : 'clientUser.realName',
+					title : '报名者',
+					sortable: false
+				},
+				{
+					field : 'clientUser.memberId',
+					title : '射手编号',
+					sortable: false
+				},
+				{
+					field : 'schedules',
+					title : '报名时间段',
+					sortable: false
+				},
+				{
+					field : 'status', 
+					title : '状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+						if(row.fkTable!=3){
+							return $.table.selectDictLabel(release_status, value);
+						}else {
+							return $.table.selectDictLabel(club_release_status, value);
+						}
+		            }
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        $('#fkTable').change(function (){
+			var prefix = ctx + "shooting/register"
+        	var id=$('#fkTable').val();
+			if(id!=0){
+				$.ajax({
+					url: prefix + "/getListById",
+					data: null,
+					type: "post",
+					processData: false,
+					contentType: false,
+					success: function(result) {
+						if(id==1){
+							$('#actName').html('')
+							$('#actName').append("<option value=''>所有</option>");
+							for(var i in result.trainingList){
+
+								$('#actName').append("<option value='"+result.trainingList[i].id+"'>"+result.trainingList[i].title+"</option>");
+							}
+						}
+						if(id==2){
+							$('#actName').html('')
+							$('#actName').append("<option value=''>所有</option>");
+							for(var i in result.contestList){
+								$('#actName').append("<option value='"+result.contestList[i].id+"'>"+result.contestList[i].title+"</option>");
+							}
+						}
+						if(id==3){
+							$('#actName').html('')
+							$('#actName').append("<option value=''>所有</option>");
+							for(var i in result.clubActivityList){
+								$('#actName').append("<option value='"+result.clubActivityList[i].id+"'>"+result.clubActivityList[i].title+"</option>");
+							}
+						}
+					}
+				})
+			}else {
+				$('#actName').html('')
+				$('#actName').append("<option value=''>所有</option>");
+			}
+
+		})
+
+		/*function exportRegister(){
+			var rows =  $('#bootstrap-table').bootstrapTable('getData')
+			var ids = rows?data:{}
+			//
+			$.post(prefix +"/exportRegister",ids , function(result) {
+				if (result.code == web_status.SUCCESS) {
+					alert("导出成功")
+				} else {
+					$.modal.alertError(result.msg);
+				}
+				$.modal.closeLoading();
+			});
+		}*/
+
+		// 搜索-默认第一个form
+		 function exportRegister() {
+
+			 if($("#fkTable").val()==null||$("#fkTable").val()==''){
+				 alert('请选择活动类别')
+				 return ;
+			 }
+		 	if($("#actName").val()==null||$("#actName").val()==''){
+		 		alert('请选择活动名称')
+				return ;
+			}
+
+		 	$.post(prefix+"/list",{"pageNUm":"1","pageSize":"10","fkId":$("#actName").val(),"fkTable":$("#fkTable").val()},function (res){
+				if(res.total==0){
+					alert("该赛事无报名人员");
+					return
+				}
+				var url=prefix+"/exportRegister/"+$("#actName").val()+"/"+$("#fkTable").val();
+				console.log(url);
+				window.location.href=url;
+			})
+
+
+
+
+		}
+        
+    </script>
+</body>
+</html>

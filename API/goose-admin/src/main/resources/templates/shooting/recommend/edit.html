@@ -1,0 +1,1045 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-recommend-edit" th:object="${recommend}">
+        <input id="id" name="id" th:field="*{id}" type="hidden">
+        <!--
+          <div class="form-group">
+            <label class="col-sm-3 control-label">发布者：</label>
+            <div class="col-sm-8">
+                <select id="clientUserId" name="clientUserId" class="form-control">
+                    <option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" th:field="*{clientUserId}"></option>
+                </select>
+            </div>
+        </div>
+         -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">推荐类别：</label>
+            <div class="col-sm-8">
+                <select id="category" name="category" class="form-control m-b"
+                        th:with="type=${@dict.getType('shooting_recommend_category')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                            th:field="*{category}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">标题：</label>
+            <div class="col-sm-8">
+                <input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">内容：</label>
+            <div class="col-sm-8">
+                <input id="content" name="content" th:field="*{content}" type="hidden">
+                <div id="contentId" class="summernote"></div>
+            </div>
+        </div>
+        <!--<div class="form-group">
+            <label class="col-sm-3 control-label">图集链接1：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image1" id="image1" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage1" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接2：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image2" id="image2" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage2" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接3：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image3" id="image3" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage3" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接4：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image4" id="image4" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage4" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接5：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image5" id="image5" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage5" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接6：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image6" id="image6" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage6" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接7：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image7" id="image7" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage7" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接8：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image8" id="image8" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage8" class='imageBox' />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图集链接9：</label>
+            <div class="col-sm-8">
+               <div class="new-contentarea">
+                   <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                   <input type="file" class="" name="image9" id="image9" accept="image/*"/>
+               </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                       <img id="imgpreviewimage9" class='imageBox' />
+                </div>
+            </div>
+        </div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上传图片：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="image9" id="uploadFile" accept="image/*"/> 
+                </div>
+                <div>
+                    <p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：710*360,格式：jpg、png、gif</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" id="picLable" hidden>图片预览: </label>
+            <div class="col-sm-8" id="sDiv">
+                <div class="col-sm-12" id="imgDiv">
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div1">
+                        <img id="imgpreviewimage1" src="" width="100%" height="100px" class="smPic">
+                        <span id="span1"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div2">
+                        <img id="imgpreviewimage2" src="" width="100%" height="100px" class="smPic">
+                        <span id="span2"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div3">
+                        <img id="imgpreviewimage3" src="" width="100%" height="100px" class="smPic">
+                        <span id="span3"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div4">
+                        <img id="imgpreviewimage4" src="" width="100%" height="100px" class="smPic">
+                        <span id="span4"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div5">
+                        <img id="imgpreviewimage5" src="" width="100%" height="100px" class="smPic">
+                        <span id="span5"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div6">
+                        <img id="imgpreviewimage6" src="" width="100%" height="100px" class="smPic">
+                        <span id="span6"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div7">
+                        <img id="imgpreviewimage7" src="" width="100%" height="100px" class="smPic">
+                        <span id="span7"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div8">
+                        <img id="imgpreviewimage8" src="" width="100%" height="100px" class="smPic">
+                        <span id="span8"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                    <div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div9">
+                        <img id="imgpreviewimage9" src="" width="100%" height="100px" class="smPic">
+                        <span id="span9"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8" hidden id="hDiv">
+                <img src="" id="bgPic" style="width: 100%;height: 100%">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">视频：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传视频</label> </a>
+                    <input type="file" class="" name="video" id="video" accept="video/*"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">视频预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <video id="videopreviewmediaUrl" width="320" height="240" controls/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">点赞数：</label>
+            <div class="col-sm-8">
+                <input id="likeCount" name="likeCount" th:field="*{likeCount}" class="form-control" type="text"
+                       disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">评论数：</label>
+            <div class="col-sm-8">
+                <input id="commentCount" name="commentCount" th:field="*{commentCount}" class="form-control" type="text"
+                       disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">浏览数：</label>
+            <div class="col-sm-8">
+                <input id="readCount" name="readCount" th:field="*{readCount}" class="form-control" type="text"
+                       disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">置顶：</label>
+            <div class="col-sm-8">
+                <select id="onTop" name="onTop" class="form-control m-b"
+                        th:with="type=${@dict.getType('recommend_on_top')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                            th:field="*{onTop}"></option>
+                </select>
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label">排名：</label>
+            <div class="col-sm-8">
+                <input id="rankings" name="rankings" th:field="*{rankings}" class="form-control" type="text">
+            </div>
+        </div>
+        -->
+        <div class="form-group" th:hidden="*{draft} == 0">
+            <label class="col-sm-3 control-label">是否存为草稿：</label>
+            <div class="col-sm-8">
+                <div>
+                    <label class="radio-inline"><input type="radio" id="draftYes" name="draft" value="1"  th:checked="*{draft} == 1">是</label>
+                    <label class="radio-inline"><input type="radio" id="draftNo" name="draft" value="0" th:checked="*{draft} == 0">否</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control m-b"
+                        th:with="type=${@dict.getType('sys_common_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                            th:field="*{status}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!--			<div class="form-group">-->
+        <!--				<label class="col-sm-3 control-label">广告标题：</label>-->
+        <!--				<div class="col-sm-8">-->
+        <!--					<input id="adTitle" name="adTitle" th:field="*{adTitle}" class="form-control" type="text">-->
+        <!--				</div>-->
+        <!--			</div>-->
+        <!--			<div class="form-group">-->
+        <!--				<label class="col-sm-3 control-label">广告详情：</label>-->
+        <!--				<div class="col-sm-8">-->
+        <!--					<input id="adContent" name="adContent" th:field="*{adContent}" type="hidden">-->
+        <!--					<div id="adContentId" class="summernote"></div>-->
+        <!--				</div>-->
+        <!--			</div>-->
+        <!--			<div class="form-group">-->
+        <!--				<label class="col-sm-3 control-label">广告图片：</label>-->
+        <!--				<div class="col-sm-8">-->
+        <!--					<div class="new-contentarea">-->
+        <!--						<a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>-->
+        <!--						<input type="file" class="" name="adMediaUrl" id="adMediaUrl" accept="image/*"/>-->
+        <!--					</div>-->
+        <!--				</div>-->
+        <!--			</div>-->
+        <!--			<div class="form-group">-->
+        <!--				<label class="col-sm-3 control-label">图片预览：</label>-->
+        <!--				<div class="col-sm-8">-->
+        <!--					<div class="container">-->
+        <!--						<img id="imgpreviewadMediaUrl" class='imageBox' />-->
+        <!--					</div>-->
+        <!--				</div>-->
+        <!--			</div>-->
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建者：</label>
+            <div class="col-sm-8">
+                <input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建时间：</label>
+            <div class="col-sm-8">
+                <input id="createTime" name="createTime" class="form-control time-input" type="text"
+                       th:value="${#dates.format(recommend.createTime, 'yyyy-MM-dd')}" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新者：</label>
+            <div class="col-sm-8">
+                <input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新时间：</label>
+            <div class="col-sm-8">
+                <input id="updateTime" name="updateTime" class="form-control time-input" type="text"
+                       th:value="${#dates.format(recommend.updateTime, 'yyyy-MM-dd')}" disabled>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+<script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+<script type="text/javascript">
+    var fileArr=[];
+    var fileArrAdd=[];
+    var picMap={}
+    var prefix = ctx + "shooting/recommend"
+
+    $("#contentId").summernote({
+        height: '320px',
+        lang: 'zh-CN',
+        dialogsInBody: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        placeholder: '请输入通知的内容',
+        callbacks:{
+            onImageUpload:function(files, editor, $editable) {
+           	 var fd = new FormData();
+           	    fd.append("file", files[0]);
+           	    fd.append("type",1);
+           	    $.ajax({
+           	        type:"POST",
+           	        url:ctx + "shooting/oss/uploadRichText",
+           	        data: fd,
+           	        cache: false,
+           	        contentType: false,
+           	        processData: false,
+           	        success: function (data) {
+           	        	$("#contentId").summernote('insertImage',data)
+           	        }
+           	    });
+           	 
+           }
+        }
+
+    });
+    var content = $("#content").val();
+    
+    
+    $('#contentId').summernote("code",content);
+    
+    $("#adContentId").summernote({
+        height: '220px',
+        lang: 'zh-CN',
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link','picture']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        callbacks:{
+        	onImageUpload: function (files, editor, $editable) {
+        		console.log("qqqqqqqqqqqqq")
+                console.log(files)
+              //  sendFile(files[0], editor, $editable);
+            }
+        }
+    });
+    var content = $("#adContent").val();
+    $('#adContentId').summernote("code",content);
+
+
+    $("#form-recommend-edit").validate({
+        rules: {
+            id: {
+                required: false,
+            },
+            clientUserId: {
+                required: false,
+            },
+            title: {
+                required: false,
+            },
+            content: {
+                required: false,
+            },
+            image1: {
+                required: false,
+            },
+            image2: {
+                required: false,
+            },
+            image3: {
+                required: false,
+            },
+            image4: {
+                required: false,
+            },
+            image5: {
+                required: false,
+            },
+            image6: {
+                required: false,
+            },
+            image7: {
+                required: false,
+            },
+            image8: {
+                required: false,
+            },
+            image9: {
+                required: false,
+            },
+            video: {
+                required: false,
+            },
+            likeCount: {
+                required: false,
+            },
+            commentCount: {
+                required: false,
+            },
+            readCount: {
+                required: false,
+            },
+            onTop: {
+                required: false,
+            },
+            rankings: {
+                required: false,
+            },
+            status: {
+                required: false,
+            },
+            createBy: {
+                required: false,
+            },
+            createTime: {
+                required: false,
+            },
+            updateBy: {
+                required: false,
+            },
+            updateTime: {
+                required: false,
+            },
+            adTitle: {
+                required: false,
+            },
+            adContent: {
+                required: false,
+            },
+            adMediaUrl: {
+                required: false,
+            },
+        },
+        messages: {
+            id: {},
+            clientUserId: {},
+            category: {},
+            title: {},
+            content: {},
+            image1: {},
+            image2: {},
+            image3: {},
+            image4: {},
+            image5: {},
+            image6: {},
+            image7: {},
+            image8: {},
+            image9: {},
+            video: {},
+            likeCount: {},
+            commentCount: {},
+            readCount: {},
+            onTop: {},
+            rankings: {},
+            status: {},
+            createBy: {},
+            createTime: {},
+            updateBy: {},
+            updateTime: {},
+            adTitle: {},
+            adContent: {},
+            adMediaUrl: {},
+        }
+    });
+
+    function removePic(obj) {
+        console.log(obj)
+        $(obj).parent().remove();
+        for(var i in fileArrAdd){
+            console.log(fileArr[i])
+            if(fileArrAdd[i] = name){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+    }
+
+    $("#uploadFile").on("change", function () {
+        var num =fileArr.length
+        var newFile=fileArrAdd.length
+        if (num+newFile == 9) {
+            layer.msg("最多上传9张图片")
+            return
+        }
+        var ss = document.getElementById('uploadFile').files[0]
+        fileArrAdd.push(ss)
+        var objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
+        if (objUrl) {
+            var pic = '<div id="imagepreview' + Math.floor(Math.random() * 1000000) + '" class="col-sm-4" style="position: relative; padding-top: 15px;"><img src="' + objUrl + '" width="100%" height="100px" class="smPic" ><span onclick="removePic(this)" data-name=" '+ss.name+'" style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span></div>'
+            $('#picLable').removeAttr('hidden')
+            $("#imgDiv").append(pic); //将图片路径存入src中，显示出图片
+        }
+
+
+        $(".smPic").click(function () {
+            var picSrc = $(this).attr('src')
+            $('#bgPic').attr('src', picSrc)
+            $('#sDiv').hide()
+            $("#hDiv").show()
+        })
+
+        $('#hDiv').on('click', function () {
+            $('#bgPic').removeAttr('src')
+            $('#hDiv').hide()
+            $('#sDiv').show()
+        })
+
+    });
+
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+
+    $('#span1').click(function () {
+        var name=$('#span1').data('filename');
+        $('#span1').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span2').click(function () {
+        var name=$('#span2').data('filename');
+        $('#span2').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span3').click(function () {
+        var name=$('#span3').data('filename');
+        $('#span3').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span4').click(function () {
+        var name=$('#span4').data('filename');
+        $('#span4').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span5').click(function () {
+        var name=$('#span5').data('filename');
+        $('#span5').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span6').click(function () {
+        var name=$('#span6').data('filename');
+        $('#span6').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span7').click(function () {
+        var name=$('#span7').data('filename');
+        $('#span7').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span8').click(function () {
+        var name=$('#span8').data('filename');
+        $('#span8').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+    $('#span9').click(function () {
+        var name=$('#span9').data('filename');
+        $('#span9').parent().remove()
+        for(var i in fileArr){
+            if(fileArr[i] ==name ){
+                fileArr.splice(i,1);
+                break;
+            }
+        }
+        for(var i in fileArrAdd){
+            if(fileArrAdd[i] ==name ){
+                fileArrAdd.splice(i,1);
+                break;
+            }
+        }
+    })
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            var sHTMLcontent = $("#contentId").summernote('code');
+            $("#content").val(sHTMLcontent);
+            var formdata = new FormData();
+            formdata.append("id", $("#id").val());
+            //formdata.append("clientUserId", $("#clientUserId").val());
+            formdata.append("category", $("#category").val());
+            formdata.append("title", $("#title").val());
+            formdata.append("content", $("#content").val());
+            formdata.append("onTop", $("#onTop").val());
+            // formdata.append("rankings", $("#rankings").val());
+            formdata.append("status", $("#status").val());
+            formdata.append("createBy", $("#createBy").val());
+            formdata.append("createTime", $("#createTime").val());
+            formdata.append("updateBy", $("#updateBy").val());
+            formdata.append("updateTime", $("#updateTime").val());
+            formdata.append("adTitle", $("#adTitle").val());
+            formdata.append("draft",$("input[name='draft']:checked").val())
+            formdata.append("adContent", $("#adContent").val());
+            for (var i in fileArr) {
+                var data = fileArr[i]
+                i++
+                var fileName = 'image' + i
+                formdata.append(fileName, data);
+            }
+            for (var i in fileArrAdd) {
+                var data = fileArrAdd[i]
+                i++
+                var num=fileArr.length+i;
+                var fileName = 'image' + num+'File'
+                formdata.append(fileName, data);
+            }
+            console.log(formdata.fileName)
+            /* formdata.append("image1File", $('input[name=image1]').get(0).files[0]);
+             formdata.append("image2File", $('input[name=image2]').get(0).files[0]);
+             formdata.append("image3File", $('input[name=image3]').get(0).files[0]);
+             formdata.append("image4File", $('input[name=image4]').get(0).files[0]);
+             formdata.append("image5File", $('input[name=image5]').get(0).files[0]);
+             formdata.append("image6File", $('input[name=image6]').get(0).files[0]);
+             formdata.append("image7File", $('input[name=image7]').get(0).files[0]);
+             formdata.append("image8File", $('input[name=image8]').get(0).files[0]);
+             formdata.append("image9File", $('input[name=image9]').get(0).files[0]);*/
+            formdata.append("videoFile", $('input[name=video]').get(0).files[0]);
+            // formdata.append("adMediaUrlFile", $('input[name=adMediaUrl]').get(0).files[0]);
+
+            $.ajax({
+                url: prefix + "/edit",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                beforeSend: function (XMLHttpRequest) {
+                    //注意，layer.msg默认3秒自动关闭，如果数据加载耗时比较长，需要设置time
+                    $.modal.loading("提交中...");
+                },
+                success: function (result) {
+                    $.modal.closeLoading();
+                    $.operate.saveSuccess(result);
+                }
+            })
+        }
+    }
+
+
+    $(window).load(function () {
+
+        var pictureimage1 = '[[${recommend.image1}]]';
+        var optionsimage1 = {
+            imgSrc: $.common.isEmpty(pictureimage1) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage1
+        }
+
+        if (!$.common.isEmpty(pictureimage1)) {
+            fileArr.push(pictureimage1)
+            $('#imgpreviewimage1').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage1.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div1').removeAttr('hidden')
+            $('#span1').data('filename',pictureimage1)
+        }
+        var pictureimage2 = '[[${recommend.image2}]]';
+        var optionsimage2 = {
+            imgSrc: $.common.isEmpty(pictureimage2) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage2
+        }
+
+        if (!$.common.isEmpty(pictureimage2)) {
+            fileArr.push(pictureimage2)
+            $('#imgpreviewimage2').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage2.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div2').removeAttr('hidden')
+            $('#span2').data('filename',pictureimage2)
+
+        }
+
+
+        var pictureimage3 = '[[${recommend.image3}]]';
+        var optionsimage3 = {
+            imgSrc: $.common.isEmpty(pictureimage3) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage3
+        }
+
+        if (!$.common.isEmpty(pictureimage3)) {
+            fileArr.push(pictureimage3)
+            $('#imgpreviewimage3').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage3.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div3').removeAttr('hidden')
+            $('#span3').data('filename',pictureimage3)
+
+        }
+
+
+        var pictureimage4 = '[[${recommend.image4}]]';
+        var optionsimage4 = {
+            imgSrc: $.common.isEmpty(pictureimage4) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage4
+        }
+
+        if (!$.common.isEmpty(pictureimage4)) {
+            fileArr.push(pictureimage4)
+            $('#imgpreviewimage4').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage4.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div4').removeAttr('hidden')
+            $('#span4').data('filename',pictureimage4)
+
+        }
+
+        var pictureimage5 = '[[${recommend.image5}]]';
+        var optionsimage5 = {
+            imgSrc: $.common.isEmpty(pictureimage5) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage5
+        }
+
+        if (!$.common.isEmpty(pictureimage5)) {
+            fileArr.push(pictureimage5)
+            $('#imgpreviewimage5').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage5.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div5').removeAttr('hidden')
+            $('#span5').data('filename',pictureimage5)
+
+        }
+
+        var pictureimage6 = '[[${recommend.image6}]]';
+        var optionsimage6 = {
+            imgSrc: $.common.isEmpty(pictureimage6) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage6
+        }
+
+        if (!$.common.isEmpty(pictureimage6)) {
+            fileArr.push(pictureimage6)
+            $('#imgpreviewimage6').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage6.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div6').removeAttr('hidden')
+            $('#span6').data('filename',pictureimage6)
+
+        }
+
+
+        var pictureimage7 = '[[${recommend.image7}]]';
+        var optionsimage7 = {
+            imgSrc: $.common.isEmpty(pictureimage7) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage7
+        }
+
+        if (!$.common.isEmpty(pictureimage7)) {
+            fileArr.push(pictureimage7)
+            $('#imgpreviewimage7').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage7.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div7').removeAttr('hidden')
+            $('#span7').data('filename',pictureimage7)
+
+        }
+
+        var pictureimage8 = '[[${recommend.image8}]]';
+        var optionsimage8 = {
+            imgSrc: $.common.isEmpty(pictureimage8) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage8
+        }
+
+        if (!$.common.isEmpty(pictureimage8)) {
+            fileArr.push(pictureimage8)
+
+            $('#imgpreviewimage8').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage8.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div8').removeAttr('hidden')
+            $('#span8').data('filename',pictureimage8)
+
+        }
+        var pictureimage9 = '[[${recommend.image9}]]';
+        var optionsimage9 = {
+            imgSrc: $.common.isEmpty(pictureimage9) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage9
+        }
+
+        if (!$.common.isEmpty(pictureimage9)) {
+            fileArr.push(pictureimage9)
+            $('#imgpreviewimage9').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsimage9.imgSrc);
+            $('#picLable').removeAttr('hidden')
+            $('#div9').removeAttr('hidden')
+            $('#span9').data('filename',pictureimage9)
+
+        }
+
+        var picturevideo = '[[${recommend.video}]]';
+        var optionsvideo = {
+            imgSrc: $.common.isEmpty(picturevideo) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturevideo
+        }
+
+        if (!$.common.isEmpty(picturevideo)) {
+            $('#videopreviewmediaUrl').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsvideo.imgSrc);
+        }
+        $('#video').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsvideo.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是视频类型
+                if ((optionsvideo.imgSrc).indexOf("video/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传视频类型,如：MP4后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#videopreviewmediaUrl').attr('src', e.target.result);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+
+        var pictureadMediaUrl = '[[${recommend.adMediaUrl}]]';
+        var optionsadMediaUrl = {
+            imgSrc: $.common.isEmpty(pictureadMediaUrl) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureadMediaUrl
+        }
+
+        if (!$.common.isEmpty(pictureadMediaUrl)) {
+            $('#imgpreviewadMediaUrl').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/recommend" + optionsadMediaUrl.imgSrc);
+        }
+        $('#adMediaUrl').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsadMediaUrl.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsadMediaUrl.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewadMediaUrl').attr('src', e.target.result);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+        $(".smPic").click(function () {
+            var picSrc = $(this).attr('src')
+            $('#bgPic').attr('src', picSrc)
+            $('#sDiv').hide()
+            $("#hDiv").show()
+        })
+
+        $('#hDiv').on('click', function () {
+            $('#bgPic').removeAttr('src')
+            $('#hDiv').hide()
+            $('#sDiv').show()
+        })
+    });
+
+
+</script>
+</body>
+</html>

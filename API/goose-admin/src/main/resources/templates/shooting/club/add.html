@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-club-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地区：</label>
+            <div class="col-sm-8">
+                <select id="areaId" name="areaId" class="form-control">
+                    <option th:each="fkRow:${ areaIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">名称：</label>
+            <div class="col-sm-8">
+                <input id="title" name="title" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">简介：</label>
+            <div class="col-sm-8">
+                <input id="profile" name="profile" type="hidden">
+                <div id="profileId" class="summernote"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">俱乐部LOGO:</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="avatar" id="avatar" accept="image/*"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewavatar" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">背景图片：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="image" id="image" accept="image/*"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewimage" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label">教官数：</label>
+            <div class="col-sm-8">
+                <input id="coachCount" name="coachCount" class="form-control" type="text">
+            </div>
+        </div>
+         -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">学员数：</label>
+            <div class="col-sm-8">
+                <input id="studentCount" name="studentCount" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">粉丝数：</label>
+            <div class="col-sm-8">
+                <input id="fansCount" name="fansCount" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">俱乐部类别：</label>
+            <div class="col-sm-8">
+                <select id="category" name="category" class="form-control m-b"
+                        th:with="type=${@dict.getType('shooting_club_category')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label">排名：</label>
+            <div class="col-sm-8">
+                <input id="rankings" name="rankings" class="form-control" type="text">
+            </div>
+        </div>
+         -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control m-b"
+                        th:with="type=${@dict.getType('sys_common_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">创建俱乐部聊天群：</label>
+            <div class="col-sm-3">
+                <input id="jgGroupName" name="jsGroupName" class="form-control" type="text" placeholder="请输入聊天群组名称">
+            </div>
+            <div class="col-sm-2" style="line-height:34px;">群管理员</div>
+            <div class="col-sm-3" style="line-height: 34px;">
+                <select id="jgGroupAdminId" name="jgGroupAdminId" class="form-control">
+                    <option value="">所有</option>
+                    <option th:each="fkRow:${ clientUserList}" th:value="${ fkRow.id}"
+                            th:text="${ fkRow.phone}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建者：</label>
+            <div class="col-sm-8">
+                <input id="createBy" name="createBy" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建时间：</label>
+            <div class="col-sm-8">
+                <input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新者：</label>
+            <div class="col-sm-8">
+                <input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新时间：</label>
+            <div class="col-sm-8">
+                <input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+<script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+<script type="text/javascript">
+    var prefix = ctx + "shooting/club"
+
+    $("#profileId").summernote({
+        height: '320px',
+        lang: 'zh-CN',
+        dialogsInBody: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        placeholder: '请输入通知的内容',
+        callbacks: {
+            onImageUpload: function (files, editor, $editable) {
+                var fd = new FormData();
+                fd.append("file", files[0]);
+                fd.append("type", 4);
+                $.ajax({
+                    type: "POST",
+                    url: ctx + "shooting/oss/uploadRichText",
+                    data: fd,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $("#profileId").summernote('insertImage', data)
+                    }
+                });
+
+            }
+        }
+    });
+
+
+    $("#form-club-add").validate({
+        rules: {
+            id: {
+                required: false,
+            },
+            areaId: {
+                required: true,
+            },
+            title: {
+                required: true,
+            },
+            profile: {
+                required: false,
+            },
+            avatar: {
+                required: false,
+            },
+            image: {
+                required: false,
+            },
+            coachCount: {
+                required: false,
+            },
+            studentCount: {
+                required: false,
+            },
+    /*         fansCount: {
+                required: false,
+            }, */
+            category: {
+                required: true,
+            },
+            rankings: {
+                required: false,
+            },
+            status: {
+                required: false,
+            },
+            createBy: {
+                required: false,
+            },
+            createTime: {
+                required: false,
+            },
+            updateBy: {
+                required: false,
+            },
+            updateTime: {
+                required: false,
+            },
+        },
+        messages: {
+            id: {},
+            areaId: {},
+            title: {},
+            profile: {},
+            avatar: {},
+            image: {},
+            coachCount: {},
+            studentCount: {},
+            fansCount: {},
+            category: {},
+            rankings: {},
+            status: {},
+            createBy: {},
+            createTime: {},
+            updateBy: {},
+            updateTime: {},
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            var sHTMLprofile = $("#profileId").summernote('code');
+
+            $("#profile").val(sHTMLprofile);
+            var formdata = new FormData();
+            formdata.append("areaId", $("#areaId").val());
+            formdata.append("title", $("#title").val());
+            formdata.append("profile", $("#profile").val());
+            //	formdata.append("coachCount", $("#coachCount").val());
+            formdata.append("studentCount", $("#studentCount").val());
+           	formdata.append("fansCount", $("#fansCount").val());
+            formdata.append("category", $("#category").val());
+            //	formdata.append("rankings", $("#rankings").val());
+            formdata.append("status", $("#status").val());
+            formdata.append("createBy", $("#createBy").val());
+            formdata.append("createTime", $("#createTime").val());
+            formdata.append("updateBy", $("#updateBy").val());
+            formdata.append("updateTime", $("#updateTime").val());
+
+            formdata.append("jgGroupName", $("#jgGroupName").val());
+            formdata.append("jgGroupAdminId", $("#jgGroupAdminId").val());
+
+            formdata.append("avatarFile", document.getElementById('avatar').files.length > 0 ? document.getElementById('avatar').files[0] : null);
+            formdata.append("imageFile", document.getElementById('image').files.length > 0 ? document.getElementById('image').files[0] : null);
+
+            $.ajax({
+                url: prefix + "/add",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    $.operate.saveSuccess(result);
+                }
+            })
+
+        }
+    }
+
+    $(window).load(function () {
+        var optionsavatar = {}
+        $('#avatar').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsavatar.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsavatar.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewavatar').attr('src', e.target.result);
+                    $('#imgpreviewavatar').attr('hidden', false);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+        var optionsimage = {}
+        $('#image').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsimage.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsimage.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewimage').attr('src', e.target.result);
+                    $('#imgpreviewimage').attr('hidden', false);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+
+    });
+
+
+</script>
+</body>
+</html>

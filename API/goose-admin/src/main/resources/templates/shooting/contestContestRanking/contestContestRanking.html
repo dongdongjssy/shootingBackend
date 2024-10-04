@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul><li style="margin-top: 12px">用户:</li>
+							<li style="width: 280px">
+								<select id="clientUserId"  name="clientUserId" class="form-control">
+									<option value="">所有</option>
+									<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								赛事：
+								<select id="contestId" name="contestId" >
+									<option value="">所有</option>
+									<option th:each="fkRow:${ contestIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								组别：
+								<select id="groupId" name="groupId" >
+									<option value="">所有</option>
+									<option th:each="fkRow:${ groupIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								CPSA名次：<input type="text" name="cpsaRank"/>
+							</li>
+							<li>
+								总名次：<input type="text" name="totalRank"/>
+							</li>
+							<li>
+								成绩：<input type="text" name="score"/>
+							</li>
+							<!-- <li>
+								百分比：<input type="text" name="percentage"/>
+							</li> -->
+							<!-- <li>
+								平均系数：<input type="text" name="avgCoeff"/>
+							</li>
+							<li>
+								平均得分：<input type="text" name="avgScore"/>
+							</li> -->
+							<li>
+								年龄组别：<select name="ageGroup" th:with="type=${@dict.getType('age_group')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								是否DQ：<select name="isDq" th:with="type=${@dict.getType('is_dq')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								状态：<select name="status" th:with="type=${@dict.getType('sys_common_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+ 				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:contestContestRanking:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+			<!-- 	<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:contestContestRanking:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:contestContestRanking:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a> -->
+<!-- 				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="shooting:contestContestRanking:export">
+						<i class="fa fa-download"></i> 导出
+				 </a> -->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:contestContestRanking:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:contestContestRanking:remove')}]];
+        var prefix = ctx + "shooting/contestContestRanking";
+        var datas_age_group = [[${@dict.getType('age_group')}]];
+        var datas_is_dq = [[${@dict.getType('is_dq')}]];
+        var datas_sys_common_status = [[${@dict.getType('sys_common_status')}]];
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "成绩",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'clientUser.realName',
+					title : '用户',
+					sortable: false,
+					width:'100px'
+				},
+				{
+					field : 'clientUser.phone',
+					title : '电话',
+					sortable: false
+				},
+
+				{
+					field : 'contest.title',
+					title : '赛事',
+					sortable: false
+				},
+				{
+					field : 'contestGroup.name',
+					title : '组别',
+					sortable: false
+				},
+				{
+					field : 'cpsaRank', 
+					title : 'CPSA名次',
+
+					sortable: true
+				},
+				{
+					field : 'totalRank', 
+					title : '总名次',
+					formatter: function(value, row, index) {
+						if(value==999999){
+							return '-'
+						}
+						return value
+					},
+					sortable: true
+				},
+				{
+					field : 'score', 
+					title : '成绩',
+					formatter: function(value, row, index) {
+						if(value==999999){
+							return '-'
+						}
+						return '-'
+					},
+					sortable: true
+				},
+				{
+					field : 'percentage', 
+					title : '百分比',
+					formatter: function(value, row, index) {
+						var vv = value * 100;
+		            	return vv.toFixed(2) + "%";
+		            }
+
+				},
+				{
+					field : 'avgCoeff', 
+					title : '平均系数',
+
+					sortable: true
+				},
+				{
+					field : 'avgTime', 
+					title : '平均时间',
+
+					sortable: true
+				},
+				{
+					field : 'avgScore', 
+					title : '平均得分',
+
+					sortable: true
+				},
+				{
+					field : 'ageGroup', 
+					title : '年龄组别',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_age_group, value);
+		            }
+				},
+				{
+					field : 'isDq', 
+					title : '是否DQ',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_is_dq, value);
+		            }
+				},
+				{
+					field : 'note', 
+					title : '备注',
+
+					sortable: true
+				},
+				{
+					field : 'status', 
+					title : '状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_sys_common_status, value);
+		            }
+				},
+				{
+					field : 'createBy', 
+					title : '创建者',
+
+					sortable: true
+				},
+				{
+					field : 'createTime', 
+					title : '创建时间',
+
+					sortable: true
+				},
+/* 				{
+					field : 'updateBy', 
+					title : '更新者',
+
+					sortable: true
+				},
+				{
+					field : 'updateTime', 
+					title : '更新时间',
+
+					sortable: true
+				}, */
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        
+        
+    </script>
+</body>
+</html>

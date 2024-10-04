@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${package}.mapper.${className}Mapper">
+    
+    <resultMap type="${className}" id="${className}Result">
+#foreach ($column in $columns)
+        <result property="${column.attrname}"    column="${column.columnName}"    />
+#end
+#foreach ($fk in $foreignKeyColumns)
+        <association property="${fk.attrname}" column="${fk.columnName}"  javaType="${fk.attrType}"  resultMap="${fk.attrName}Result" />
+#end
+    </resultMap>
+
+#foreach ($fk in $foreignKeyColumns)
+    <resultMap type="${fk.attrType}" id="${fk.attrName}Result">
+#foreach ($column in $fk.referencedTableColumns)
+        <result property="${column.attrname}"    column="$fk.alias#[[_]]#${column.columnName}"    />
+#end    
+    </resultMap>
+#end    
+	
+	<sql id="select${className}VoNoJoin">
+        select#foreach($column in $columns) tb.$column.columnName#if($velocityCount != $columns.size()),#end#end
+        from ${tableName} tb
+    </sql>
+    
+	<sql id="select${className}Vo">
+           select#foreach($column in $columns) tb.$column.columnName#if($velocityCount != $columns.size()),#end#end
+#foreach($fk in $foreignKeyColumns)
+#if($fk.referencedTableName == "CLIENT_USER")
+#foreach($column in $fk.referencedTableColumns) 
+, $fk.alias.$column.columnName as $fk.alias#[[_]]#$column.columnName #if($velocityCount != $fk.referencedTableColumns.size())#end
+#end
+#end
+#end    
+ from ${tableName} tb ##
+#foreach($column in $foreignKeyColumns)
+#if($column.referencedTableName == "CLIENT_USER")
+join $column.referencedTableName $column.alias on tb.$column.columnName = $column.alias.$column.referencedColumnName
+#end
+#end
+    </sql>
+    
+     <select id="select${className}All" parameterType="${className}" resultMap="${className}Result">
+        <include refid="select${className}Vo"/>
+     </select>    
+	
+    <select id="select${className}List" parameterType="${className}" resultMap="${className}Result">
+        <include refid="select${className}Vo"/>
+        <where>  
+#foreach($column in $columns)
+#if($column.attrType == 'Date' && $column.configInfo.searchable == 1 )
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+				AND date_format(tb.$column.columnName ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+				AND date_format(tb.$column.columnName ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+#else
+            <if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname.trim() != '' #end"> and tb.$column.columnName = #{$column.attrname}</if>
+#end
+#end
+        </where>
+    </select>
+    
+    <select id="select${className}ById" parameterType="${primaryKey.attrType}" resultMap="${className}Result">
+        <include refid="select${className}Vo"/>
+        where tb.${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </select>
+        
+    <insert id="insert${className}" parameterType="${className}" useGeneratedKeys="true" keyProperty="$primaryKey.attrname">
+        insert into ${tableName}
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+#if($column.columnName != $primaryKey.columnName || $primaryKey.extra != 'auto_increment')
+#if($column.columnName == 'create_time')
+			create_time,
+#else
+			<if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname != '' #end ">$column.columnName,</if>
+#end
+#end
+#end
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+#if($column.columnName != $primaryKey.columnName || $primaryKey.extra != 'auto_increment')
+#if($column.columnName == 'create_time')
+			sysdate(),
+#elseif($column.columnName == 'update_time')				
+#else
+			<if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname != '' #end ">#{$column.attrname},</if>
+#end
+#end			
+#end
+         </trim>
+    </insert>
+	 
+    <update id="update${className}" parameterType="${className}">
+        update ${tableName}
+        <trim prefix="SET" suffixOverrides=",">
+#foreach($column in $columns)
+#if($column.columnName != $primaryKey.columnName)
+#if($column.columnName == 'update_time')
+			update_time = sysdate(),
+#elseif($column.columnName == 'create_time')
+#else
+            <if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname != '' #end ">$column.columnName = #{$column.attrname},</if>
+#end
+#end
+#end
+        </trim>
+        where ${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </update>
+
+	<delete id="delete${className}ById" parameterType="${primaryKey.attrType}">
+        delete from ${tableName} where ${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </delete>
+	
+    <delete id="delete${className}ByIds" parameterType="String">
+        delete from ${tableName} where ${primaryKey.columnName} in 
+        <foreach item="${primaryKey.attrname}" collection="array" open="(" separator="," close=")">
+            #{${primaryKey.attrname}}
+        </foreach>
+    </delete>
+ 
+#foreach($column in $columns)
+#if($column.configInfo.checkUnique == 1)
+ 	<select id="check${column.attrName}Unique" parameterType="${className}" resultMap="${className}Result">
+         <include refid="select${className}Vo"/>
+		 where tb.${column.columnName} = #{${column.attrname}} 
+#foreach ($fk in $foreignKeyColumns)
+#foreach($c in $columns)
+#if(${c.columnName} == ${fk.columnName})
+         and tb.${fk.columnName}=#{${c.attrname}}
+#end
+#end         
+#end		 
+		 
+	</select> 
+#end
+#end
+
+	<sql id="select${className}Assoc">
+        select#foreach($column in $columns) tb.$column.columnName#if($velocityCount != $columns.size()),#end#end #if(0 != $foreignKeyColumns.size()),#end
+        #foreach($fk in $foreignKeyColumns) 
+#foreach($column in $fk.referencedTableColumns) $fk.alias.$column.columnName as $fk.alias#[[_]]#$column.columnName #if($velocityCount != $fk.referencedTableColumns.size()),#end 
+#end
+		#if($velocityCount != $foreignKeyColumns.size()),#end##
+        #end##       
+        from ${tableName} tb #foreach($column in $foreignKeyColumns) join $column.referencedTableName $column.alias on tb.$column.columnName = $column.alias.$column.referencedColumnName#if($velocityCount != $foreignKeyColumns.size()) #end#end        
+    </sql>
+    
+     <select id="select${className}AllAssoc" parameterType="${className}" resultMap="${className}Result">
+        <include refid="select${className}Assoc"/>
+     </select>    
+	
+    <select id="select${className}ListAssoc" parameterType="${className}" resultMap="${className}Result">
+        <include refid="select${className}Assoc"/>
+        <where>  
+#foreach($column in $columns)
+#if($column.configInfo.textSearchOpt == 0)
+#if($column.attrType == 'Date' && $column.configInfo.searchable == 1 )
+			<if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+				AND date_format(tb.$column.columnName ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+			</if>
+			<if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+				AND date_format(tb.$column.columnName ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+#else
+            <if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname.trim() != '' #end"> and tb.$column.columnName = #{$column.attrname}</if>
+#end
+#else
+            <if test="$column.attrname != null #if($column.attrType == 'String' ) and $column.attrname.trim() != '' #end"> and tb.$column.columnName like concat('%', #{$column.attrname}, '%')</if>
+#end
+#end
+        </where>
+    </select>
+    
+    <select id="select${className}ByIdAssoc" parameterType="${primaryKey.attrType}" resultMap="${className}Result">
+        <include refid="select${className}Assoc"/>
+        where tb.${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </select>
+
+    
+</mapper>

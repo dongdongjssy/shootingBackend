@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content" >    
+        <form class="form-horizontal m form-group" id="form-option-edit" th:object="${table}"  th:each="column, stat:${table.columns}" th:if="${column.columnName} != 'id'">
+                <input id="tableName" name="tableName" th:field="*{tableName}" type="hidden"/>
+        	    <input id="columnName" name="columnName" th:value="${column.columnName}" type="hidden"/>        	
+				<input id="" name="" th:value="${column.columnComment}+':    '+${column.columnName}+' ('+${column.dataType}+','+${column.attrType}+')'" class="form-control" type="text" disabled >
+		
+				<div th:if="${column.columnName.indexOf('pic') == -1 and column.columnName.indexOf('image') == -1}">
+					<label class="col-sm-3 control-label">支持搜索：</label>
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="searchable" type="radio" name="searchable" value="0" th:field="*{columns[__${stat.index}__].configInfo.searchable}"/> 否 </label> 
+						<label class="radio-box"> <input id="searchable" type="radio" name="searchable" value="1" th:field="*{columns[__${stat.index}__].configInfo.searchable}"/> 是 </label> 
+					</div>
+					<div th:if="${column.columnName.indexOf('pic') == -1 and column.columnName.indexOf('image') == -1}">
+						<label class="col-sm-3 control-label">系统生成：</label>
+						<div class="col-sm-8">
+							<label class="radio-box"> <input id="systemField" type="radio" name="systemField" value="0" th:field="*{columns[__${stat.index}__].configInfo.systemField}"/> 否 </label> 
+							<label class="radio-box"> <input id="systemField" type="radio" name="systemField" value="1" th:field="*{columns[__${stat.index}__].configInfo.systemField}"/> 是 </label> 
+						</div>	
+					</div>					
+				</div>	
+				
+				<div th:if="${column.attrType == 'String' and column.columnName.indexOf('pic') == -1 and column.columnName.indexOf('image') == -1}">
+					<label class="col-sm-3 control-label">文本搜索类型：</label>
+					<div class="col-sm-8" >
+						<label class="radio-box"> <input id="textSearchOpt" type="radio" name="textSearchOpt" value="0"  th:field="*{columns[__${stat.index}__].configInfo.textSearchOpt}"/>匹配</label> 
+						<label class="radio-box"> <input id="textSearchOpt" type="radio" name="textSearchOpt" value="1" th:field="*{columns[__${stat.index}__].configInfo.textSearchOpt}" />相同</label>					
+					</div>	
+					
+					<label class="col-sm-3 control-label">文本编辑类型：</label>	
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="richEditor" type="radio" name="richEditor" value="0"  th:field="*{columns[__${stat.index}__].configInfo.richEditor}"/> 纯文本 </label> 
+						<label class="radio-box"> <input id="richEditor" type="radio" name="richEditor" value="1" th:field="*{columns[__${stat.index}__].configInfo.richEditor}"/> 格式化编辑 </label> 				
+					</div>	
+				</div>							
+
+				<div th:if="${column.refTableName == null and column.columnName.indexOf('pic') == -1 and column.columnName.indexOf('image') == -1}">				
+					<label class="col-sm-3 control-label">检查惟一性：</label>		
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="checkUnique" type="radio" name="checkUnique" value="0" th:field="*{columns[__${stat.index}__].configInfo.checkUnique}"/> 否 </label> 
+						<label class="radio-box"> <input id="checkUnique" type="radio" name="checkUnique" value="1" th:field="*{columns[__${stat.index}__].configInfo.checkUnique}"/> 是 </label> 
+					</div>	
+				</div>	
+				
+				<div th:if="${column.columnName.indexOf('pic') != -1 or column.columnName.indexOf('image') != -1}">				
+					<label class="col-sm-3 control-label">上传图片：</label>
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="uploadPic" type="radio" name="uploadPic" value="0" th:field="*{columns[__${stat.index}__].configInfo.uploadPic}"/> 否 </label> 
+						<label class="radio-box"> <input id="uploadPic" type="radio" name="uploadPic" value="1" th:field="*{columns[__${stat.index}__].configInfo.uploadPic}"/> 是 </label> 
+					</div>	
+				</div>
+				
+				<div th:if="${column.refTableName != null}">
+					<label class="col-sm-3 control-label" th:text="外键关联： "></label>
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="fkCreateAssoc" type="radio" name="fkCreateAssoc" value="0" th:field="*{columns[__${stat.index}__].configInfo.fkCreateAssoc}"/> 否 </label> 
+						<label class="radio-box"> <input id="fkCreateAssoc" type="radio" name="fkCreateAssoc" value="1" th:field="*{columns[__${stat.index}__].configInfo.fkCreateAssoc}"/> 是</label> 
+						<label th:text="'(表:'+${column.refTableName}+', 列:'+${column.refColumnName}+')'" /></label> 
+						
+					</div>	
+					<label class="col-sm-3 control-label" th:text="外键输入方式："></label>
+					<div class="col-sm-8">
+						<label class="radio-box"> <input id="fkInputMethod" type="radio" th:name="fkInputMethod" value="select" th:field="*{columns[__${stat.index}__].configInfo.fkInputMethod}"/> 列表 </label> 
+						<label class="radio-box"> <input id="fkInputMethod" type="radio" th:name="fkInputMethod" value="text" th:field="*{columns[__${stat.index}__].configInfo.fkInputMethod}"/> 文本</label> 
+					</div>								
+					<label class="col-sm-3 control-label" th:text="外键列表字段："></label>
+					<div th:each="fkColumn:${table.foreignKeyColumns}">
+						<div class="col-sm-8" th:if="${fkColumn.referencedTableName == column.refTableName}">
+							<select id="fkDisplayColumn" name="fkDisplayColumn" class="form-control" >
+								<option th:each="fc:${fkColumn.referencedTableColumns}" th:value="${fc.columnName}" 
+								th:text="${fc.columnName}"  th:field="*{columns[__${stat.index}__].configInfo.fkDisplayColumn}"></option>
+							</select>						
+						</div>
+					</div>	
+					<div>	
+					<input id="fkTable"  name="fkTable" th:field="*{columns[__${stat.index}__].configInfo.fkTable}"  type="hidden">
+					<input id="fkColumn" name="fkColumn" th:field="*{columns[__${stat.index}__].configInfo.fkColumn}"  type="hidden">
+					</div>
+				</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+
+    <script type="text/javascript">
+	var prefix = ctx + "tool/gen";	
+	function submitHandler() {
+	        var columnOptions = [];
+	        $('.form-group').each(function(i){
+	        	var column = {
+		        	columnName:$(this).find('input[id="columnName"]').val(),
+	        		searchable:$(this).find('input[id="searchable"]:checked').val(),
+	        		systemField:$(this).find('input[id="systemField"]:checked').val(),
+	        		textSearchOpt:$(this).find('input[id="textSearchOpt"]:checked').val(),
+	        		richEditor:$(this).find('input[id="richEditor"]:checked').val(),
+	        		checkUnique:$(this).find('input[id="checkUnique"]:checked').val(),
+	        		uploadPic:$(this).find('input[id="uploadPic"]:checked').val(),
+	        		fkCreateAssoc:$(this).find('input[id="fkCreateAssoc"]:checked').val(),　
+	        		fkInputMethod:$(this).find('input[id="fkInputMethod"]:checked').val(),　
+	        		fkDisplayColumn:$(this).find('select[id="fkDisplayColumn"]').val(),
+	        		fkTable:$(this).find('input[id="fkTable"]').val(),
+	        		fkColumn:$(this).find('input[id="fkColumn"]').val(),
+
+	        	};	   
+	        	
+	        	columnOptions.push(column);
+	        });
+	        
+	        console.log(JSON.stringify(columnOptions));
+	        
+	        $.ajax({
+	            url: prefix + "/genCode/" + $("#tableName").val(),
+	            data: JSON.stringify(columnOptions),
+	            type: "post",
+	            processData: false,
+	            contentType: 'application/json',
+	            dataType: "text",
+	            success: function(result) {
+	                var url = prefix + '/download/'+result;
+	                window.location = url;	  
+	                var msg = {
+	                		"code": 0,
+	                		"msg": "执行成功,正在生成代码请稍后…",
+	                }
+	            	$.operate.ajaxSuccessClose(msg);
+	            }
+	        })
+	
+	}
+
+		
+		
+	</script>
+</body>
+</html>

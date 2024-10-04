@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+						<!--  
+							<li>
+								所属评论：
+								<select id="commentId" name="commentId" >
+									<option value="">所有</option>
+									<option th:each="fkRow:${ commentIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.remark}"></option>
+								</select>
+							</li>
+						 -->
+						    <li>回复者：</li>
+							<li class="col-sm-3">								
+								<select id="clientUserId" name="clientUserId" class="form-control">
+									<option value="">所有</option>
+									<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								状态：<select name="status" th:with="type=${@dict.getType('shooting_comment_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+	            <!-- 
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:commentFeedback:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				 -->
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:commentFeedback:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:commentFeedback:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+<!-- 				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="shooting:commentFeedback:export">
+						<i class="fa fa-download"></i> 导出
+				 </a> -->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:commentFeedback:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:commentFeedback:remove')}]];
+        var prefix = ctx + "shooting/commentFeedback";
+        var datas_shooting_comment_status = [[${@dict.getType('shooting_comment_status')}]];
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "回复",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'comment.remark',
+					title : '所属评论',
+					sortable: false
+				},
+				{
+					field : 'clientUser.nickname',
+					title : '回复者',
+					sortable: false
+				},
+				{
+					field : 'content', 
+					title : '回复内容',
+					sortable: true,
+					visible: false,					
+					formatter: function(value, row, index) {
+						value = ellipsisText(value.replace(/<[^>]*>/g, ''), 40)
+		            	return value
+		            }
+				},
+				{
+					field : 'status', 
+					title : '状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_shooting_comment_status, value);
+		            }
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    	function ellipsisText(str, size=100) {
+    	    let truncatedText=str.length > size?str.substring(0,size) + '...':str;
+    	    return truncatedText;	   
+    	 }  
+        
+    </script>
+</body>
+</html>

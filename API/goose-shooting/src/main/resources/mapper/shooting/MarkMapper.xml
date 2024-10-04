@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.MarkMapper">
+    
+    <resultMap type="Mark" id="MarkResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="mark"    column="mark"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+    </resultMap>
+	
+	<sql id="selectMarkVoNoJoin">
+        select tb.id, tb.client_user_id, tb.mark        from shooting_mark tb
+    </sql>
+    
+	<sql id="selectMarkVo">
+           select tb.id, tb.client_user_id, tb.mark, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date  from shooting_mark tb join client_user a on tb.client_user_id = a.id
+    </sql>
+    
+     <select id="selectMarkAll" parameterType="Mark" resultMap="MarkResult">
+        <include refid="selectMarkVo"/>
+     </select>    
+	
+    <select id="selectMarkList" parameterType="Mark" resultMap="MarkResult">
+        <include refid="selectMarkVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="mark != null "> and tb.mark = #{mark}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarkById" parameterType="Long" resultMap="MarkResult">
+        <include refid="selectMarkVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertMark" parameterType="Mark" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_mark
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="mark != null  ">mark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="mark != null  ">#{mark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMark" parameterType="Mark">
+        update shooting_mark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="mark != null  ">mark = #{mark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMarkById" parameterType="Long">
+        delete from shooting_mark where id = #{id}
+    </delete>
+	
+    <delete id="deleteMarkByIds" parameterType="String">
+        delete from shooting_mark where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectMarkAssoc">
+        select tb.id, tb.client_user_id, tb.mark ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date 		                from shooting_mark tb  join client_user a on tb.client_user_id = a.id    </sql>
+    
+     <select id="selectMarkAllAssoc" parameterType="Mark" resultMap="MarkResult">
+        <include refid="selectMarkAssoc"/>
+     </select>    
+	
+    <select id="selectMarkListAssoc" parameterType="Mark" resultMap="MarkResult">
+        <include refid="selectMarkAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="mark != null "> and tb.mark = #{mark}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarkByIdAssoc" parameterType="Long" resultMap="MarkResult">
+        <include refid="selectMarkAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

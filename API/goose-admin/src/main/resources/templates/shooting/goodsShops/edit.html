@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsShops-edit" th:object="${goodsShops}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商铺名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商铺等级：</label>
+				<div class="col-sm-8">
+					<input id="star" name="star" th:field="*{star}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详情：</label>
+				<div class="col-sm-8">
+				    <input id="comment" name="comment" th:field="*{comment}" type="hidden">
+				    <div id="commentId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsShops.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsShops.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsShops"
+	    $("#commentId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link']],
+		        ['view', ['fullscreen',  'help']]
+			  ]				
+	    }); 
+		var content = $("#comment").val();
+		$('#commentId').code(content);				
+
+		$("#form-goodsShops-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				name: {
+					required: false,
+				},
+				star: {
+					required: false,
+				},
+				comment: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				name: {
+				},		
+				star: {
+				},		
+				comment: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+				var sHTMLcomment = $("#commentId").code();
+				$("#comment").val(sHTMLcomment);
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("name", $("#name").val());
+				formdata.append("star", $("#star").val());
+				formdata.append("comment", $("#comment").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

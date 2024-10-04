@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ContestStatsMapper">
+    
+    <resultMap type="ContestStats" id="ContestStatsResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="contestGroupId"    column="contest_group_id"    />
+        <result property="ageGroup"    column="age_group"    />
+        <result property="year"    column="year"    />
+        <result property="rank"    column="rank"    />
+        <result property="point"    column="point"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="totalCount"    column="total_count"    />
+        <result property="totalAvgScore"    column="total_avg_score"    />
+        <result property="bestScore"    column="best_score"    />
+        <result property="bestCount"    column="best_count"    />
+        <result property="bestAvgScore"    column="best_avg_score"    />
+        <result property="note"    column="note"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="type" column="type_id"  javaType="Type"  resultMap="TypeResult" />
+        <association property="contestGroup" column="contest_group_id"  javaType="ContestGroup"  resultMap="ContestGroupResult" />
+    </resultMap>
+
+    <resultMap type="Type" id="TypeResult">
+        <result property="id"    column="a_id"    />
+        <result property="name"    column="a_name"    />
+    </resultMap>
+    <resultMap type="ContestGroup" id="ContestGroupResult">
+        <result property="id"    column="b_id"    />
+        <result property="name"    column="b_name"    />
+    </resultMap>
+	
+	<sql id="selectContestStatsVoNoJoin">
+        select tb.id, tb.client_user_id, tb.type_id, tb.contest_group_id, tb.age_group, tb.year, tb.rank, tb.point, tb.total_score, tb.total_count, tb.total_avg_score, tb.best_score, tb.best_count, tb.best_avg_score, tb.note, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_contest_stats tb
+    </sql>
+    
+	<sql id="selectContestStatsVo">
+           select tb.id, tb.client_user_id, tb.type_id, tb.contest_group_id, tb.age_group, tb.year, tb.rank, tb.point, tb.total_score, tb.total_count, tb.total_avg_score, tb.best_score, tb.best_count, tb.best_avg_score, tb.note, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_contest_stats tb     </sql>
+    
+     <select id="selectContestStatsAll" parameterType="ContestStats" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsVo"/>
+     </select>    
+	
+    <select id="selectContestStatsList" parameterType="ContestStats" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="typeId != null "> and tb.type_id = #{typeId}</if>
+            <if test="contestGroupId != null "> and tb.contest_group_id = #{contestGroupId}</if>
+            <if test="ageGroup != null "> and tb.age_group = #{ageGroup}</if>
+            <if test="year != null "> and tb.year = #{year}</if>
+            <if test="rank != null "> and tb.rank = #{rank}</if>
+            <if test="point != null "> and tb.point = #{point}</if>
+            <if test="totalScore != null "> and tb.total_score = #{totalScore}</if>
+            <if test="totalCount != null "> and tb.total_count = #{totalCount}</if>
+            <if test="totalAvgScore != null "> and tb.total_avg_score = #{totalAvgScore}</if>
+            <if test="bestScore != null "> and tb.best_score = #{bestScore}</if>
+            <if test="bestCount != null "> and tb.best_count = #{bestCount}</if>
+            <if test="bestAvgScore != null "> and tb.best_avg_score = #{bestAvgScore}</if>
+            <if test="note != null  and note != '' "> and tb.note = #{note}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestStatsById" parameterType="Long" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertContestStats" parameterType="ContestStats" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_contest_stats
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="typeId != null  ">type_id,</if>
+			<if test="contestGroupId != null  ">contest_group_id,</if>
+			<if test="ageGroup != null  ">age_group,</if>
+			<if test="year != null  ">year,</if>
+			<if test="rank != null  ">rank,</if>
+			<if test="point != null  ">point,</if>
+			<if test="totalScore != null  ">total_score,</if>
+			<if test="totalCount != null  ">total_count,</if>
+			<if test="totalAvgScore != null  ">total_avg_score,</if>
+			<if test="bestScore != null  ">best_score,</if>
+			<if test="bestCount != null  ">best_count,</if>
+			<if test="bestAvgScore != null  ">best_avg_score,</if>
+			<if test="note != null  and note != ''  ">note,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+			<if test="contestGroupId != null  ">#{contestGroupId},</if>
+			<if test="ageGroup != null  ">#{ageGroup},</if>
+			<if test="year != null  ">#{year},</if>
+			<if test="rank != null  ">#{rank},</if>
+			<if test="point != null  ">#{point},</if>
+			<if test="totalScore != null  ">#{totalScore},</if>
+			<if test="totalCount != null  ">#{totalCount},</if>
+			<if test="totalAvgScore != null  ">#{totalAvgScore},</if>
+			<if test="bestScore != null  ">#{bestScore},</if>
+			<if test="bestCount != null  ">#{bestCount},</if>
+			<if test="bestAvgScore != null  ">#{bestAvgScore},</if>
+			<if test="note != null  and note != ''  ">#{note},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContestStats" parameterType="ContestStats">
+        update shooting_contest_stats
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="contestGroupId != null  ">contest_group_id = #{contestGroupId},</if>
+            <if test="ageGroup != null  ">age_group = #{ageGroup},</if>
+            <if test="year != null  ">year = #{year},</if>
+            <if test="rank != null  ">rank = #{rank},</if>
+            <if test="point != null  ">point = #{point},</if>
+            <if test="totalScore != null  ">total_score = #{totalScore},</if>
+            <if test="totalCount != null  ">total_count = #{totalCount},</if>
+            <if test="totalAvgScore != null  ">total_avg_score = #{totalAvgScore},</if>
+            <if test="bestScore != null  ">best_score = #{bestScore},</if>
+            <if test="bestCount != null  ">best_count = #{bestCount},</if>
+            <if test="bestAvgScore != null  ">best_avg_score = #{bestAvgScore},</if>
+            <if test="note != null  and note != ''  ">note = #{note},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteContestStatsById" parameterType="Long">
+        delete from shooting_contest_stats where id = #{id}
+    </delete>
+	
+    <delete id="deleteContestStatsByIds" parameterType="String">
+        delete from shooting_contest_stats where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectContestStatsAssoc">
+        select tb.id, tb.client_user_id, tb.type_id,tb.course_id,tb.contest_group_id, tb.age_group, tb.year, tb.rank, tb.point, 
+        tb.total_score, tb.total_count, tb.total_avg_score, tb.best_score, tb.best_count, tb.best_avg_score, tb.note, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time ,
+         a.id as a_id , a.name as a_name,         
+         b.id as b_id , b.name as b_name,
+         c.nickname 		                
+         from shooting_contest_stats tb  
+         LEFT join 
+         shooting_type a 
+         on 
+         tb.type_id = a.id  
+         LEFT join 
+         shooting_contest_group b 
+         on 
+         tb.contest_group_id = b.id 
+         LEFT JOIN 
+         client_user c 
+         ON 
+         tb.client_user_id = c.id   
+         
+         </sql>
+    
+     <select id="selectContestStatsAllAssoc" parameterType="ContestStats" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsAssoc"/>
+     </select>    
+	
+    <select id="selectContestStatsListAssoc" parameterType="ContestStats" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="typeId != null "> 
+            	<if test="typeId != 0">
+            	            and tb.type_id = #{typeId}
+            	</if>
+            </if>
+            <if test="courseId != null "> 
+            	<if test="courseId != 0">
+            	            and tb.course_id = #{courseId}
+            	</if>
+            </if>
+            <if test="contestGroupId != null "> 
+            	<if test="contestGroupId != 0">
+            	            and tb.contest_group_id = #{contestGroupId}
+            	</if>
+            </if>
+            <if test="ageGroup != null "> 
+            	<if test="ageGroup != 0">
+            	            and tb.age_group = #{ageGroup}
+            	</if>
+            </if>
+            <if test="year != null "> and tb.year = #{year}</if>
+            <if test="rank != null "> and tb.rank = #{rank}</if>
+            <if test="point != null "> and tb.point = #{point}</if>
+            <if test="totalScore != null "> and tb.total_score = #{totalScore}</if>
+            <if test="totalCount != null "> and tb.total_count = #{totalCount}</if>
+            <if test="totalAvgScore != null "> and tb.total_avg_score = #{totalAvgScore}</if>
+            <if test="bestScore != null "> and tb.best_score = #{bestScore}</if>
+            <if test="bestCount != null "> and tb.best_count = #{bestCount}</if>
+            <if test="bestAvgScore != null "> and tb.best_avg_score = #{bestAvgScore}</if>
+            <if test="note != null  and note != '' "> and tb.note = #{note}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestStatsByIdAssoc" parameterType="Long" resultMap="ContestStatsResult">
+        <include refid="selectContestStatsAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+	<select id="selectYear" parameterType="ContestStats" resultType="Integer">
+		select 
+		year 
+		from 
+		shooting_contest_stats
+		<where>
+		status = 0
+			<if test="typeId != null "> 	
+				<if test="typeId != 0">
+				    and type_id = #{typeId}
+				</if>
+			</if>
+            <if test="contestGroupId != null "> 
+            	<if test="contestGroupId != 0">
+            	   and contest_group_id = #{contestGroupId}
+            	</if>
+            </if>
+            <if test="ageGroup != null "> 
+            	<if test="ageGroup != 0">
+            	   and age_group = #{ageGroup}
+            	</if>
+            </if>
+		</where>
+		group by year
+		order by year desc
+		limit 4
+	</select>
+    
+    
+     <select id="selectMyMark" parameterType="ContestStats" resultType="MyMark">
+    	SELECT 
+		a.id,a.cpsa_rank cpsaRank,a.score,a.point,
+		b.start_date startDate,b.end_date endDate,b.title,
+		c.name as areaName,
+		d.name as groupName
+		FROM 
+		`shooting_contest_contest_ranking` a 
+		left join 
+		shooting_contest b 
+		ON 
+		a.contest_id = b.id
+		left join 
+		shooting_area c 
+		ON 
+		b.area_id = c.id
+		left join 
+		shooting_contest_group d 
+		ON 
+		a.group_id = d.id
+		where 
+		a.client_user_id = #{clientUserId}
+		and 
+		date_format(b.start_date ,'%y') = #{year}
+		<if test="typeId != null">
+			<if test="typeId == 1">
+				and b.course_id = 4
+			</if>
+			<if test="typeId == 2">
+				and b.course_id = 2
+			</if>
+		</if>
+<!-- 		b.type_id = #{typeId} -->
+    </select>
+    
+    
+    <select id="getAgeGroup" resultType="AgeGroup">
+    	select 
+    	dict_label as name, dict_value as id
+    	from 
+    	sys_dict_data
+    	where 
+    	dict_type = "age_group"
+    </select>
+    
+    
+    <select id="selectAllUser" resultType="Stats">
+	SELECT
+	a.client_user_id as clientUserId,
+	c.nickname as nickName,
+	c.english_name as englishName,
+	c.real_name as realName
+	FROM
+	shooting_contest_contest_ranking a 
+	LEFT JOIN
+	shooting_contest b 
+	ON 
+	a.contest_id = b.id
+	left join 
+	client_user c 
+	ON 
+	a.client_user_id = c.id
+		where 
+		YEAR(b.start_date) = #{year}
+		and
+		c.real_name is not null
+			<if test="courseId != null">
+			AND
+			b.course_id = #{courseId}
+		</if>
+		<if test="typeId != null">
+			AND
+			b.type_id = #{typeId}
+		</if>
+		<if test="contestGroupId != 0">
+			AND
+			a.group_id = #{contestGroupId}
+		</if>
+		<if test="ageGroup != 0">
+			AND
+			a.age_group = #{ageGroup}
+		</if>
+		group by a.client_user_id
+    </select>
+    
+    <select id="selectContestRanking" resultType="ContestContestRanking">
+    	SELECT
+		a.point,a.score
+		FROM
+		shooting_contest_contest_ranking a 
+		LEFT JOIN
+		shooting_contest b 
+		ON 
+		a.contest_id = b.id
+		where 
+		YEAR(b.start_date) = #{year}
+		<if test="courseId != null">
+			AND
+			b.course_id = #{courseId}
+		</if>
+		<if test="typeId != null">
+			AND
+			b.type_id = #{typeId}
+		</if>
+		AND
+		a.client_user_id = #{userId}
+		<if test="contestGroupId != 0">
+			AND
+			a.group_id = #{contestGroupId}
+		</if>
+		<if test="ageGroup != 0">
+			AND
+			a.age_group = #{ageGroup}
+		</if>
+		
+    </select>
+    
+</mapper>

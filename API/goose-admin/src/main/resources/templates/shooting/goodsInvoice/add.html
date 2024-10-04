@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsInvoice-add">
+			<input name="clientUserId"  type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发票类型：</label>
+				<div class="col-sm-8">
+					<select id="invoiceType" name="invoiceType" class="form-control m-b" th:with="type=${@dict.getType('goods_invoice_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发票抬头：</label>
+				<div class="col-sm-8">
+					<input id="head" name="head" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发票税号：</label>
+				<div class="col-sm-8">
+					<input id="code" name="code" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开户行：</label>
+				<div class="col-sm-8">
+					<input id="bank" name="bank" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">银行账号：</label>
+				<div class="col-sm-8">
+					<input id="bankAccount" name="bankAccount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">企业地址：</label>
+				<div class="col-sm-8">
+					<input id="address" name="address" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">企业电话：</label>
+				<div class="col-sm-8">
+					<input id="phone" name="phone" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否默认发票：</label>
+				<div class="col-sm-8">
+					<select id="defaultInvoice" name="defaultInvoice" class="form-control m-b" th:with="type=${@dict.getType('goods_invoice_default')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsInvoice"
+	    		
+		$("#form-goodsInvoice-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				invoiceType: {
+					required: false,
+				},
+				head: {
+					required: false,
+				},
+				code: {
+					required: false,
+				},
+				bank: {
+					required: false,
+				},
+				bankAccount: {
+					required: false,
+				},
+				address: {
+					required: false,
+				},
+				phone: {
+					required: false,
+				},
+				defaultInvoice: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clientUserId: {
+				},		
+				invoiceType: {
+				},		
+				head: {
+				},		
+				code: {
+				},		
+				bank: {
+				},		
+				bankAccount: {
+				},		
+				address: {
+				},		
+				phone: {
+				},		
+				defaultInvoice: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("clientUserId", $("#treeId").val());
+				formdata.append("invoiceType", $("#invoiceType").val());
+				formdata.append("head", $("#head").val());
+				formdata.append("code", $("#code").val());
+				formdata.append("bank", $("#bank").val());
+				formdata.append("bankAccount", $("#bankAccount").val());
+				formdata.append("address", $("#address").val());
+				formdata.append("phone", $("#phone").val());
+				formdata.append("defaultInvoice", $("#defaultInvoice").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

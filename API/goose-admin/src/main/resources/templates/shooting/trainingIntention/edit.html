@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-trainingIntention-edit" th:object="${trainingIntention}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">报名者：</label>
+				<div class="col-sm-8">
+					<select id="clientUserId" name="clientUserId" class="form-control" disabled>
+						<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" th:field="*{clientUserId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">邮箱：</label>
+				<div class="col-sm-8">
+					<input id="email" name="email" th:field="*{email}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">手机号：</label>
+				<div class="col-sm-8">
+					<input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户微信：</label>
+				<div class="col-sm-8">
+					<input id="openId" name="openId" th:field="*{openId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">城市：</label>
+				<div class="col-sm-8">
+					<input id="city" name="city" th:field="*{city}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">身份证号：</label>
+				<div class="col-sm-8">
+					<input id="idNumber" name="idNumber" th:field="*{idNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">真实姓名：</label>
+				<div class="col-sm-8">
+					<input id="realName" name="realName" th:field="*{realName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年龄：</label>
+				<div class="col-sm-8">
+					<input id="age" name="age" th:field="*{age}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">培训类型：</label>
+				<div class="col-sm-8">
+					<select id="trainingType" name="trainingType" class="form-control m-b"
+							th:with="type=${@dict.getType('training_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+								th:value="${dict.dictValue}" th:field="*{trainingType}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">培训时间：</label>
+				<div class="col-sm-8">
+					<select id="trainingTime" name="trainingTime" class="form-control m-b"
+							th:with="type=${@dict.getType('training_time')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+								th:value="${dict.dictValue}" th:field="*{trainingTime}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/trainingIntention"
+
+		$("#form-trainingIntention-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				email: {
+					required: false,
+				},
+				phone: {
+					required: false,
+				},
+				openId: {
+					required: false,
+				},
+				city: {
+					required: false,
+				},
+				idNumber: {
+					required: false,
+				},
+				realName: {
+					required: false,
+				},
+				age: {
+					required: false,
+				},
+				trainingType: {
+					required: false,
+				},
+				trainingTime: {
+					required: false,
+				},
+				remark: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				email: {
+				},		
+				phone: {
+				},		
+				openId: {
+				},		
+				city: {
+				},		
+				idNumber: {
+				},		
+				realName: {
+				},		
+				age: {
+				},		
+				trainingType: {
+				},		
+				trainingTime: {
+				},		
+				remark: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("email", $("#email").val());
+				formdata.append("phone", $("#phone").val());
+				formdata.append("openId", $("#openId").val());
+				formdata.append("city", $("#city").val());
+				formdata.append("idNumber", $("#idNumber").val());
+				formdata.append("realName", $("#realName").val());
+				formdata.append("age", $("#age").val());
+				formdata.append("trainingType", $("#trainingType").val());
+				formdata.append("trainingTime", $("#trainingTime").val());
+				formdata.append("remark", $("#remark").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

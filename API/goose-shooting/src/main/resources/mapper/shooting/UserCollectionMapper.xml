@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserCollectionMapper">
+    
+    <resultMap type="UserCollection" id="UserCollectionResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="collectionId"    column="collection_id"    />
+        <result property="collectionType"    column="collection_type"    />
+    </resultMap>
+
+	
+	<sql id="selectUserCollectionVoNoJoin">
+        select tb.id, tb.client_user_id, tb.collection_id, tb.collection_type        from shooting_user_collection tb
+    </sql>
+    
+	<sql id="selectUserCollectionVo">
+           select tb.id, tb.client_user_id, tb.collection_id, tb.collection_type from shooting_user_collection tb     </sql>
+    
+     <select id="selectUserCollectionAll" parameterType="UserCollection" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionVo"/>
+     </select>    
+	
+    <select id="selectUserCollectionList" parameterType="UserCollection" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="collectionId != null "> and tb.collection_id = #{collectionId}</if>
+            <if test="collectionType != null  and collectionType != '' "> and tb.collection_type = #{collectionType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserCollectionById" parameterType="Long" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertUserCollection" parameterType="UserCollection" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_user_collection
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="collectionId != null  ">collection_id,</if>
+			<if test="collectionType != null  and collectionType != ''  ">collection_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="collectionId != null  ">#{collectionId},</if>
+			<if test="collectionType != null  and collectionType != ''  ">#{collectionType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserCollection" parameterType="UserCollection">
+        update shooting_user_collection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="collectionId != null  ">collection_id = #{collectionId},</if>
+            <if test="collectionType != null  and collectionType != ''  ">collection_type = #{collectionType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserCollectionById" parameterType="Long">
+        delete from shooting_user_collection where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserCollectionByIds" parameterType="String">
+        delete from shooting_user_collection where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectUserCollectionAssoc">
+        select tb.id, tb.client_user_id, tb.collection_id, tb.collection_type                 from shooting_user_collection tb     </sql>
+    
+     <select id="selectUserCollectionAllAssoc" parameterType="UserCollection" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionAssoc"/>
+     </select>    
+	
+    <select id="selectUserCollectionListAssoc" parameterType="UserCollection" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="collectionId != null "> and tb.collection_id = #{collectionId}</if>
+            <if test="collectionType != null  and collectionType != '' "> and tb.collection_type = #{collectionType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserCollectionByIdAssoc" parameterType="Long" resultMap="UserCollectionResult">
+        <include refid="selectUserCollectionAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

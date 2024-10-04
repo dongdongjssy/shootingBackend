@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsEvaluation-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单id：</label>
+				<div class="col-sm-8">
+					<input id="goodsOrderId" name="goodsOrderId" class="form-control" type="text">
+				</div>
+			</div>
+			<input name="clientUserId"  type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">评价：</label>
+				<div class="col-sm-8">
+				    <input id="comments" name="comments" type="hidden">
+				    <div id="commentsId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">星级：</label>
+				<div class="col-sm-8">
+					<input id="star" name="star" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsEvaluation"
+	    $("#commentsId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link']],
+		        ['view', ['fullscreen',  'help']]
+			  ]				
+	    }); 
+				
+	    		
+		$("#form-goodsEvaluation-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				goodsOrderId: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				comments: {
+					required: false,
+				},
+				star: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				goodsOrderId: {
+				},		
+				clientUserId: {
+				},		
+				comments: {
+				},		
+				star: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+				var sHTMLcomments = $("#commentsId").code();
+				$("#comments").val(sHTMLcomments);
+		        var formdata = new FormData();
+				formdata.append("goodsOrderId", $("#goodsOrderId").val());
+				formdata.append("clientUserId", $("#treeId").val());
+				formdata.append("comments", $("#comments").val());
+				formdata.append("star", $("#star").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

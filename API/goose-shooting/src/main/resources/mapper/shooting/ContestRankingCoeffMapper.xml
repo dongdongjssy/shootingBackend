@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ContestRankingCoeffMapper">
+    
+    <resultMap type="ContestRankingCoeff" id="ContestRankingCoeffResult">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="rank"    column="rank"    />
+        <result property="rankCoeff"    column="rank_coeff"    />
+        <association property="course" column="course_id"  javaType="Course"  resultMap="CourseResult" />
+        <association property="type" column="type_id"  javaType="Type"  resultMap="TypeResult" />
+        <association property="contestGroup" column="group_id"  javaType="ContestGroup"  resultMap="ContestGroupResult" />
+    </resultMap>
+
+    <resultMap type="Course" id="CourseResult">
+        <result property="id"    column="a_id"    />
+        <result property="name"    column="a_name"    />
+    </resultMap>
+    <resultMap type="Type" id="TypeResult">
+        <result property="id"    column="b_id"    />
+        <result property="name"    column="b_name"    />
+    </resultMap>
+    <resultMap type="ContestGroup" id="ContestGroupResult">
+        <result property="id"    column="c_id"    />
+        <result property="name"    column="c_name"    />
+    </resultMap>
+	
+	<sql id="selectContestRankingCoeffVoNoJoin">
+        select tb.id, tb.year, tb.course_id, tb.type_id, tb.group_id, tb.rank, tb.rank_coeff        from shooting_contest_ranking_coeff tb
+    </sql>
+    
+	<sql id="selectContestRankingCoeffVo">
+           select tb.id, tb.year, tb.course_id, tb.type_id, tb.group_id, tb.rank, tb.rank_coeff from shooting_contest_ranking_coeff tb     </sql>
+    
+     <select id="selectContestRankingCoeffAll" parameterType="ContestRankingCoeff" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffVo"/>
+     </select>    
+	
+    <select id="selectContestRankingCoeffList" parameterType="ContestRankingCoeff" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="year != null "> and tb.year = #{year}</if>
+            <if test="courseId != null "> and tb.course_id = #{courseId}</if>
+            <if test="typeId != null "> and tb.type_id = #{typeId}</if>
+            <if test="groupId != null "> and tb.group_id = #{groupId}</if>
+            <if test="rank != null "> and tb.rank = #{rank}</if>
+            <if test="rankCoeff != null "> and tb.rank_coeff = #{rankCoeff}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestRankingCoeffById" parameterType="Long" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertContestRankingCoeff" parameterType="ContestRankingCoeff" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_contest_ranking_coeff
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="year != null  ">year,</if>
+			<if test="courseId != null  ">course_id,</if>
+			<if test="typeId != null  ">type_id,</if>
+			<if test="groupId != null  ">group_id,</if>
+			<if test="rank != null  ">rank,</if>
+			<if test="rankCoeff != null  ">rank_coeff,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="year != null  ">#{year},</if>
+			<if test="courseId != null  ">#{courseId},</if>
+			<if test="typeId != null  ">#{typeId},</if>
+			<if test="groupId != null  ">#{groupId},</if>
+			<if test="rank != null  ">#{rank},</if>
+			<if test="rankCoeff != null  ">#{rankCoeff},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateContestRankingCoeff" parameterType="ContestRankingCoeff">
+        update shooting_contest_ranking_coeff
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null  ">year = #{year},</if>
+            <if test="courseId != null  ">course_id = #{courseId},</if>
+            <if test="typeId != null  ">type_id = #{typeId},</if>
+            <if test="groupId != null  ">group_id = #{groupId},</if>
+            <if test="rank != null  ">rank = #{rank},</if>
+            <if test="rankCoeff != null  ">rank_coeff = #{rankCoeff},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteContestRankingCoeffById" parameterType="Long">
+        delete from shooting_contest_ranking_coeff where id = #{id}
+    </delete>
+	
+    <delete id="deleteContestRankingCoeffByIds" parameterType="String">
+        delete from shooting_contest_ranking_coeff where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectContestRankingCoeffAssoc">
+        select tb.id, tb.year, tb.course_id, tb.type_id, tb.group_id, tb.rank, tb.rank_coeff ,         a.id as a_id , a.name as a_name 		,         b.id as b_id , b.name as b_name 		,         c.id as c_id , c.name as c_name 		                from shooting_contest_ranking_coeff tb  join shooting_course a on tb.course_id = a.id  join shooting_type b on tb.type_id = b.id  join shooting_contest_group c on tb.group_id = c.id    </sql>
+    
+     <select id="selectContestRankingCoeffAllAssoc" parameterType="ContestRankingCoeff" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffAssoc"/>
+     </select>    
+	
+    <select id="selectContestRankingCoeffListAssoc" parameterType="ContestRankingCoeff" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="year != null "> and tb.year = #{year}</if>
+            <if test="courseId != null "> and tb.course_id = #{courseId}</if>
+            <if test="typeId != null "> and tb.type_id = #{typeId}</if>
+            <if test="groupId != null "> and tb.group_id = #{groupId}</if>
+            <if test="rank != null "> and tb.rank = #{rank}</if>
+            <if test="rankCoeff != null "> and tb.rank_coeff = #{rankCoeff}</if>
+        </where>
+    </select>
+    
+    <select id="selectContestRankingCoeffByIdAssoc" parameterType="Long" resultMap="ContestRankingCoeffResult">
+        <include refid="selectContestRankingCoeffAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

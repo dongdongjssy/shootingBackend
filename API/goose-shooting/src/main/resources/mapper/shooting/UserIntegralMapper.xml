@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserIntegralMapper">
+    
+    <resultMap type="UserIntegral" id="UserIntegralResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="member"    column="member"    />
+        <result property="ageGroup"    column="age_group"    />
+        <result property="gunGroup"    column="gun_group"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="teamNo"    column="team_no"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectUserIntegralVoNoJoin">
+        select tb.id, tb.name, tb.member, tb.age_group, tb.gun_group, tb.total_score, tb.team_no, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_user_integral tb
+    </sql>
+    
+	<sql id="selectUserIntegralVo">
+           select tb.id, tb.name, tb.member, tb.age_group, tb.gun_group, tb.total_score, tb.team_no, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_user_integral tb     </sql>
+    
+     <select id="selectUserIntegralAll" parameterType="UserIntegral" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralVo"/>
+     </select>    
+	
+    <select id="selectUserIntegralList" parameterType="UserIntegral" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="member != null  "> and tb.member = #{member}</if>
+            <if test="ageGroup != null "> and tb.age_group = #{ageGroup}</if>
+            <if test="gunGroup != null "> and tb.gun_group = #{gunGroup}</if>
+            <if test="totalScore != null "> and tb.total_score = #{totalScore}</if>
+            <if test="teamNo != null "> and tb.team_no = #{teamNo}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserIntegralById" parameterType="Long" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertUserIntegral" parameterType="UserIntegral" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_user_integral
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="member != null  ">member,</if>
+			<if test="ageGroup != null  ">age_group,</if>
+			<if test="gunGroup != null  ">gun_group,</if>
+			<if test="totalScore != null  ">total_score,</if>
+			<if test="teamNo != null  ">team_no,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="member != null  and member != ''  ">#{member},</if>
+			<if test="ageGroup != null  ">#{ageGroup},</if>
+			<if test="gunGroup != null  ">#{gunGroup},</if>
+			<if test="totalScore != null  ">#{totalScore},</if>
+			<if test="teamNo != null  ">#{teamNo},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserIntegral" parameterType="UserIntegral">
+        update shooting_user_integral
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="member != null  and member != ''  ">member = #{member},</if>
+            <if test="ageGroup != null  ">age_group = #{ageGroup},</if>
+            <if test="gunGroup != null  ">gun_group = #{gunGroup},</if>
+            <if test="totalScore != null  ">total_score = #{totalScore},</if>
+            <if test="teamNo != null  ">team_no = #{teamNo},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserIntegralById" parameterType="Long">
+        delete from shooting_user_integral where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserIntegralByIds" parameterType="String">
+        delete from shooting_user_integral where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectUserIntegralAssoc">
+        select tb.id, tb.name, tb.member, tb.age_group, tb.gun_group, tb.total_score, tb.team_no, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_user_integral tb     </sql>
+    
+     <select id="selectUserIntegralAllAssoc" parameterType="UserIntegral" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralAssoc"/>
+     </select>    
+	
+    <select id="selectUserIntegralListAssoc" parameterType="UserIntegral" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="member != null and member != '' "> and tb.member = #{member}</if>
+            <if test="ageGroup != null "> and tb.age_group = #{ageGroup}</if>
+            <if test="gunGroup != null "> and tb.gun_group = #{gunGroup}</if>
+            <if test="totalScore != null "> and tb.total_score = #{totalScore}</if>
+            <if test="teamNo != null "> and tb.team_no = #{teamNo}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserIntegralByIdAssoc" parameterType="Long" resultMap="UserIntegralResult">
+        <include refid="selectUserIntegralAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    <update id="updateUserIntegralByMember" parameterType="UserIntegral">
+        update shooting_user_integral
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="ageGroup != null  ">age_group = #{ageGroup},</if>
+            <if test="gunGroup != null  ">gun_group = #{gunGroup},</if>
+            <if test="totalScore != null  ">total_score = #{totalScore},</if>
+            <if test="teamNo != null  ">team_no = #{teamNo},</if>
+            update_time = sysdate(),
+        </trim>
+        where member = #{member}
+    </update>
+</mapper>

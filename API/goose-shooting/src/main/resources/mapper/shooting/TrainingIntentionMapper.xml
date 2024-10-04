@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.TrainingIntentionMapper">
+    
+    <resultMap type="TrainingIntention" id="TrainingIntentionResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="openId"    column="open_id"    />
+        <result property="city"    column="city"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="realName"    column="real_name"    />
+        <result property="age"    column="age"    />
+        <result property="trainingType"    column="training_type"    />
+        <result property="trainingTime"    column="training_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+	
+	<sql id="selectTrainingIntentionVoNoJoin">
+        select tb.id,tb.client_user_id, tb.email, tb.phone, tb.open_id, tb.city, tb.id_number, tb.real_name, tb.age, tb.training_type, tb.training_time, tb.remark        from shooting_training_intention tb
+    </sql>
+    
+	<sql id="selectTrainingIntentionVo">
+           select tb.id,tb.client_user_id, tb.email, tb.phone, tb.open_id, tb.city, tb.id_number, tb.real_name, tb.age, tb.training_type, tb.training_time, tb.remark from shooting_training_intention tb     </sql>
+    
+     <select id="selectTrainingIntentionAll" parameterType="TrainingIntention" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionVo"/>
+     </select>    
+	
+    <select id="selectTrainingIntentionList" parameterType="TrainingIntention" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="email != null  and email != '' "> and tb.email = #{email}</if>
+            <if test="phone != null  and phone != '' "> and tb.phone = #{phone}</if>
+            <if test="openId != null  and openId != '' "> and tb.open_id = #{openId}</if>
+            <if test="city != null  and city != '' "> and tb.city = #{city}</if>
+            <if test="idNumber != null  and idNumber != '' "> and tb.id_number = #{idNumber}</if>
+            <if test="realName != null  and realName != '' "> and tb.real_name = #{realName}</if>
+            <if test="age != null "> and tb.age = #{age}</if>
+            <if test="trainingType != null "> and tb.training_type = #{trainingType}</if>
+            <if test="trainingTime != null "> and tb.training_time = #{trainingTime}</if>
+            <if test="remark != null  and remark != '' "> and tb.remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainingIntentionById" parameterType="Long" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertTrainingIntention" parameterType="TrainingIntention" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_training_intention
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+            <if test="clientUserId != null  ">client_user_id,</if>
+			<if test="email != null  and email != ''  ">email,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="openId != null  and openId != ''  ">open_id,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="idNumber != null  and idNumber != ''  ">id_number,</if>
+			<if test="realName != null  and realName != ''  ">real_name,</if>
+			<if test="age != null  ">age,</if>
+			<if test="trainingType != null  ">training_type,</if>
+			<if test="trainingTime != null  ">training_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+            <if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="email != null  and email != ''  ">#{email},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="openId != null  and openId != ''  ">#{openId},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="idNumber != null  and idNumber != ''  ">#{idNumber},</if>
+			<if test="realName != null  and realName != ''  ">#{realName},</if>
+			<if test="age != null  ">#{age},</if>
+			<if test="trainingType != null  ">#{trainingType},</if>
+			<if test="trainingTime != null  ">#{trainingTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTrainingIntention" parameterType="TrainingIntention">
+        update shooting_training_intention
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="clientUserId != null">client_user_id = #{clientUserId},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="openId != null  and openId != ''  ">open_id = #{openId},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="idNumber != null  and idNumber != ''  ">id_number = #{idNumber},</if>
+            <if test="realName != null  and realName != ''  ">real_name = #{realName},</if>
+            <if test="age != null  ">age = #{age},</if>
+            <if test="trainingType != null  ">training_type = #{trainingType},</if>
+            <if test="trainingTime != null  ">training_time = #{trainingTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTrainingIntentionById" parameterType="Long">
+        delete from shooting_training_intention where id = #{id}
+    </delete>
+	
+    <delete id="deleteTrainingIntentionByIds" parameterType="String">
+        delete from shooting_training_intention where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectTrainingIntentionAssoc">
+        select tb.id, tb.email,tb.client_user_id, tb.phone, tb.open_id, tb.city, tb.id_number, tb.real_name, tb.age, tb.training_type, tb.training_time, tb.remark                 from shooting_training_intention tb     </sql>
+    
+     <select id="selectTrainingIntentionAllAssoc" parameterType="TrainingIntention" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionAssoc"/>
+     </select>    
+	
+    <select id="selectTrainingIntentionListAssoc" parameterType="TrainingIntention" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="email != null  and email != '' "> and tb.email like concat('%', #{email}, '%')</if>
+            <if test="phone != null  and phone != '' "> and tb.phone like concat('%', #{phone}, '%')</if>
+            <if test="openId != null  and openId != '' "> and tb.open_id = #{openId}</if>
+            <if test="city != null  and city != '' "> and tb.city = #{city}</if>
+            <if test="idNumber != null  and idNumber != '' "> and tb.id_number = #{idNumber}</if>
+            <if test="realName != null  and realName != '' "> and tb.real_name = #{realName}</if>
+            <if test="age != null "> and tb.age = #{age}</if>
+            <if test="trainingType != null "> and tb.training_type = #{trainingType}</if>
+            <if test="trainingTime != null "> and tb.training_time = #{trainingTime}</if>
+            <if test="remark != null  and remark != '' "> and tb.remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainingIntentionByIdAssoc" parameterType="Long" resultMap="TrainingIntentionResult">
+        <include refid="selectTrainingIntentionAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

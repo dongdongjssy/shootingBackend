@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsMapper">
+    
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="pictureUrl1"    column="picture_url1"    />
+        <result property="pictureUrl2"    column="picture_url2"    />
+        <result property="pictureUrl3"    column="picture_url3"    />
+        <result property="pictureUrl4"    column="picture_url4"    />
+        <result property="pictureUrl5"    column="picture_url5"    />
+        <result property="pictureUrl6"    column="picture_url6"    />
+        <result property="pictureUrl7"    column="picture_url7"    />
+        <result property="pictureUrl8"    column="picture_url8"    />
+        <result property="pictureUrl9"    column="picture_url9"    />
+        <result property="price"    column="price"    />
+        <result property="memberPrice"    column="member_price"    />
+        <result property="goodsTypeId"    column="goods_type_id"    />
+        <result property="mailMethod"    column="mail_method"    />
+        <result property="mailPrice"    column="mail_price"    />
+        <result property="invoice"    column="invoice"    />
+        <result property="comments"    column="comments"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="goodsType" column="goods_type_id"  javaType="GoodsType"  resultMap="GoodsTypeResult" />
+    </resultMap>
+
+    <resultMap type="GoodsType" id="GoodsTypeResult">
+        <result property="id"    column="a_id"    />
+        <result property="name"    column="a_name"    />
+        <result property="status"    column="a_status"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+    </resultMap>
+	
+	<sql id="selectGoodsVoNoJoin">
+        select tb.id, tb.name, tb.description, tb.picture_url1, tb.picture_url2, tb.picture_url3, tb.picture_url4, tb.picture_url5, tb.picture_url6, tb.picture_url7, tb.picture_url8, tb.picture_url9, tb.price, tb.member_price, tb.goods_type_id, tb.mail_method, tb.mail_price, tb.invoice, tb.comments, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_goods tb
+    </sql>
+    
+	<sql id="selectGoodsVo">
+           select tb.id, tb.name, tb.description, tb.picture_url1, tb.picture_url2, tb.picture_url3, tb.picture_url4, tb.picture_url5, tb.picture_url6, tb.picture_url7, tb.picture_url8, tb.picture_url9, tb.price, tb.member_price, tb.goods_type_id, tb.mail_method, tb.mail_price, tb.invoice, tb.comments, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_goods tb     </sql>
+    
+     <select id="selectGoodsAll" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+     </select>    
+	
+    <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="description != null  and description != '' "> and tb.description = #{description}</if>
+            <if test="pictureUrl1 != null  and pictureUrl1 != '' "> and tb.picture_url1 = #{pictureUrl1}</if>
+            <if test="pictureUrl2 != null  and pictureUrl2 != '' "> and tb.picture_url2 = #{pictureUrl2}</if>
+            <if test="pictureUrl3 != null  and pictureUrl3 != '' "> and tb.picture_url3 = #{pictureUrl3}</if>
+            <if test="pictureUrl4 != null  and pictureUrl4 != '' "> and tb.picture_url4 = #{pictureUrl4}</if>
+            <if test="pictureUrl5 != null  and pictureUrl5 != '' "> and tb.picture_url5 = #{pictureUrl5}</if>
+            <if test="pictureUrl6 != null  and pictureUrl6 != '' "> and tb.picture_url6 = #{pictureUrl6}</if>
+            <if test="pictureUrl7 != null  and pictureUrl7 != '' "> and tb.picture_url7 = #{pictureUrl7}</if>
+            <if test="pictureUrl8 != null  and pictureUrl8 != '' "> and tb.picture_url8 = #{pictureUrl8}</if>
+            <if test="pictureUrl9 != null  and pictureUrl9 != '' "> and tb.picture_url9 = #{pictureUrl9}</if>
+            <if test="price != null  and price != '' "> and tb.price = #{price}</if>
+            <if test="memberPrice != null  and memberPrice != '' "> and tb.member_price = #{memberPrice}</if>
+            <if test="goodsTypeId != null  and goodsTypeId != '' "> and tb.goods_type_id = #{goodsTypeId}</if>
+            <if test="mailMethod != null "> and tb.mail_method = #{mailMethod}</if>
+            <if test="mailPrice != null "> and tb.mail_price = #{mailPrice}</if>
+            <if test="invoice != null "> and tb.invoice = #{invoice}</if>
+            <if test="comments != null  and comments != '' "> and tb.comments = #{comments}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="status == null "> and tb.status = 0</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="description != null  and description != ''  ">description,</if>
+			<if test="pictureUrl1 != null  and pictureUrl1 != ''  ">picture_url1,</if>
+			<if test="pictureUrl2 != null  and pictureUrl2 != ''  ">picture_url2,</if>
+			<if test="pictureUrl3 != null  and pictureUrl3 != ''  ">picture_url3,</if>
+			<if test="pictureUrl4 != null  and pictureUrl4 != ''  ">picture_url4,</if>
+			<if test="pictureUrl5 != null  and pictureUrl5 != ''  ">picture_url5,</if>
+			<if test="pictureUrl6 != null  and pictureUrl6 != ''  ">picture_url6,</if>
+			<if test="pictureUrl7 != null  and pictureUrl7 != ''  ">picture_url7,</if>
+			<if test="pictureUrl8 != null  and pictureUrl8 != ''  ">picture_url8,</if>
+			<if test="pictureUrl9 != null  and pictureUrl9 != ''  ">picture_url9,</if>
+			<if test="price != null  and price != ''  ">price,</if>
+			<if test="memberPrice != null  and memberPrice != ''  ">member_price,</if>
+			<if test="goodsTypeId != null ">goods_type_id,</if>
+			<if test="mailMethod != null  ">mail_method,</if>
+			<if test="mailPrice != null  ">mail_price,</if>
+			<if test="invoice != null  ">invoice,</if>
+			<if test="comments != null  and comments != ''  ">comments,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="description != null  and description != ''  ">#{description},</if>
+			<if test="pictureUrl1 != null  and pictureUrl1 != ''  ">#{pictureUrl1},</if>
+			<if test="pictureUrl2 != null  and pictureUrl2 != ''  ">#{pictureUrl2},</if>
+			<if test="pictureUrl3 != null  and pictureUrl3 != ''  ">#{pictureUrl3},</if>
+			<if test="pictureUrl4 != null  and pictureUrl4 != ''  ">#{pictureUrl4},</if>
+			<if test="pictureUrl5 != null  and pictureUrl5 != ''  ">#{pictureUrl5},</if>
+			<if test="pictureUrl6 != null  and pictureUrl6 != ''  ">#{pictureUrl6},</if>
+			<if test="pictureUrl7 != null  and pictureUrl7 != ''  ">#{pictureUrl7},</if>
+			<if test="pictureUrl8 != null  and pictureUrl8 != ''  ">#{pictureUrl8},</if>
+			<if test="pictureUrl9 != null  and pictureUrl9 != ''  ">#{pictureUrl9},</if>
+			<if test="price != null  and price != ''  ">#{price},</if>
+			<if test="memberPrice != null  and memberPrice != ''  ">#{memberPrice},</if>
+			<if test="goodsTypeId != null  ">#{goodsTypeId},</if>
+			<if test="mailMethod != null  ">#{mailMethod},</if>
+			<if test="mailPrice != null  ">#{mailPrice},</if>
+			<if test="invoice != null  ">#{invoice},</if>
+			<if test="comments != null  and comments != ''  ">#{comments},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoods" parameterType="Goods">
+        update shooting_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+            <if test="pictureUrl1 != null    ">picture_url1 = #{pictureUrl1},</if>
+            <if test="pictureUrl2 != null    ">picture_url2 = #{pictureUrl2},</if>
+            <if test="pictureUrl3 != null    ">picture_url3 = #{pictureUrl3},</if>
+            <if test="pictureUrl4 != null    ">picture_url4 = #{pictureUrl4},</if>
+            <if test="pictureUrl5 != null    ">picture_url5 = #{pictureUrl5},</if>
+            <if test="pictureUrl6 != null    ">picture_url6 = #{pictureUrl6},</if>
+            <if test="pictureUrl7 != null    ">picture_url7 = #{pictureUrl7},</if>
+            <if test="pictureUrl8 != null    ">picture_url8 = #{pictureUrl8},</if>
+            <if test="pictureUrl9 != null    ">picture_url9 = #{pictureUrl9},</if>
+            <if test="price != null  and price != ''  ">price = #{price},</if>
+            <if test="memberPrice != null  and memberPrice != ''  ">member_price = #{memberPrice},</if>
+            <if test="goodsTypeId != null  ">goods_type_id = #{goodsTypeId},</if>
+            <if test="mailMethod != null  ">mail_method = #{mailMethod},</if>
+            <if test="mailPrice != null  ">mail_price = #{mailPrice},</if>
+            <if test="invoice != null  ">invoice = #{invoice},</if>
+            <if test="comments != null  and comments != ''  ">comments = #{comments},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsById" parameterType="Long">
+        delete from shooting_goods where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsByIds" parameterType="String">
+        update shooting_goods set status=1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteGoodsByGoodsTypeIds" parameterType="String">
+        delete from shooting_goods where goods_type_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+	<sql id="selectGoodsAssoc">
+        select tb.id, tb.name, tb.description, tb.picture_url1, tb.picture_url2, tb.picture_url3, tb.picture_url4, tb.picture_url5, tb.picture_url6, tb.picture_url7, tb.picture_url8, tb.picture_url9, tb.price, tb.member_price, tb.goods_type_id, tb.mail_method, tb.mail_price, tb.invoice, tb.comments, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time ,         a.id as a_id , a.name as a_name , a.status as a_status , a.create_by as a_create_by , a.create_time as a_create_time , a.update_by as a_update_by , a.update_time as a_update_time 		                from shooting_goods tb  join shooting_goods_type a on tb.goods_type_id = a.id    </sql>
+    
+     <select id="selectGoodsAllAssoc" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsListAssoc" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="description != null  and description != '' "> and tb.description like concat('%', #{description}, '%')</if>
+            <if test="pictureUrl1 != null  and pictureUrl1 != '' "> and tb.picture_url1 = #{pictureUrl1}</if>
+            <if test="pictureUrl2 != null  and pictureUrl2 != '' "> and tb.picture_url2 = #{pictureUrl2}</if>
+            <if test="pictureUrl3 != null  and pictureUrl3 != '' "> and tb.picture_url3 = #{pictureUrl3}</if>
+            <if test="pictureUrl4 != null  and pictureUrl4 != '' "> and tb.picture_url4 = #{pictureUrl4}</if>
+            <if test="pictureUrl5 != null  and pictureUrl5 != '' "> and tb.picture_url5 = #{pictureUrl5}</if>
+            <if test="pictureUrl6 != null  and pictureUrl6 != '' "> and tb.picture_url6 = #{pictureUrl6}</if>
+            <if test="pictureUrl7 != null  and pictureUrl7 != '' "> and tb.picture_url7 = #{pictureUrl7}</if>
+            <if test="pictureUrl8 != null  and pictureUrl8 != '' "> and tb.picture_url8 = #{pictureUrl8}</if>
+            <if test="pictureUrl9 != null  and pictureUrl9 != '' "> and tb.picture_url9 = #{pictureUrl9}</if>
+            <if test="price != null  and price != '' "> and tb.price = #{price}</if>
+            <if test="memberPrice != null  and memberPrice != '' "> and tb.member_price = #{memberPrice}</if>
+            <if test="goodsTypeId != null  and goodsTypeId != '' "> and tb.goods_type_id = #{goodsTypeId}</if>
+            <if test="mailMethod != null "> and tb.mail_method = #{mailMethod}</if>
+            <if test="mailPrice != null "> and tb.mail_price = #{mailPrice}</if>
+            <if test="invoice != null "> and tb.invoice = #{invoice}</if>
+            <if test="comments != null  and comments != '' "> and tb.comments like concat('%', #{comments}, '%')</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsByIdAssoc" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+    <update id="updateGoodsStatus"  parameterType="Goods">
+        update shooting_goods set status = #{status}
+        where id = #{id}
+    </update>
+
+    
+</mapper>

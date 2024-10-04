@@ -1,0 +1,898 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goods-edit" th:object="${goods}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品描述：</label>
+				<div class="col-sm-8">
+					<input id="description" name="description" th:field="*{description}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">上传图片：</label>
+				<div class="col-sm-8">
+					<div class="new-contentarea">
+						<a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+						<input type="file" class=""id="uploadFile">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label " id="picLable" hidden="">图片预览: </label>
+				<div class="col-sm-8" id="sDiv">
+					<!--<div class="col-sm-12" id="imgDiv" >
+						<div class="col-sm-4" hidden="hidden" id="div1"><img id="imgpreviewpictureUrl1" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div2"><img id="imgpreviewpictureUrl2" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div3"><img id="imgpreviewpictureUrl3" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div4"><img id="imgpreviewpictureUrl4" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div5"><img id="imgpreviewpictureUrl5" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div6"><img id="imgpreviewpictureUrl6" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div7"><img id="imgpreviewpictureUrl7" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div8"><img id="imgpreviewpictureUrl8" src="" width="100%" height="100px" class="smPic" ></div>
+						<div class="col-sm-4" hidden="hidden" id="div9"><img id="imgpreviewpictureUrl9" src="" width="100%" height="100px" class="smPic" ></div>
+					</div>-->
+					<div class="col-sm-12" id="imgDiv">
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div1">
+							<img id="imgpreviewpictureUrl1" src="" width="100%" height="100px" class="smPic">
+							<span id="span1"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div2">
+							<img id="imgpreviewpictureUrl2" src="" width="100%" height="100px" class="smPic">
+							<span id="span2"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div3">
+							<img id="imgpreviewpictureUrl3" src="" width="100%" height="100px" class="smPic">
+							<span id="span3"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div4">
+							<img id="imgpreviewpictureUrl4" src="" width="100%" height="100px" class="smPic">
+							<span id="span4"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div5">
+							<img id="imgpreviewpictureUrl5" src="" width="100%" height="100px" class="smPic">
+							<span id="span5"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div6">
+							<img id="imgpreviewpictureUrl6" src="" width="100%" height="100px" class="smPic">
+							<span id="span6"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div7">
+							<img id="imgpreviewpictureUrl7" src="" width="100%" height="100px" class="smPic">
+							<span id="span7"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div8">
+							<img id="imgpreviewpictureUrl8" src="" width="100%" height="100px" class="smPic">
+							<span id="span8"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div9">
+							<img id="imgpreviewpictureUrl9" src="" width="100%" height="100px" class="smPic">
+							<span id="span9"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-8" hidden id="hDiv">
+					<img src="" id="bgPic" style="width: 100%;height: 100%">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">价格：</label>
+				<div class="col-sm-8">
+					<input id="price" name="price" th:field="*{price}" class="form-control" type="number" min="0" step="0.01">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">会员价格：</label>
+				<div class="col-sm-8">
+					<input id="memberPrice" name="memberPrice" th:field="*{memberPrice}" class="form-control" type="number" min="0" step="0.01">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商品类型：</label>
+				<div class="col-sm-8">
+					<select id="goodsTypeId" name="goodsTypeId" class="form-control">
+						<option th:each="fkRow:${ goodsTypeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{goodsTypeId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">邮寄方式：</label>
+				<div class="col-sm-8">
+					<select id="mailMethod" name="mailMethod" class="form-control m-b" th:with="type=${@dict.getType('goods_mail_method')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{mailMethod}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">邮费：</label>
+				<div class="col-sm-8">
+					<input id="mailPrice" name="mailPrice" th:field="*{mailPrice}" class="form-control" type="number" min="0" step="0.01">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否提供发票：</label>
+				<div class="col-sm-8">
+					<select id="invoice" name="invoice" class="form-control m-b" th:with="type=${@dict.getType('goods_invoice_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{invoice}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详情描述：</label>
+				<div class="col-sm-8">
+				    <input id="comments" name="comments" th:field="*{comments}" type="hidden">
+				    <div id="commentsId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+<!--
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(goods.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(goods.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>-->
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var fileArr=[];
+		var fileArrAdd=[];
+		var prefix = ctx + "shooting/goods"
+	    $("#commentsId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link','picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]		,
+			placeholder: '请输入详情的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",20);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#commentsId").summernote('insertImage',data)
+						}
+					});
+				}
+			}
+		});
+		var content = $("#comments").val();
+		$('#commentsId').summernote("code",content);
+
+		$("#form-goods-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				name: {
+					required: false,
+				},
+				description: {
+					required: false,
+				},
+				pictureUrl1: {
+					required: false,
+				},
+				pictureUrl2: {
+					required: false,
+				},
+				pictureUrl3: {
+					required: false,
+				},
+				pictureUrl4: {
+					required: false,
+				},
+				pictureUrl5: {
+					required: false,
+				},
+				pictureUrl6: {
+					required: false,
+				},
+				pictureUrl7: {
+					required: false,
+				},
+				pictureUrl8: {
+					required: false,
+				},
+				pictureUrl9: {
+					required: false,
+				},
+				price: {
+					required: false,
+				},
+				memberPrice: {
+					required: false,
+				},
+				goodsTypeId: {
+					required: false,
+				},
+				mailMethod: {
+					required: false,
+				},
+				mailPrice: {
+					required: false,
+				},
+				invoice: {
+					required: false,
+				},
+				comments: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				name: {
+				},		
+				description: {
+				},		
+				pictureUrl1: {
+				},		
+				pictureUrl2: {
+				},		
+				pictureUrl3: {
+				},		
+				pictureUrl4: {
+				},		
+				pictureUrl5: {
+				},		
+				pictureUrl6: {
+				},		
+				pictureUrl7: {
+				},		
+				pictureUrl8: {
+				},		
+				pictureUrl9: {
+				},		
+				price: {
+				},		
+				memberPrice: {
+				},		
+				goodsTypeId: {
+				},		
+				mailMethod: {
+				},		
+				mailPrice: {
+				},		
+				invoice: {
+				},		
+				comments: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+				var sHTMLcomments = $("#commentsId").summernote("code");
+				$("#comments").val(sHTMLcomments);
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("name", $("#name").val());
+				formdata.append("description", $("#description").val());
+				formdata.append("price", $("#price").val());
+				formdata.append("memberPrice", $("#memberPrice").val());
+				formdata.append("goodsTypeId", $("#goodsTypeId").val());
+				formdata.append("mailMethod", $("#mailMethod").val());
+				formdata.append("mailPrice", $("#mailPrice").val());
+				formdata.append("invoice", $("#invoice").val());
+				formdata.append("comments", $("#comments").val());
+				formdata.append("status", $("#status").val());
+
+				for (var i in fileArr) {
+					var data = fileArr[i]
+					i++
+					var fileName = 'pictureUrl' + i
+					formdata.append(fileName, data);
+				}
+				for (var i in fileArrAdd) {
+					var data = fileArrAdd[i]
+					i++
+					var num=fileArr.length+i;
+					var fileName = 'pictureUrl' + num+'File'
+					formdata.append(fileName, data);
+				}
+	   
+
+
+			/*	var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-9;		
+		        formdata.append("pictureUrl1File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-8;		
+		        formdata.append("pictureUrl2File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-7;		
+		        formdata.append("pictureUrl3File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-6;		
+		        formdata.append("pictureUrl4File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-5;		
+		        formdata.append("pictureUrl5File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-4;		
+		        formdata.append("pictureUrl6File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-3;		
+		        formdata.append("pictureUrl7File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-2;		
+		        formdata.append("pictureUrl8File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("pictureUrl9File", $('input[type=file]')[fileIdx].files[0]);
+		        */
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+		$(window).load(function() {
+
+
+			var picturepictureUrl1 = '[[${goods.pictureUrl1}]]';
+			var optionspictureUrl1 = {
+				imgSrc: $.common.isEmpty(picturepictureUrl1) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl1
+			}
+
+			if (!$.common.isEmpty(picturepictureUrl1)) {
+				fileArr.push(picturepictureUrl1)
+				$('#imgpreviewpictureUrl1').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl1.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div1').removeAttr('hidden')
+
+				$('#pictureUrl1').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl1.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl1.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl1').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+
+				})
+				$('#span1').data('filename', picturepictureUrl1)
+
+			}
+
+			var picturepictureUrl2 = '[[${goods.pictureUrl2}]]';
+			var optionspictureUrl2 = {
+				imgSrc: $.common.isEmpty(picturepictureUrl2) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl2
+			}
+
+			if (!$.common.isEmpty(picturepictureUrl2)) {
+				fileArr.push(picturepictureUrl2)
+				$('#imgpreviewpictureUrl2').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl2.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div2').removeAttr('hidden')
+
+				$('#pictureUrl2').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl2.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl2.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl2').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span2').data('filename', picturepictureUrl2)
+
+			}
+			var picturepictureUrl3 = '[[${goods.pictureUrl3}]]';
+			var optionspictureUrl3 = {
+				imgSrc: $.common.isEmpty(picturepictureUrl3) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl3
+			}
+
+
+			if (!$.common.isEmpty(picturepictureUrl3)) {
+				fileArr.push(picturepictureUrl3)
+				$('#imgpreviewpictureUrl3').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl3.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div3').removeAttr('hidden')
+
+				$('#pictureUrl3').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl3.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl3.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl3').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span3').data('filename', picturepictureUrl3)
+			}
+
+			var picturepictureUrl4 = '[[${goods.pictureUrl4}]]';
+			var optionspictureUrl4 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl4) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl4
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl4) ) {
+				fileArr.push(picturepictureUrl4)
+				$('#imgpreviewpictureUrl4').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl4.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div4').removeAttr('hidden')
+
+				$('#pictureUrl4').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl4.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl4.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl4').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span4').data('filename', picturepictureUrl4)
+			}
+
+			var picturepictureUrl5 = '[[${goods.pictureUrl5}]]';
+			var optionspictureUrl5 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl5) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl5
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl5) ) {
+				fileArr.push(picturepictureUrl5)
+				$('#imgpreviewpictureUrl5').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl5.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div5').removeAttr('hidden')
+
+				$('#pictureUrl5').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl5.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl5.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl5').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span5').data('filename', picturepictureUrl5)
+			}
+
+			var picturepictureUrl6 = '[[${goods.pictureUrl6}]]';
+			var optionspictureUrl6 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl6) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl6
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl6) ) {
+				fileArr.push(picturepictureUrl6)
+				$('#imgpreviewpictureUrl6').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl6.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div6').removeAttr('hidden')
+
+				$('#pictureUrl6').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl6.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl6.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl6').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span6').data('filename', picturepictureUrl6)
+			}
+
+			var picturepictureUrl7 = '[[${goods.pictureUrl7}]]';
+			var optionspictureUrl7 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl7) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl7
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl7) ) {
+				fileArr.push(picturepictureUrl7)
+				$('#imgpreviewpictureUrl7').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl7.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div7').removeAttr('hidden')
+
+				$('#pictureUrl7').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl7.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl7.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl7').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span7').data('filename', picturepictureUrl7)
+			}
+
+
+			var picturepictureUrl8 = '[[${goods.pictureUrl8}]]';
+			var optionspictureUrl8 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl8) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl8
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl8) ) {
+				fileArr.push(picturepictureUrl8)
+				$('#imgpreviewpictureUrl8').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl8.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div8').removeAttr('hidden')
+
+				$('#pictureUrl8').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl8.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl8.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl8').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span8').data('filename', picturepictureUrl8)
+			}
+
+
+			var picturepictureUrl9 = '[[${goods.pictureUrl9}]]';
+			var optionspictureUrl9 = {	
+			    imgSrc: $.common.isEmpty(picturepictureUrl9) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturepictureUrl9
+			}
+
+			if(! $.common.isEmpty(picturepictureUrl9) ) {
+				fileArr.push(picturepictureUrl9)
+				$('#imgpreviewpictureUrl9').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goods" + optionspictureUrl9.imgSrc);
+				$('#picLable').removeAttr('hidden')
+				$('#div9').removeAttr('hidden')
+
+				$('#pictureUrl9').on('change', function () {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						optionspictureUrl9.imgSrc = e.target.result;
+						//根据MIME判断上传的文件是不是图片类型
+						if ((optionspictureUrl9.imgSrc).indexOf("image/") == -1) {
+							parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+						} else {
+							$('#imgpreviewpictureUrl9').attr('src', e.target.result);
+						}
+					}
+					reader.readAsDataURL(this.files[0]);
+				})
+				$('#span9').data('filename', picturepictureUrl9)
+			}
+
+			$(".smPic").click(function () {
+				var picSrc =  $(this).attr('src')
+				$('#bgPic').attr('src',picSrc)
+				$('#sDiv').hide()
+				$("#hDiv").show()
+			})
+
+			$('#hDiv').on('click',function(){
+				$('#bgPic').removeAttr('src')
+				$('#hDiv').hide()
+				$('#sDiv').show()
+			})
+
+		});
+
+		function removePic(obj) {
+			var name=obj.getAttribute("data-name");
+			$(obj).parent().remove();
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] = name){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		}
+
+		$("#uploadFile").on("change", function () {
+			var num =fileArr.length
+			var newFile=fileArrAdd.length
+			if (num+newFile == 9) {
+				layer.msg("最多上传9张图片")
+				return
+			}
+			var ss = document.getElementById('uploadFile').files[0]
+			fileArrAdd.push(ss)
+			var objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
+			if (objUrl) {
+				var pic = '<div id="imagepreview' + Math.floor(Math.random() * 1000000) + '" class="col-sm-4" style="position: relative; padding-top: 15px;"><img src="' + objUrl + '" width="100%" height="100px" class="smPic" ><span onclick="removePic(this)" data-name=" '+ss.name+'" style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span></div>'
+				$('#picLable').removeAttr('hidden')
+				$("#imgDiv").append(pic); //将图片路径存入src中，显示出图片
+			}
+
+
+			$(".smPic").click(function () {
+				var picSrc = $(this).attr('src')
+				$('#bgPic').attr('src', picSrc)
+				$('#sDiv').hide()
+				$("#hDiv").show()
+			})
+
+			$('#hDiv').on('click', function () {
+				$('#bgPic').removeAttr('src')
+				$('#hDiv').hide()
+				$('#sDiv').show()
+			})
+
+		});
+
+		function getObjectURL(file) {
+			var url = null;
+			if (window.createObjectURL != undefined) { // basic
+				url = window.createObjectURL(file);
+			} else if (window.URL != undefined) { // mozilla(firefox)
+				url = window.URL.createObjectURL(file);
+			} else if (window.webkitURL != undefined) { // webkit or chrome
+				url = window.webkitURL.createObjectURL(file);
+			}
+			return url;
+		}
+
+
+		$('#span1').click(function () {
+			debugger;
+			var name=$('#span1').data('filename');
+			$('#span1').parent().remove()
+			for(var i in fileArr){
+				console.log(fileArr[i]);
+				console.log(name);
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span2').click(function () {
+			var name=$('#span2').data('filename');
+			$('#span2').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span3').click(function () {
+			var name=$('#span3').data('filename');
+			$('#span3').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span4').click(function () {
+			var name=$('#span4').data('filename');
+			$('#span4').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span5').click(function () {
+			var name=$('#span5').data('filename');
+			$('#span5').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span6').click(function () {
+			var name=$('#span6').data('filename');
+			$('#span6').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span7').click(function () {
+			var name=$('#span7').data('filename');
+			$('#span7').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span8').click(function () {
+			var name=$('#span8').data('filename');
+			$('#span8').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+		$('#span9').click(function () {
+			var name=$('#span9').data('filename');
+			$('#span9').parent().remove()
+			for(var i in fileArr){
+				if(fileArr[i] ==name ){
+					fileArr.splice(i,1);
+					break;
+				}
+			}
+			for(var i in fileArrAdd){
+				if(fileArrAdd[i] ==name ){
+					fileArrAdd.splice(i,1);
+					break;
+				}
+			}
+		})
+
+
+
+    
+	    		
+	</script>
+</body>
+</html>

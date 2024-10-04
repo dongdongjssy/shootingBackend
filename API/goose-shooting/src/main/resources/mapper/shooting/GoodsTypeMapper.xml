@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsTypeMapper">
+    
+    <resultMap type="GoodsType" id="GoodsTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectGoodsTypeVoNoJoin">
+        select tb.id, tb.name, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_goods_type tb
+    </sql>
+    
+	<sql id="selectGoodsTypeVo">
+           select tb.id, tb.name, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_goods_type tb     </sql>
+    
+     <select id="selectGoodsTypeAll" parameterType="GoodsType" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeVo"/>
+     </select>    
+	
+    <select id="selectGoodsTypeList" parameterType="GoodsType" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null "> and tb.name = #{name}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != ''and createBy != 'admin' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsTypeById" parameterType="Long" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoodsType" parameterType="GoodsType" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  ">name,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  ">#{name},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsType" parameterType="GoodsType">
+        update shooting_goods_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  ">name = #{name},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsTypeById" parameterType="Long">
+        delete from shooting_goods_type where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsTypeByIds" parameterType="String">
+        delete from shooting_goods_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGoodsTypeAssoc">
+        select tb.id, tb.name, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_goods_type tb     </sql>
+    
+     <select id="selectGoodsTypeAllAssoc" parameterType="GoodsType" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsTypeListAssoc" parameterType="GoodsType" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null and name!='' "> and tb.name = #{name}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsTypeByIdAssoc" parameterType="Long" resultMap="GoodsTypeResult">
+        <include refid="selectGoodsTypeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

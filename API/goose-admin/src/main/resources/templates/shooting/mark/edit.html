@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-mark-edit" th:object="${mark}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			    <input id="clientUserId" name="clientUserId" th:field="*{clientUserId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">成绩：</label>
+				<div class="col-sm-8">
+					<input id="mark" name="mark" th:field="*{mark}" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/mark"
+
+		$("#form-mark-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				mark: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clientUserId: {
+				},		
+				mark: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("clientUserId", $("#clientUserId").val());
+				formdata.append("mark", $("#mark").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

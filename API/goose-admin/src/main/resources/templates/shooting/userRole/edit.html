@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-userRole-edit" th:object="${userRole}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+            <input id="roleIdsValue" name="roleIdsValue" th:field="*{roleIds}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户：</label>
+				<div class="col-sm-8">
+					<select id="userId" name="userId" class="form-control" disabled>
+						<option th:each="fkRow:${ userIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" th:field="*{userId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">角色：</label>
+				<div class="col-sm-8">
+					<select id="roleIds" name="roleIds" class="form-control" multiple>
+						<option th:each="fkRow:${ roleIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}"></option>
+					</select>					
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "client/userRole"
+
+		$("#form-userRole-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				userId: {
+					required: false,
+				},
+				roleId: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				userId: {
+				},		
+				roleId: {
+				},		
+		    }				
+		});
+		
+		$(window).load(function() {
+			 var roleIds = $("#roleIdsValue").val().split(',');
+			 $("#roleIds").val(roleIds);
+			 $('#roleIds').multiSelect('select', roleIds[0]);
+		});
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("userId", $("#userId").val()); 
+				formdata.append("roleIds", $("#roleIds").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

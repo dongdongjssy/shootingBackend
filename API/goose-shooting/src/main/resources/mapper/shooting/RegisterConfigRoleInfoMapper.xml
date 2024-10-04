@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterConfigRoleInfoMapper">
+    
+    <resultMap type="RegisterConfigRoleInfo" id="RegisterConfigRoleInfoResult">
+        <result property="id"    column="id"    />
+        <result property="registerConfigId"    column="register_config_id"    />
+        <result property="roleName"    column="role_name"    />
+        <result property="roleId"    column="role_id"    />
+    </resultMap>
+
+	
+	<sql id="selectRegisterConfigRoleInfoVoNoJoin">
+        select tb.id, tb.register_config_id, tb.role_name, tb.role_id        from shooting_register_config_role_info tb
+    </sql>
+    
+	<sql id="selectRegisterConfigRoleInfoVo">
+           select tb.id, tb.register_config_id, tb.role_name, tb.role_id from shooting_register_config_role_info tb     </sql>
+    
+     <select id="selectRegisterConfigRoleInfoAll" parameterType="RegisterConfigRoleInfo" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoVo"/>
+     </select>    
+	
+    <select id="selectRegisterConfigRoleInfoList" parameterType="RegisterConfigRoleInfo" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerConfigId != null "> and tb.register_config_id = #{registerConfigId}</if>
+            <if test="roleName != null  and roleName != '' "> and tb.role_name = #{roleName}</if>
+            <if test="roleId != null "> and tb.role_id = #{roleId}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterConfigRoleInfoById" parameterType="Long" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectRegisterConfigRoleInfoByConfigId" parameterType="Long" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoVo"/>
+        where tb.register_config_id = #{id}
+    </select>
+        
+    <insert id="insertRegisterConfigRoleInfo" parameterType="RegisterConfigRoleInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_register_config_role_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="registerConfigId != null  ">register_config_id,</if>
+			<if test="roleName != null  and roleName != ''  ">role_name,</if>
+			<if test="roleId != null  ">role_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="registerConfigId != null  ">#{registerConfigId},</if>
+			<if test="roleName != null  and roleName != ''  ">#{roleName},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRegisterConfigRoleInfo" parameterType="RegisterConfigRoleInfo">
+        update shooting_register_config_role_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registerConfigId != null  ">register_config_id = #{registerConfigId},</if>
+            <if test="roleName != null  and roleName != ''  ">role_name = #{roleName},</if>
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRegisterConfigRoleInfoById" parameterType="Long">
+        delete from shooting_register_config_role_info where id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterConfigRoleInfoByConfigId" parameterType="Long">
+        delete from shooting_register_config_role_info where register_config_id = #{id}
+    </delete>
+	
+    <delete id="deleteRegisterConfigRoleInfoByIds" parameterType="String">
+        delete from shooting_register_config_role_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectRegisterConfigRoleInfoAssoc">
+        select tb.id, tb.register_config_id, tb.role_name, tb.role_id                 from shooting_register_config_role_info tb     </sql>
+    
+     <select id="selectRegisterConfigRoleInfoAllAssoc" parameterType="RegisterConfigRoleInfo" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoAssoc"/>
+     </select>    
+	
+    <select id="selectRegisterConfigRoleInfoListAssoc" parameterType="RegisterConfigRoleInfo" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerConfigId != null "> and tb.register_config_id = #{registerConfigId}</if>
+            <if test="roleName != null  and roleName != '' "> and tb.role_name = #{roleName}</if>
+            <if test="roleId != null "> and tb.role_id = #{roleId}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterConfigRoleInfoByIdAssoc" parameterType="Long" resultMap="RegisterConfigRoleInfoResult">
+        <include refid="selectRegisterConfigRoleInfoAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.MessageMapper">
+    
+    <resultMap type="Message" id="MessageResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isView"    column="is_view"    />
+        <result property="isImportant"    column="is_important"    />
+        <result property="orderId"    column="order_id"    />
+        
+    </resultMap>
+
+	
+	<sql id="selectMessageVoNoJoin">
+        select tb.id, tb.title, tb.content, tb.type, tb.status,tb.is_important, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_message tb
+    </sql>
+    
+	<sql id="selectMessageVo">
+           select tb.id, tb.title, tb.content, tb.type,tb.is_important, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_message tb     </sql>
+    
+     <select id="selectMessageAll" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+     </select>    
+	
+    <select id="selectMessageList" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title = #{title}</if>
+            <if test="content != null  and content != '' "> and tb.content = #{content}</if>
+            <if test="type != null "> and tb.type = #{type}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+        order by tb.create_time desc
+    </select>
+    
+    <select id="selectMessageById" parameterType="Long" resultMap="MessageResult">
+        <include refid="selectMessageVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="type != null  ">type,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="isImportant != null  ">is_important,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="type != null  ">#{type},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="isImportant != null  ">#{isImportant},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateMessage" parameterType="Message">
+        update shooting_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+            <if test="isImportant != null  ">is_important=#{isImportant},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteMessageById" parameterType="Long">
+        delete from shooting_message where id = #{id}
+    </delete>
+	
+    <delete id="deleteMessageByIds" parameterType="String">
+        delete from shooting_message where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectMessageAssoc">
+        select tb.id, tb.title, tb.content, tb.type,tb.is_important, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_message tb     </sql>
+    
+     <select id="selectMessageAllAssoc" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageAssoc"/>
+     </select>    
+	
+    <select id="selectMessageListAssoc" parameterType="Message" resultMap="MessageResult">
+        <include refid="selectMessageAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="title != null  and title != '' "> and tb.title like concat('%', #{title}, '%')</if>
+            <if test="content != null  and content != '' "> and tb.content like concat('%', #{content}, '%')</if>
+            <if test="type != null "> and tb.type = #{type}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+                order by tb.create_time desc
+        
+    </select>
+    
+    <select id="selectMessageByIdAssoc" parameterType="Long" resultMap="MessageResult">
+        <include refid="selectMessageAssoc"/>
+        where tb.id = #{id}
+    </select>
+    
+    <insert id="insertMessageUser">
+    	insert into 
+    	shooting_message_user
+    	(message_id,client_user_id,create_by,create_time)
+    	values
+    	(#{messageId},#{clientUserId},#{createBy},now())
+    </insert>
+    
+    <insert id="insertMessageUserInAsync">
+    	insert into 
+    	shooting_message_user
+    	(message_id,client_user_id,create_by,create_time)
+    	values
+    	(#{messageId},#{clientUserId},#{createBy},now())
+    </insert>
+    
+    
+    <update id="updateMessageUser">
+    	update 
+    	shooting_message_user
+    	set 
+    	is_view = 2
+    	where 
+    	client_user_id = #{clientUserId}
+    </update>
+
+	<select id="selectMessageListByUser" parameterType="Message" resultMap="MessageResult">
+		SELECT
+		b.id, b.title, b.content,b.is_important, b.type, b.status, b.create_by, b.create_time, b.update_by, b.update_time,b.order_id,
+		a.is_view
+		from 
+		shooting_message_user a
+		left join 
+		shooting_message b 
+		ON 
+		a.message_id = b.id
+		where 
+		a.client_user_id = #{clientUserId}
+		order by a.create_time desc
+	</select>
+    
+    <select id="selectMessageIsViewByUser" parameterType="Message" resultType="int">
+    	SELECT
+		count(*)
+		from 
+		shooting_message_user a
+		left join 
+		shooting_message b 
+		ON 
+		a.message_id = b.id
+		where 
+		a.client_user_id = #{clientUserId}
+		and 
+		a.is_view = 1
+    </select>
+</mapper>

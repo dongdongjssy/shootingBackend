@@ -1,0 +1,16 @@
+zuul:
+  host:  
+    socket-timeout-millis: 5000  
+    connect-timeout-millis: 5000  
+  routes:
+    reserve:
+      path: /shooting-service/**
+      serviceId: shooting-service
+      #must use the stripPrefix=false if we are using context path in *service
+      #stripPrefix: false
+    security:
+      path: /security-service/**
+      serviceId: security-service
+      #must use the stripPrefix=false if we are using context path in *service
+      #stripPrefix: false
+   

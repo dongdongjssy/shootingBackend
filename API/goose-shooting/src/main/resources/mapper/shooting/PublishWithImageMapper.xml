@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.PublishWithImageMapper">
+    
+    <resultMap type="PublishWithImage" id="PublishWithImageResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="content"    column="content"    />
+        <result property="image1"    column="image1"    />
+        <result property="image2"    column="image2"    />
+        <result property="image3"    column="image3"    />
+        <result property="image4"    column="image4"    />
+        <result property="image5"    column="image5"    />
+        <result property="image6"    column="image6"    />
+        <result property="image7"    column="image7"    />
+        <result property="image8"    column="image8"    />
+        <result property="image9"    column="image9"    />
+        <result property="rankings"    column="rankings"    />
+        <result property="status"    column="status"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+    </resultMap>
+	
+	<sql id="selectPublishWithImageVoNoJoin">
+        select tb.id, tb.client_user_id, tb.content, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9, tb.rankings, tb.status        from shooting_publish_with_image tb
+    </sql>
+    
+	<sql id="selectPublishWithImageVo">
+           select tb.id, tb.client_user_id, tb.content, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9, tb.rankings, tb.status, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date  from shooting_publish_with_image tb join client_user a on tb.client_user_id = a.id
+    </sql>
+    
+     <select id="selectPublishWithImageAll" parameterType="PublishWithImage" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageVo"/>
+     </select>    
+	
+    <select id="selectPublishWithImageList" parameterType="PublishWithImage" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content = #{content}</if>
+            <if test="image1 != null  and image1 != '' "> and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' "> and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' "> and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' "> and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' "> and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' "> and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' "> and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' "> and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' "> and tb.image9 = #{image9}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPublishWithImageById" parameterType="Long" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertPublishWithImage" parameterType="PublishWithImage" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_publish_with_image
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="image1 != null  and image1 != ''  ">image1,</if>
+			<if test="image2 != null  and image2 != ''  ">image2,</if>
+			<if test="image3 != null  and image3 != ''  ">image3,</if>
+			<if test="image4 != null  and image4 != ''  ">image4,</if>
+			<if test="image5 != null  and image5 != ''  ">image5,</if>
+			<if test="image6 != null  and image6 != ''  ">image6,</if>
+			<if test="image7 != null  and image7 != ''  ">image7,</if>
+			<if test="image8 != null  and image8 != ''  ">image8,</if>
+			<if test="image9 != null  and image9 != ''  ">image9,</if>
+			<if test="rankings != null  ">rankings,</if>
+			<if test="status != null  ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="image1 != null  and image1 != ''  ">#{image1},</if>
+			<if test="image2 != null  and image2 != ''  ">#{image2},</if>
+			<if test="image3 != null  and image3 != ''  ">#{image3},</if>
+			<if test="image4 != null  and image4 != ''  ">#{image4},</if>
+			<if test="image5 != null  and image5 != ''  ">#{image5},</if>
+			<if test="image6 != null  and image6 != ''  ">#{image6},</if>
+			<if test="image7 != null  and image7 != ''  ">#{image7},</if>
+			<if test="image8 != null  and image8 != ''  ">#{image8},</if>
+			<if test="image9 != null  and image9 != ''  ">#{image9},</if>
+			<if test="rankings != null  ">#{rankings},</if>
+			<if test="status != null  ">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePublishWithImage" parameterType="PublishWithImage">
+        update shooting_publish_with_image
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="image1 != null  and image1 != ''  ">image1 = #{image1},</if>
+            <if test="image2 != null  and image2 != ''  ">image2 = #{image2},</if>
+            <if test="image3 != null  and image3 != ''  ">image3 = #{image3},</if>
+            <if test="image4 != null  and image4 != ''  ">image4 = #{image4},</if>
+            <if test="image5 != null  and image5 != ''  ">image5 = #{image5},</if>
+            <if test="image6 != null  and image6 != ''  ">image6 = #{image6},</if>
+            <if test="image7 != null  and image7 != ''  ">image7 = #{image7},</if>
+            <if test="image8 != null  and image8 != ''  ">image8 = #{image8},</if>
+            <if test="image9 != null  and image9 != ''  ">image9 = #{image9},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePublishWithImageById" parameterType="Long">
+        delete from shooting_publish_with_image where id = #{id}
+    </delete>
+	
+    <delete id="deletePublishWithImageByIds" parameterType="String">
+        delete from shooting_publish_with_image where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectPublishWithImageAssoc">
+        select tb.id, tb.client_user_id, tb.content, tb.image1, tb.image2, tb.image3, tb.image4, tb.image5, tb.image6, tb.image7, tb.image8, tb.image9, tb.rankings, tb.status ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date 		                from shooting_publish_with_image tb  join client_user a on tb.client_user_id = a.id    </sql>
+    
+     <select id="selectPublishWithImageAllAssoc" parameterType="PublishWithImage" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageAssoc"/>
+     </select>    
+	
+    <select id="selectPublishWithImageListAssoc" parameterType="PublishWithImage" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content like concat('%', #{content}, '%')</if>
+            <if test="image1 != null  and image1 != '' "> and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' "> and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' "> and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' "> and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' "> and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' "> and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' "> and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' "> and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' "> and tb.image9 = #{image9}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPublishWithImageByIdAssoc" parameterType="Long" resultMap="PublishWithImageResult">
+        <include refid="selectPublishWithImageAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsAttributeMapper">
+    
+    <resultMap type="GoodsAttribute" id="GoodsAttributeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="label"    column="label"    />
+        <result property="createBy"    column="create_by"    />
+        <association property="goods" column="goods_id"  javaType="Goods"  resultMap="GoodsResult" />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="a_id"    />
+        <result property="name"    column="a_name"    />
+        <result property="description"    column="a_description"    />
+        <result property="pictureUrl1"    column="a_picture_url1"    />
+        <result property="pictureUrl2"    column="a_picture_url2"    />
+        <result property="pictureUrl3"    column="a_picture_url3"    />
+        <result property="pictureUrl4"    column="a_picture_url4"    />
+        <result property="pictureUrl5"    column="a_picture_url5"    />
+        <result property="pictureUrl6"    column="a_picture_url6"    />
+        <result property="pictureUrl7"    column="a_picture_url7"    />
+        <result property="pictureUrl8"    column="a_picture_url8"    />
+        <result property="pictureUrl9"    column="a_picture_url9"    />
+        <result property="price"    column="a_price"    />
+        <result property="memberPrice"    column="a_member_price"    />
+        <result property="goodsTypeId"    column="a_goods_type_id"    />
+        <result property="mailMethod"    column="a_mail_method"    />
+        <result property="mailPrice"    column="a_mail_price"    />
+        <result property="invoice"    column="a_invoice"    />
+        <result property="comments"    column="a_comments"    />
+        <result property="status"    column="a_status"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectGoodsAttributeVoNoJoin">
+        select tb.id, tb.name, tb.parent_id, tb.goods_id ,tb.create_by     from shooting_goods_attribute tb
+    </sql>
+    
+	<sql id="selectGoodsAttributeVo">
+           select tb.id, tb.name, tb.parent_id,tb.create_by, tb.goods_id from shooting_goods_attribute tb     </sql>
+    
+     <select id="selectGoodsAttributeAll" parameterType="GoodsAttribute" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeVo"/>
+     </select>    
+	
+    <select id="selectGoodsAttributeList" parameterType="GoodsAttribute" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="parentId != null "> and tb.parent_id = #{parentId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsAttributeById" parameterType="Long" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoodsAttribute" parameterType="GoodsAttribute" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods_attribute
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="goodsId != null  ">goods_id,</if>
+            <if test="createBy != null  ">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="goodsId != null  ">#{goodsId},</if>
+            <if test="createBy != null  ">#{createBy},</if>
+        </trim>
+    </insert>
+	 
+    <update id="updateGoodsAttribute" parameterType="GoodsAttribute">
+        update shooting_goods_attribute
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsAttributeById" parameterType="Long">
+        delete from shooting_goods_attribute where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsAttributeByIds" parameterType="String">
+        delete from shooting_goods_attribute where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGoodsAttributeAssoc">
+        select tb.id, tb.name, tb.parent_id, tb.goods_id, tb.create_by,        a.id as a_id , a.name as a_name , a.description as a_description , a.picture_url1 as a_picture_url1 , a.picture_url2 as a_picture_url2 , a.picture_url3 as a_picture_url3 , a.picture_url4 as a_picture_url4 , a.picture_url5 as a_picture_url5 , a.picture_url6 as a_picture_url6 , a.picture_url7 as a_picture_url7 , a.picture_url8 as a_picture_url8 , a.picture_url9 as a_picture_url9 , a.price as a_price , a.member_price as a_member_price , a.goods_type_id as a_goods_type_id , a.mail_method as a_mail_method , a.mail_price as a_mail_price , a.invoice as a_invoice , a.comments as a_comments , a.status as a_status , a.create_by as a_create_by , a.create_time as a_create_time , a.update_by as a_update_by , a.update_time as a_update_time		                from shooting_goods_attribute tb  join shooting_goods a on tb.goods_id = a.id    </sql>
+    
+     <select id="selectGoodsAttributeAllAssoc" parameterType="GoodsAttribute" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsAttributeListAssoc" parameterType="GoodsAttribute" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="parentId != null "> and tb.parent_id = #{parentId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="createBy != null and createBy != ''  and createBy != 'admin' "> and tb.create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsAttributeByIdAssoc" parameterType="Long" resultMap="GoodsAttributeResult">
+        <include refid="selectGoodsAttributeAssoc"/>
+        where tb.id = #{id}
+    </select>
+    <select id="selectGoodsAttributeByGoodsId" parameterType="Long" resultMap="GoodsAttributeResult">
+        SELECT
+            tb.id,
+            `parent_id`,
+            `name`,
+            goods_id,
+            ss.dict_label as label
+        FROM
+            `shooting_goods_attribute` tb
+        JOIN sys_dict_data AS ss ON tb.parent_id = ss.dict_value
+        WHERE
+            ss.dict_type = 'goods_parent_attributes'
+            and tb.goods_id=#{goodsId}
+    </select>
+    
+</mapper>

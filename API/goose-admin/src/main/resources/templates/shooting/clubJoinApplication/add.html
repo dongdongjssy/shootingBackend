@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-clubJoinApplication-add">
+			<input name="clientUserId"  type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">申请者：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">申请加入的俱乐部：</label>
+				<div class="col-sm-8">
+					<select id="clubId" name="clubId" class="form-control">
+						<option th:each="fkRow:${ clubIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('shooting_club_join_application_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/clubJoinApplication"
+	    		
+		$("#form-clubJoinApplication-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				clubId: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clientUserId: {
+				},		
+				clubId: {
+				},		
+				status: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("clientUserId", $("#treeId").val());
+				formdata.append("clubId", $("#clubId").val());
+				formdata.append("status", $("#status").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

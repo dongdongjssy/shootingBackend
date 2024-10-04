@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterConfigMapper">
+
+    <resultMap type="RegisterConfig" id="RegisterConfigResult">
+        <result property="id" column="id"/>
+        <result property="fkId" column="fk_id"/>
+        <result property="registerType" column="register_type"/>
+        <result property="isUnauthAllowed" column="is_unauth_allowed"/>
+        <result property="title" column="title"/>
+    </resultMap>
+
+
+    <sql id="selectRegisterConfigVoNoJoin">
+        select tb.id, tb.fk_id, tb.register_type, tb.is_unauth_allowed, tb.title
+        from shooting_register_config tb
+    </sql>
+
+    <sql id="selectRegisterConfigVo">
+        select tb.id, tb.fk_id, tb.register_type, tb.is_unauth_allowed, tb.title
+        from shooting_register_config tb     </sql>
+
+    <select id="selectRegisterConfigAll" parameterType="RegisterConfig" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigVo"/>
+    </select>
+
+    <select id="selectRegisterConfigByFkIdAndType" parameterType="RegisterConfig" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigVoNoJoin"/>
+        where
+        tb.fk_id = #{fkId} and
+        tb.register_type = #{registerType}
+    </select>
+
+    <select id="selectRegisterConfigList" parameterType="RegisterConfig" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="fkId != null ">and tb.fk_id = #{fkId}</if>
+            <if test="registerType != null  and registerType != '' ">and tb.register_type = #{registerType}</if>
+            <if test="isUnauthAllowed != null ">and tb.is_unauth_allowed = #{isUnauthAllowed}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+        </where>
+    </select>
+
+    <select id="selectRegisterConfigById" parameterType="Long" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertRegisterConfig" parameterType="RegisterConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_register_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="fkId != null  ">fk_id,</if>
+            <if test="registerType != null  and registerType != ''  ">register_type,</if>
+            <if test="isUnauthAllowed != null  ">is_unauth_allowed,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="fkId != null  ">#{fkId},</if>
+            <if test="registerType != null  and registerType != ''  ">#{registerType},</if>
+            <if test="isUnauthAllowed != null  ">#{isUnauthAllowed},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRegisterConfig" parameterType="RegisterConfig">
+        update shooting_register_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fkId != null  ">fk_id = #{fkId},</if>
+            <if test="registerType != null  and registerType != ''  ">register_type = #{registerType},</if>
+            <if test="isUnauthAllowed != null  ">is_unauth_allowed = #{isUnauthAllowed},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRegisterConfigById" parameterType="Long">
+        delete
+        from shooting_register_config
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterConfigByIds" parameterType="String">
+        delete from shooting_register_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectRegisterConfigAssoc">
+        select tb.id, tb.fk_id, tb.register_type, tb.is_unauth_allowed, tb.title
+        from shooting_register_config tb     </sql>
+
+    <select id="selectRegisterConfigAllAssoc" parameterType="RegisterConfig" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigAssoc"/>
+    </select>
+
+    <select id="selectRegisterConfigListAssoc" parameterType="RegisterConfig" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="fkId != null ">and tb.fk_id = #{fkId}</if>
+            <if test="registerType != null  and registerType != '' ">and tb.register_type = #{registerType}</if>
+            <if test="isUnauthAllowed != null ">and tb.is_unauth_allowed = #{isUnauthAllowed}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+        </where>
+    </select>
+
+    <select id="selectRegisterConfigByIdAssoc" parameterType="Long" resultMap="RegisterConfigResult">
+        <include refid="selectRegisterConfigAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

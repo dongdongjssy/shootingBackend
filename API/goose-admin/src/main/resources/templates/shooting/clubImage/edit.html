@@ -1,0 +1,703 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-clubImage-edit" th:object="${clubImage}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">俱乐部：</label>
+				<div class="col-sm-8">
+					<select id="clubId" name="clubId" class="form-control">
+						<option th:each="fkRow:${ clubIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" th:field="*{clubId}"></option>
+					</select>					
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接1：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image1" id="image1" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage1" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接2：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image2" id="image2" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage2" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接3：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image3" id="image3" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage3" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接4：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image4" id="image4" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage4" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接5：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image5" id="image5" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage5" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接6：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image6" id="image6" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage6" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接7：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image7" id="image7" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage7" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接8：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image8" id="image8" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage8" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图集链接9：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="image9" id="image9" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewimage9" class='imageBox' />
+			        </div>				
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">上传图片：</label>
+				<div class="col-sm-8">
+					<div class="new-contentarea">
+						<a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+						<input type="file" class="" name="image9" id="uploadFile" accept="image/*"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label " id="picLable" hidden="">图片预览: </label>
+				<div class="col-sm-8" id="sDiv">
+					<div class="col-sm-12" id="imgDiv" >
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div1">
+							<img id="imgpreviewimage1" src="" width="100%" height="100px" class="smPic">
+							<span id="span1"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div2">
+							<img id="imgpreviewimage2" src="" width="100%" height="100px" class="smPic">
+							<span id="span2"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div3">
+							<img id="imgpreviewimage3" src="" width="100%" height="100px" class="smPic">
+							<span id="span3"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div4">
+							<img id="imgpreviewimage4" src="" width="100%" height="100px" class="smPic">
+							<span id="span4"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div5">
+							<img id="imgpreviewimage5" src="" width="100%" height="100px" class="smPic">
+							<span id="span5"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div6">
+							<img id="imgpreviewimage6" src="" width="100%" height="100px" class="smPic">
+							<span id="span6"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div7">
+							<img id="imgpreviewimage7" src="" width="100%" height="100px" class="smPic">
+							<span id="span7"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div8">
+							<img id="imgpreviewimage8" src="" width="100%" height="100px" class="smPic">
+							<span id="span8"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+						<div class="col-sm-4" style="position: relative; padding-top: 15px;" hidden="hidden" id="div9">
+							<img id="imgpreviewimage9" src="" width="100%" height="100px" class="smPic">
+							<span id="span9"  style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-8" hidden id="hDiv">
+					<img src="" id="bgPic" style="width: 100%;height: 100%">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/clubImage"
+        var fileArr=[];
+        var fileArrAdd=[];
+		$("#form-clubImage-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clubId: {
+					required: false,
+				},
+				image1: {
+					required: false,
+				},
+				image2: {
+					required: false,
+				},
+				image3: {
+					required: false,
+				},
+				image4: {
+					required: false,
+				},
+				image5: {
+					required: false,
+				},
+				image6: {
+					required: false,
+				},
+				image7: {
+					required: false,
+				},
+				image8: {
+					required: false,
+				},
+				image9: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clubId: {
+				},		
+				image1: {
+				},		
+				image2: {
+				},		
+				image3: {
+				},		
+				image4: {
+				},		
+				image5: {
+				},		
+				image6: {
+				},		
+				image7: {
+				},		
+				image8: {
+				},		
+				image9: {
+				},		
+		    }				
+		});
+
+        function removePic(obj) {
+            console.log(obj)
+            $(obj).parent().remove();
+            for(var i in fileArrAdd){
+                console.log(fileArr[i])
+                if(fileArrAdd[i] = name){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+        }
+        $("#uploadFile").on("change", function () {
+            var num =fileArr.length
+            var newFile=fileArrAdd.length
+            if (num+newFile == 9) {
+                layer.msg("最多上传9张图片")
+                return
+            }
+            var ss = document.getElementById('uploadFile').files[0]
+            fileArrAdd.push(ss)
+            var objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
+            if (objUrl) {
+                var pic = '<div id="imagepreview' + Math.floor(Math.random() * 1000000) + '" class="col-sm-4" style="position: relative; padding-top: 15px;"><img src="' + objUrl + '" width="100%" height="100px" class="smPic" ><span onclick="removePic(this)" data-name=" '+ss.name+'" style="position: absolute;display: block;width: 20px;height:20px;color: #fff;background: rgba(0,0,0,0.7);line-height: 20px;text-align: center;border-radius: 50%;top: 20px;right: 20px;cursor: pointer;">x</span></div>'
+                $('#picLable').removeAttr('hidden')
+                $("#imgDiv").append(pic); //将图片路径存入src中，显示出图片
+            }
+
+
+            $(".smPic").click(function () {
+                var picSrc = $(this).attr('src')
+                $('#bgPic').attr('src', picSrc)
+                $('#sDiv').hide()
+                $("#hDiv").show()
+            })
+
+            $('#hDiv').on('click', function () {
+                $('#bgPic').removeAttr('src')
+                $('#hDiv').hide()
+                $('#sDiv').show()
+            })
+
+        });
+
+        function getObjectURL(file) {
+            var url = null;
+            if (window.createObjectURL != undefined) { // basic
+                url = window.createObjectURL(file);
+            } else if (window.URL != undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file);
+            } else if (window.webkitURL != undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file);
+            }
+            return url;
+        }
+
+
+        $('#span1').click(function () {
+            var name=$('#span1').data('filename');
+            $('#span1').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span2').click(function () {
+            var name=$('#span2').data('filename');
+            $('#span2').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span3').click(function () {
+            var name=$('#span3').data('filename');
+            $('#span3').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span4').click(function () {
+            var name=$('#span4').data('filename');
+            $('#span4').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span5').click(function () {
+            var name=$('#span5').data('filename');
+            $('#span5').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span6').click(function () {
+            var name=$('#span6').data('filename');
+            $('#span6').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span7').click(function () {
+            var name=$('#span7').data('filename');
+            $('#span7').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span8').click(function () {
+            var name=$('#span8').data('filename');
+            $('#span8').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+        $('#span9').click(function () {
+            var name=$('#span9').data('filename');
+            $('#span9').parent().remove()
+            for(var i in fileArr){
+                if(fileArr[i] ==name ){
+                    fileArr.splice(i,1);
+                    break;
+                }
+            }
+            for(var i in fileArrAdd){
+                if(fileArrAdd[i] ==name ){
+                    fileArrAdd.splice(i,1);
+                    break;
+                }
+            }
+        })
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("clubId", $("#clubId").val());
+	   
+
+
+			/*	var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-9;		
+		        formdata.append("image1File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-8;		
+		        formdata.append("image2File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-7;		
+		        formdata.append("image3File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-6;		
+		        formdata.append("image4File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-5;		
+		        formdata.append("image5File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-4;		
+		        formdata.append("image6File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-3;		
+		        formdata.append("image7File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-2;		
+		        formdata.append("image8File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("image9File", $('input[type=file]')[fileIdx].files[0]);
+		        */
+                for (var i in fileArr) {
+                    var data = fileArr[i]
+                    i++
+                    var fileName = 'image' + i
+                    formdata.append(fileName, data);
+                }
+                for (var i in fileArrAdd) {
+                    var data = fileArrAdd[i]
+                    i++
+                    var num=fileArr.length+i;
+                    var fileName = 'image' + num+'File'
+                    formdata.append(fileName, data);
+                }
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+		$(window).load(function() {
+            $(".smPic").click(function () {
+                var picSrc =  $(this).attr('src')
+                $('#bgPic').attr('src',picSrc)
+                $('#sDiv').hide()
+                $("#hDiv").show()
+            })
+
+            $('#hDiv').on('click',function(){
+                $('#bgPic').removeAttr('src')
+                $('#hDiv').hide()
+                $('#sDiv').show()
+            })
+
+			var pictureimage1 = '[[${clubImage.image1}]]';
+			var optionsimage1 = {	
+			    imgSrc: $.common.isEmpty(pictureimage1) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage1
+			}
+
+			if(! $.common.isEmpty(pictureimage1) ) {
+                fileArr.push(pictureimage1)
+                $('#imgpreviewimage1').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage1.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div1').removeAttr('hidden')
+                $('#span1').data('filename',pictureimage1)
+            }
+			var pictureimage2 = '[[${clubImage.image2}]]';
+			var optionsimage2 = {	
+			    imgSrc: $.common.isEmpty(pictureimage2) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage2
+			}
+
+			if(! $.common.isEmpty(pictureimage2) ) {
+                fileArr.push(pictureimage2)
+                $('#imgpreviewimage2').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage2.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div2').removeAttr('hidden')
+                $('#span2').data('filename',pictureimage2)
+            }
+
+			var pictureimage3 = '[[${clubImage.image3}]]';
+			var optionsimage3 = {	
+			    imgSrc: $.common.isEmpty(pictureimage3) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage3
+			}
+
+			if(! $.common.isEmpty(pictureimage3) ) {
+                fileArr.push(pictureimage3)
+
+				$('#imgpreviewimage3').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage3.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div3').removeAttr('hidden')
+                $('#span3').data('filename',pictureimage3)
+
+            }
+
+			var pictureimage4 = '[[${clubImage.image4}]]';
+			var optionsimage4 = {	
+			    imgSrc: $.common.isEmpty(pictureimage4) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage4
+			}
+
+			if(! $.common.isEmpty(pictureimage4) ) {
+                fileArr.push(pictureimage4)
+                $('#imgpreviewimage4').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage4.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div4').removeAttr('hidden')
+                $('#span4').data('filename',pictureimage4)
+
+            }
+
+
+			var pictureimage5 = '[[${clubImage.image5}]]';
+			var optionsimage5 = {	
+			    imgSrc: $.common.isEmpty(pictureimage5) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage5
+			}
+
+			if(! $.common.isEmpty(pictureimage5) ) {
+                fileArr.push(pictureimage5)
+
+                $('#imgpreviewimage5').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage5.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div5').removeAttr('hidden')
+                $('#span5').data('filename',pictureimage5)
+
+            }
+
+
+			var pictureimage6 = '[[${clubImage.image6}]]';
+			var optionsimage6 = {	
+			    imgSrc: $.common.isEmpty(pictureimage6) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage6
+			}
+
+			if(! $.common.isEmpty(pictureimage6) ) {
+                fileArr.push(pictureimage6)
+
+                $('#imgpreviewimage6').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage6.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div6').removeAttr('hidden')
+                $('#span6').data('filename',pictureimage6)
+
+            }
+
+			var pictureimage7 = '[[${clubImage.image7}]]';
+			var optionsimage7 = {	
+			    imgSrc: $.common.isEmpty(pictureimage7) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage7
+			}
+
+			if(! $.common.isEmpty(pictureimage7) ) {
+                fileArr.push(pictureimage7)
+
+                $('#imgpreviewimage7').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage7.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div7').removeAttr('hidden')
+                $('#span7').data('filename',pictureimage7)
+
+            }
+
+			var pictureimage8 = '[[${clubImage.image8}]]';
+			var optionsimage8 = {	
+			    imgSrc: $.common.isEmpty(pictureimage8) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage8
+			}
+
+			if(! $.common.isEmpty(pictureimage8) ) {
+                fileArr.push(pictureimage8)
+
+                $('#imgpreviewimage8').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage8.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div8').removeAttr('hidden')
+                $('#span8').data('filename',pictureimage8)
+
+            }
+
+			var pictureimage9 = '[[${clubImage.image9}]]';
+			var optionsimage9 = {	
+			    imgSrc: $.common.isEmpty(pictureimage9) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimage9
+			}
+
+			if(! $.common.isEmpty(pictureimage9) ) {
+                fileArr.push(pictureimage9)
+
+                $('#imgpreviewimage9').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/club" + optionsimage9.imgSrc);
+                $('#picLable').removeAttr('hidden')
+                $('#div9').removeAttr('hidden')
+                $('#span9').data('filename',pictureimage9)
+
+            }
+
+		});
+    
+	    		
+	</script>
+</body>
+</html>

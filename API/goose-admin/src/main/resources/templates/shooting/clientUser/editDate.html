@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-clientUser-editDate">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">请选择会员时间：</label>
+            <div class="col-sm-8">
+                <input id="certExpireDate" name="certExpireDate"  class="form-control time-input" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "client/clientUser"
+
+    function submitHandler() {
+        if($('#certExpireDate').val()==''){
+            alert('请选择时间');
+            return
+        }
+        $.ajax({
+            url: prefix + "/editDate",
+            data: {"certExpireDate":$('#certExpireDate').val()},
+            type: "post",
+            traditional:true,
+            success: function (result) {
+                $.operate.saveSuccess(result);
+            }
+        })
+
+    }
+
+
+
+
+    function selectAll(){
+        $("input[name='aaa']").each(function () {
+                $(this).prop("checked",!$(this).prop("checked"));
+
+
+
+
+
+        })
+    }
+
+
+</script>
+</body>
+</html>

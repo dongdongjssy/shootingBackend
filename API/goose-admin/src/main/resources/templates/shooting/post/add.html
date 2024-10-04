@@ -1,0 +1,748 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-post-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">发布者：</label>
+				<div class="col-sm-8">
+					<select id="clientUserId" name="clientUserId" class="form-control">
+						<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" ></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">内容：</label>
+				<div class="col-sm-8">
+				    <input id="content" name="content" type="hidden">
+				    <div id="contentId" class="summernote"></div>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接1：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image1" id="image1" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage1" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接2：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image2" id="image2" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage2" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接3：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image3" id="image3" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage3" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接4：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image4" id="image4" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage4" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接5：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image5" id="image5" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage5" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接6：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image6" id="image6" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage6" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接7：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image7" id="image7" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage7" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接8：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image8" id="image8" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage8" class='imageBox' />
+			        </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图集链接9：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+			           <input type="file" class="" name="image9" id="image9" accept="image/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<img id="imgpreviewimage9" class='imageBox' />
+			        </div>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">上传图片：</label>
+				<div class="col-sm-8">
+					<div class="new-contentarea">
+						<a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+						<input type="file" class="" name="image9" id="uploadFile" accept="image/*"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-8" id="sDiv">
+					<div class="col-sm-12" id="imgDiv" >
+					</div>
+				</div>
+				<div class="col-sm-8" hidden id="hDiv">
+					<img src="" id="bgPic" style="width: 100%;height: 100%">
+				</div>
+			</div>
+
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">视频：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传视频</label> </a>
+			           <input type="file" class="" name="video" id="video" accept="video/*"/>
+			       </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">视频预览：</label>
+				<div class="col-sm-8">
+					<div class="container">
+			       		<video id="videopreviewmediaUrl" width="320" height="240" controls />
+			        </div>
+				</div>
+			</div>
+			<!--
+			<div class="form-group">
+				<label class="col-sm-3 control-label">点赞数：</label>
+				<div class="col-sm-8">
+					<input id="likeCount" name="likeCount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">评论数：</label>
+				<div class="col-sm-8">
+					<input id="commentCount" name="commentCount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">浏览数：</label>
+				<div class="col-sm-8">
+					<input id="readCount" name="readCount" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">排名：</label>
+				<div class="col-sm-8">
+					<input id="rankings" name="rankings" class="form-control" type="text">
+				</div>
+			</div>
+			-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('shooting_post_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/post"
+
+		var fileArr=[]
+	    $("#contentId").summernote({
+			height : '320px',
+			lang : 'zh-CN',
+			dialogsInBody: true,
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link','picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ],
+		        placeholder: '请输入通知的内容',
+		        callbacks:{
+		            onImageUpload:function(files, editor, $editable) {
+		           	 var fd = new FormData();
+		           	    fd.append("file", files[0]);
+		           	    fd.append("type",9);
+		           	    $.ajax({
+		           	        type:"POST",
+		           	        url:ctx + "shooting/oss/uploadRichText",
+		           	        data: fd,
+		           	        cache: false,
+		           	        contentType: false,
+		           	        processData: false,
+		           	        success: function (data) {
+		           	        	$("#contentId").summernote('insertImage',data)
+		           	        }
+		           	    });
+		           	 
+		           }
+		        }	
+	    });
+
+
+		$("#form-post-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clientUserId: {
+					required: true,
+				},
+				title: {
+					required: false,
+				},
+				content: {
+					required: false,
+				},
+				image1: {
+					required: false,
+				},
+				image2: {
+					required: false,
+				},
+				image3: {
+					required: false,
+				},
+				image4: {
+					required: false,
+				},
+				image5: {
+					required: false,
+				},
+				image6: {
+					required: false,
+				},
+				image7: {
+					required: false,
+				},
+				image8: {
+					required: false,
+				},
+				image9: {
+					required: false,
+				},
+				video: {
+					required: false,
+				},
+				likeCount: {
+					required: false,
+				},
+				commentCount: {
+					required: false,
+				},
+				readCount: {
+					required: false,
+				},
+				onTop: {
+					required: false,
+				},
+				rankings: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},
+				clientUserId: {
+				},
+				title: {
+				},
+				content: {
+				},
+				image1: {
+				},
+				image2: {
+				},
+				image3: {
+				},
+				image4: {
+				},
+				image5: {
+				},
+				image6: {
+				},
+				image7: {
+				},
+				image8: {
+				},
+				image9: {
+				},
+				video: {
+				},
+				likeCount: {
+				},
+				commentCount: {
+				},
+				readCount: {
+				},
+				onTop: {
+				},
+				rankings: {
+				},
+				status: {
+				},
+				createBy: {
+				},
+				createTime: {
+				},
+				updateBy: {
+				},
+				updateTime: {
+				},
+		    }
+		});
+
+		$("#uploadFile").on("change",function(){
+
+           var num= $("#imgDiv").children("div").length;
+           if(num>=9){
+               layer.msg("最多上传9张图片")
+			   return
+		   }
+            var ss=document.getElementById('uploadFile').files[0]
+            fileArr.push(ss)
+			var objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
+			if (objUrl) {
+				var pic='<div class="col-sm-4"><img src="'+objUrl+'" width="100%" height="100px" class="smPic" ></div>'
+				$("#imgDiv").append(pic) ; //将图片路径存入src中，显示出图片
+			}
+
+
+            $(".smPic").click(function () {
+                var picSrc =  $(this).attr('src')
+                $('#bgPic').attr('src',picSrc)
+                $('#sDiv').hide()
+                $("#hDiv").show()
+            })
+
+            $('#hDiv').on('click',function(){
+                $('#bgPic').removeAttr('src')
+                $('#hDiv').hide()
+                $('#sDiv').show()
+            })
+
+        });
+
+
+
+        function getObjectURL(file) {
+            var url = null ;
+            if (window.createObjectURL!=undefined) { // basic
+                url = window.createObjectURL(file) ;
+            } else if (window.URL!=undefined) { // mozilla(firefox)
+                url = window.URL.createObjectURL(file) ;
+            } else if (window.webkitURL!=undefined) { // webkit or chrome
+                url = window.webkitURL.createObjectURL(file) ;
+            }
+            return url ;
+        }
+		function submitHandler() {
+			if ($.validate.form()) {
+	            var sHTMLcontent = $("#contentId").summernote('code');
+				$("#content").val(sHTMLcontent);
+		        var formdata = new FormData();
+				formdata.append("clientUserId", $("#clientUserId").val());
+				formdata.append("content", $("#content").val());
+				// formdata.append("rankings", $("#rankings").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+				for(var i in fileArr){
+					var data=fileArr[i]
+                    i++
+				    var fileName='image'+i+'File'
+                    formdata.append(fileName,data);
+				}
+
+				/*var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-10;
+		        formdata.append("image1File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-9;
+		        formdata.append("image2File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-8;
+		        formdata.append("image3File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-7;
+		        formdata.append("image4File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-6;
+		        formdata.append("image5File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-5;
+		        formdata.append("image6File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-4;
+		        formdata.append("image7File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-3;
+		        formdata.append("image8File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-2;
+		        formdata.append("image9File", $('input[type=file]')[fileIdx].files[0]);
+				fileIdx = $('input[type=file]').length-1;*/
+                var ss=document.getElementById('video').files[0]
+		        formdata.append("videoFile", ss);
+
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+
+	   		}
+		}
+
+		$(window).load(function() {
+			var optionsimage1 = {
+			}
+		    $('#image1').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage1.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage1.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage1').attr('src', e.target.result);
+		            	$('#imgpreviewimage1').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage2 = {
+			}
+		    $('#image2').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage2.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage2.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage2').attr('src', e.target.result);
+		            	$('#imgpreviewimage2').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage3 = {
+			}
+		    $('#image3').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage3.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage3.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage3').attr('src', e.target.result);
+		            	$('#imgpreviewimage3').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage4 = {
+			}
+		    $('#image4').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage4.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage4.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage4').attr('src', e.target.result);
+		            	$('#imgpreviewimage4').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage5 = {
+			}
+		    $('#image5').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage5.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage5.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage5').attr('src', e.target.result);
+		            	$('#imgpreviewimage5').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage6 = {
+			}
+		    $('#image6').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage6.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage6.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage6').attr('src', e.target.result);
+		            	$('#imgpreviewimage6').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage7 = {
+			}
+		    $('#image7').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage7.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage7.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage7').attr('src', e.target.result);
+		            	$('#imgpreviewimage7').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage8 = {
+			}
+		    $('#image8').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage8.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage8.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage8').attr('src', e.target.result);
+		            	$('#imgpreviewimage8').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsimage9 = {
+			}
+		    $('#image9').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsimage9.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsimage9.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewimage9').attr('src', e.target.result);
+		            	$('#imgpreviewimage9').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+			var optionsvideo = {
+			}
+		    $('#video').on('change', function() {
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsvideo.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是视频类型
+		            if((optionsvideo.imgSrc).indexOf("video/")==-1){
+		                parent.layer.alert("文件格式错误，请上传视频类型,如：MP4后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#videopreviewmediaUrl').attr('src', e.target.result);
+		            	$('#videopreviewmediaUrl').attr('hidden', false);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })
+
+
+		});
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}
+
+	</script>
+</body>
+</html>

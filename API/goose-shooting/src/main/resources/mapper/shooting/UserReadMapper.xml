@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserReadMapper">
+    
+    <resultMap type="UserRead" id="UserReadResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="readId"    column="read_id"    />
+        <result property="readType"    column="read_type"    />
+    </resultMap>
+
+	
+	<sql id="selectUserReadVoNoJoin">
+        select tb.id, tb.client_user_id, tb.read_id, tb.read_type        from shooting_user_read tb
+    </sql>
+    
+	<sql id="selectUserReadVo">
+           select tb.id, tb.client_user_id, tb.read_id, tb.read_type from shooting_user_read tb     </sql>
+    
+     <select id="selectUserReadAll" parameterType="UserRead" resultMap="UserReadResult">
+        <include refid="selectUserReadVo"/>
+     </select>    
+	
+    <select id="selectUserReadList" parameterType="UserRead" resultMap="UserReadResult">
+        <include refid="selectUserReadVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="readId != null "> and tb.read_id = #{readId}</if>
+            <if test="readType != null  and readType != '' "> and tb.read_type = #{readType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserReadById" parameterType="Long" resultMap="UserReadResult">
+        <include refid="selectUserReadVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertUserRead" parameterType="UserRead" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_user_read
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="readId != null  ">read_id,</if>
+			<if test="readType != null  and readType != ''  ">read_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="readId != null  ">#{readId},</if>
+			<if test="readType != null  and readType != ''  ">#{readType},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserRead" parameterType="UserRead">
+        update shooting_user_read
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="readId != null  ">read_id = #{readId},</if>
+            <if test="readType != null  and readType != ''  ">read_type = #{readType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserReadById" parameterType="Long">
+        delete from shooting_user_read where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserReadByIds" parameterType="String">
+        delete from shooting_user_read where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectUserReadAssoc">
+        select tb.id, tb.client_user_id, tb.read_id, tb.read_type                 from shooting_user_read tb     </sql>
+    
+     <select id="selectUserReadAllAssoc" parameterType="UserRead" resultMap="UserReadResult">
+        <include refid="selectUserReadAssoc"/>
+     </select>    
+	
+    <select id="selectUserReadListAssoc" parameterType="UserRead" resultMap="UserReadResult">
+        <include refid="selectUserReadAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="readId != null "> and tb.read_id = #{readId}</if>
+            <if test="readType != null  and readType != '' "> and tb.read_type = #{readType}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserReadByIdAssoc" parameterType="Long" resultMap="UserReadResult">
+        <include refid="selectUserReadAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

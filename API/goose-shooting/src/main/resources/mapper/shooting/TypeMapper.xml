@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.TypeMapper">
+    
+    <resultMap type="Type" id="TypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+	
+	<sql id="selectTypeVoNoJoin">
+        select tb.id, tb.name        from shooting_type tb
+    </sql>
+    
+	<sql id="selectTypeVo">
+           select tb.id, tb.name from shooting_type tb     </sql>
+    
+     <select id="selectTypeAll" parameterType="Type" resultMap="TypeResult">
+        <include refid="selectTypeVo"/>
+     </select>    
+	
+    <select id="selectTypeList" parameterType="Type" resultMap="TypeResult">
+        <include refid="selectTypeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+        </where>
+    </select>
+    
+    <select id="selectTypeById" parameterType="Long" resultMap="TypeResult">
+        <include refid="selectTypeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertType" parameterType="Type" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateType" parameterType="Type">
+        update shooting_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTypeById" parameterType="Long">
+        delete from shooting_type where id = #{id}
+    </delete>
+	
+    <delete id="deleteTypeByIds" parameterType="String">
+        delete from shooting_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectTypeAssoc">
+        select tb.id, tb.name                 from shooting_type tb     </sql>
+    
+     <select id="selectTypeAllAssoc" parameterType="Type" resultMap="TypeResult">
+        <include refid="selectTypeAssoc"/>
+     </select>    
+	
+    <select id="selectTypeListAssoc" parameterType="Type" resultMap="TypeResult">
+        <include refid="selectTypeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTypeByIdAssoc" parameterType="Long" resultMap="TypeResult">
+        <include refid="selectTypeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

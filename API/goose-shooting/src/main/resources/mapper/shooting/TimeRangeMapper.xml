@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.TimeRangeMapper">
+    
+    <resultMap type="TimeRange" id="TimeRangeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="monthCount"    column="month_count"    />
+    </resultMap>
+
+	
+	<sql id="selectTimeRangeVoNoJoin">
+        select tb.id, tb.name, tb.month_count        from shooting_time_range tb
+    </sql>
+    
+	<sql id="selectTimeRangeVo">
+           select tb.id, tb.name, tb.month_count from shooting_time_range tb     </sql>
+    
+     <select id="selectTimeRangeAll" parameterType="TimeRange" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeVo"/>
+     </select>    
+	
+    <select id="selectTimeRangeList" parameterType="TimeRange" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="monthCount != null "> and tb.month_count = #{monthCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectTimeRangeById" parameterType="Long" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertTimeRange" parameterType="TimeRange" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_time_range
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="monthCount != null  ">month_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="monthCount != null  ">#{monthCount},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTimeRange" parameterType="TimeRange">
+        update shooting_time_range
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="monthCount != null  ">month_count = #{monthCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTimeRangeById" parameterType="Long">
+        delete from shooting_time_range where id = #{id}
+    </delete>
+	
+    <delete id="deleteTimeRangeByIds" parameterType="String">
+        delete from shooting_time_range where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectTimeRangeAssoc">
+        select tb.id, tb.name, tb.month_count                 from shooting_time_range tb     </sql>
+    
+     <select id="selectTimeRangeAllAssoc" parameterType="TimeRange" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeAssoc"/>
+     </select>    
+	
+    <select id="selectTimeRangeListAssoc" parameterType="TimeRange" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+            <if test="monthCount != null "> and tb.month_count = #{monthCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectTimeRangeByIdAssoc" parameterType="Long" resultMap="TimeRangeResult">
+        <include refid="selectTimeRangeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

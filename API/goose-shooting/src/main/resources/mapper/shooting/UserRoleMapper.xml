@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserRoleMapper">
+    
+    <resultMap type="UserRole" id="UserRoleResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="roleIds"    column="role_ids"    />
+        <association property="clientUser" column="user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+        <association property="role" column="role_id"  javaType="Role"  resultMap="RoleResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+        <result property="status"    column="a_status"    />
+        <result property="idFront"    column="a_id_front"    />
+        <result property="idBack"    column="a_id_back"    />
+        <result property="idNumber"    column="a_id_number"    />
+        <result property="realName"    column="a_real_name"    />
+        <result property="jgUsername"    column="a_jg_username"    />
+        <result property="memberId"    column="a_member_id"    />
+        <result property="englishName"    column="a_english_name"    />
+        <result property="certExpireDate"    column="a_cert_expire_date"    />
+        <result property="selfieImage"    column="a_selfie_image"    />
+        <result property="graduateDate"    column="a_graduate_date"    />
+        <result property="sex"    column="a_sex"    />
+        <result property="passportNo"    column="a_passport_no"    />
+    </resultMap>
+    <resultMap type="Role" id="RoleResult">
+        <result property="id"    column="b_id"    />
+        <result property="name"    column="b_name"    />
+        <result property="description"    column="b_description"    />
+    </resultMap>
+	
+	<sql id="selectUserRoleVoNoJoin">
+        select tb.id, tb.user_id, tb.role_id, tb.role_ids        from client_user_role tb
+    </sql>
+    
+	<sql id="selectUserRoleVo">
+           select tb.id, tb.user_id, tb.role_id, tb.role_ids from client_user_role tb     </sql>
+    
+     <select id="selectUserRoleAll" parameterType="UserRole" resultMap="UserRoleResult">
+        <include refid="selectUserRoleVo"/>
+         order by tb.sort desc
+     </select>    
+	
+    <select id="selectUserRoleList" parameterType="UserRole" resultMap="UserRoleResult">
+        <include refid="selectUserRoleVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="userId != null "> and tb.user_id = #{userId}</if>
+            <if test="roleId != null "> and tb.role_id = #{roleId}</if>
+            <if test="roleIds != null  and roleIds != '' "> and tb.role_ids = #{roleIds}</if>
+        </where>
+        order by tb.sort desc
+    </select>
+    
+    <select id="selectUserRoleById" parameterType="Integer" resultMap="UserRoleResult">
+        <include refid="selectUserRoleVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertUserRole" parameterType="UserRole" useGeneratedKeys="true" keyProperty="id">
+        insert into client_user_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="roleId != null  ">role_id,</if>
+			<if test="roleIds != null  and roleIds != ''  ">role_ids,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+			<if test="roleIds != null  and roleIds != ''  ">#{roleIds},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserRole" parameterType="UserRole">
+        update client_user_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+            <if test="roleIds != null  and roleIds != ''  ">role_ids = #{roleIds},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserRoleById" parameterType="Integer">
+        delete from client_user_role where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserRoleByIds" parameterType="String">
+        delete from client_user_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectUserRoleAssoc">
+        select tb.id, tb.user_id, tb.role_id, tb.role_ids ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , a.id_number as a_id_number , a.real_name as a_real_name , a.jg_username as a_jg_username , a.member_id as a_member_id , a.english_name as a_english_name , a.cert_expire_date as a_cert_expire_date , a.selfie_image as a_selfie_image , a.graduate_date as a_graduate_date , a.sex as a_sex , a.passport_no as a_passport_no 		,         b.id as b_id , b.name as b_name , b.description as b_description 		                from client_user_role tb  join client_user a on tb.user_id = a.id  join client_role b on tb.role_id = b.id    </sql>
+    
+     <select id="selectUserRoleAllAssoc" parameterType="UserRole" resultMap="UserRoleResult">
+        <include refid="selectUserRoleAssoc"/>
+     </select>    
+	
+    <select id="selectUserRoleListAssoc" parameterType="UserRole" resultMap="UserRoleResult">
+        <include refid="selectUserRoleAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="userId != null "> and tb.user_id = #{userId}</if>
+            <if test="roleId != null "> and tb.role_id = #{roleId}</if>
+            <if test="roleIds != null  and roleIds != '' "> and tb.role_ids = #{roleIds}</if>
+        </where>
+        order by tb.sort desc
+    </select>
+    
+    <select id="selectUserRoleByIdAssoc" parameterType="Integer" resultMap="UserRoleResult">
+        <include refid="selectUserRoleAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

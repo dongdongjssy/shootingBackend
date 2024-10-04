@@ -1,0 +1,108 @@
+# 数据源配置
+spring:
+    datasource:
+        #type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://39.103.189.132:3306/shooting?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: aa
+        # 初始连接数
+        initial-size: 10
+        # 最大连接池数量
+        max-active: 100
+        # 最小连接池数量
+        min-idle: 10
+        # 配置获取连接等待超时的时间
+        max-wait: 60000
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 20
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        stat-view-servlet:
+            enabled: true
+            url-pattern: /monitor/druid/*
+        filter:
+            stat:
+                log-slow-sql: true
+                slow-sql-millis: 1000
+                merge-sql: false
+            wall:
+                config:
+                    multi-statement-allow: true
+    # 文件上传
+    servlet:
+        multipart:
+            max-file-size:  30MB
+            max-request-size:  30MB
+    mail: 
+        username: cpsaclub@163.com
+        password: YBWTFGMOAGBVPLAL
+        host: smtp.163.com
+        subject: CPSA
+# 关闭多数据源配置
+multipleDs:
+    disabled: true
+
+# 项目相关配置
+goose:
+    # 名称
+    name: Shooting
+    # 版本
+    version: 3.1.0
+    # 版权年份
+    copyrightYear: 2019
+
+    # 获取ip地址开关
+    addressEnabled: true
+    profile: /home/centos/shooting/profile/
+    shooting: /home/centos/shooting/
+    clientUser: clientUser/
+    carousel: carousel/
+    recommend: recommend/
+    post: post/
+    training: training/
+    contest: contest/
+    advertisement: advertisement/
+    club: club/
+    clubPost: clubPost/
+    clubActivity: clubActivity/
+    publish: publish/
+    coach: coach/
+    judge: judge/
+    import: C:/import/       
+    message: message/
+    basePic: D:/profile/
+    startAdvertisement: startAdvertisement/
+    paymentCode: paymentCode
+    goods: goods/
+    order: order/
+    goodsCarousel: goodsCarousel/
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://127.0.0.1:1111/eureka/
+            
+#server:
+#  ssl:
+#    key-store: classpath:api.arefa-china.com.jks
+#    key-store-password: 2u0q0g4ok23
+#    keyStoreType: JKS  
+
+#阿里云对象存储OSS
+aliyun: 
+  endpoint: https://oss-cn-beijing.aliyuncs.com
+  accessKeyId: aa
+  accessKeySecret: aa
+  bucketName: cpsa-oss
+  objectName: 1
+
+## 图片上传位置 1=本地 2=阿里云oss 3= 亚马逊AWS  
+upload:
+  category: 2                

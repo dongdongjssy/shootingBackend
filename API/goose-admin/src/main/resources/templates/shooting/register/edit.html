@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-register-edit" th:object="${register}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动名称：</label>
+				<div class="col-sm-8">
+					<input id="fkId" name="fkId" th:field="*{remark}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动类别：</label>
+				<div class="col-sm-8">
+					<select id="fkTable" name="fkTable" class="form-control m-b" th:with="type=${@dict.getType('shooting_register_fk_table')}" disabled>
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{fkTable}"></option>
+					</select>
+				</div>
+			</div>
+  		    <div class="form-group">
+				<label class="col-sm-3 control-label">报名者：</label>
+				<div class="col-sm-8">
+					<select id="clientUserId" name="clientUserId" class="form-control" disabled>
+						<option th:each="fkRow:${ clientUserIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" th:field="*{clientUserId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">报名时间段：</label>
+				<div class="col-sm-8">
+					<input id="schedules" name="schedules" th:field="*{schedules}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">获得报名渠道：</label>
+				<div class="col-sm-8">
+					<input id="source" name="source" th:field="*{source}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+<!--			<div class="form-group" th:each="item: *{registerFormItems}">-->
+<!--				<label class="col-sm-3 control-label" th:text="${item.name}"></label>-->
+<!--				<div class="col-sm-8">-->
+<!--					<input th:value="${item.value}" class="form-control" type="text" disabled>-->
+<!--				</div>-->
+<!--			</div>-->
+
+			<div class="form-group" th:each="item: *{registerFormItems}">
+				<label class="col-sm-3 control-label" th:text="${item.name}"></label>
+				<div class="col-sm-8">
+					<input th:if="${item.type == 'radio' and item.remark != ''}" th:value="${item.remark}" class="form-control" type="text" disabled>
+					<input th:else th:value="${item.value}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8" th:if="*{fkTable}==1">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('release_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+				<div class="col-sm-8" th:if="*{fkTable}==2">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('release_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+				<div class="col-sm-8" th:if="*{fkTable}==3">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('club_release_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/register"
+
+		$("#form-register-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				fkId: {
+					required: false,
+				},
+				fkTable: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				fkId: {
+				},		
+				fkTable: {
+				},		
+				clientUserId: {
+				},		
+				status: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+			//	formdata.append("fkId", $("#fkId").val());
+			//	formdata.append("fkTable", $("#fkTable").val());
+			//	formdata.append("clientUserId", $("#clientUserId").val());
+				formdata.append("status", $("#status").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

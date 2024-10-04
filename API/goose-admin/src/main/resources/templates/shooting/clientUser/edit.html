@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-clientUser-edit" th:object="${clientUser}">
+        <input id="id" name="id" th:field="*{id}" type="hidden">
+        <input id="roleIdsValue" name="roleIdsValue" th:field="*{roleIds}" type="hidden">
+        <input id="myClubIdsValue" name="myClubIdsValue" th:field="*{myClubIds}" type="hidden">
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用户昵称：</label>
+            <div class="col-sm-8">
+                <input id="nickname" name="nickname" th:field="*{nickname}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用户名：</label>
+            <div class="col-sm-8">
+                <input id="userName" name="userName" th:field="*{userName}" class="form-control" type="text" readonly="readonly">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">邮箱：</label>
+            <div class="col-sm-8">
+                <input id="email" name="email" th:field="*{email}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">手机号：</label>
+            <div class="col-sm-8">
+                <input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">证件照片：</label>
+            <div class="new-contentarea">
+                <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                <input type="file" class="" name="selfieImage" id="selfieImage" accept="image/*"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewselfie" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">结业日期：</label>
+            <div class="col-sm-8">
+                <input id="graduateDate" name="graduateDate" class="form-control time-input" type="text"
+                       th:value="${#dates.format(clientUser.graduateDate, 'yyyy-MM-dd')}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">性别：</label>
+            <div class="col-sm-8">
+                <select id="sex" name="sex" class="form-control m-b"
+                        th:with="type=${@dict.getType('client_user_gender')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                            th:field="*{sex}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">护照号码：</label>
+            <div class="col-sm-8">
+                <input id="passportNo" name="passportNo" th:field="*{passportNo}" class="form-control" type="text">
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用户微信：</label>
+            <div class="col-sm-8">
+                <input id="openId" name="openId" th:field="*{openId}" class="form-control" type="text">
+            </div>
+        </div>
+        -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">射手编号：</label>
+            <div class="col-sm-8">
+                <input id="memberId" name="memberId" th:field="*{memberId}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">英文名：</label>
+            <div class="col-sm-8">
+                <input id="englishName" name="englishName" th:field="*{englishName}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">用户头像：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="avatar" id="avatar" accept="image/*"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewavatar" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">城市：</label>
+            <div class="col-sm-8">
+                <input id="city" name="city" th:field="*{city}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地址：</label>
+            <div class="col-sm-8">
+                <input id="address" name="address" th:field="*{address}" class="form-control" type="text">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">认证状态：</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control m-b"
+                        th:with="type=${@dict.getType('client_user_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"
+                            th:field="*{status}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">认证有效期：</label>
+            <div class="col-sm-8">
+                <input id="certExpireDate" name="certExpireDate" class="form-control time-input" type="text"
+                       th:value="${#dates.format(clientUser.certExpireDate, 'yyyy-MM-dd')}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">身份证正面：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewIdFront" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">身份证背面：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewIdBack" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">身份证号：</label>
+            <div class="col-sm-8">
+                <input id="idNumber" name="idNumber" th:field="*{idNumber}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">真实姓名：</label>
+            <div class="col-sm-8">
+                <input id="realName" name="realName" th:field="*{realName}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">角色：</label>
+            <div class="col-sm-8">
+                <select id="roleIds" name="roleIds" class="form-control" multiple>
+                    <option th:each="fkRow:${ roleIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">所属俱乐部：</label>
+            <div class="col-sm-8">
+                <select id="myClubIds" name="myClubIds" class="form-control" multiple>
+                    <option th:each="fkRow:${ myClubList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}"></option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "client/clientUser"
+
+    $("#form-clientUser-edit").validate({
+        rules: {
+            id: {
+                required: false,
+            },
+            nickname: {
+                required: true,
+            },
+            userName: {
+                required: true,
+            },
+            email: {
+                required: false,
+            },
+            phone: {
+                required: true,
+            },
+            password: {
+                required: false,
+            },
+            userType: {
+                required: false,
+            },
+            openId: {
+                required: false,
+            },
+            avatar: {
+                required: false,
+            },
+            city: {
+                required: false,
+            },
+            address: {
+                required: false,
+            },
+            passwordResetDate: {
+                required: false,
+            },
+            status: {
+                required: false,
+            },
+            idFront: {
+                required: false,
+            },
+            idBack: {
+                required: false,
+            },
+            idNumber: {
+                required: false,
+            },
+            realName: {
+                required: false,
+            },
+            jgUsername: {
+                required: false,
+            },
+            memberId: {
+                required: true,
+            },
+            englishName: {
+                required: false,
+            },
+            certExpireDate: {
+                required: false,
+            },
+            selfieImage: {
+                required: false,
+            },
+            graduateDate: {
+                required: false,
+            },
+            sex: {
+                required: false,
+            },
+            passportNo: {
+                required: false,
+            },
+        },
+        messages: {
+            id: {},
+            nickname: {},
+            userName: {
+                remote: "用户名已经存在"
+            },
+            email: {},
+            phone: {},
+            password: {},
+            userType: {},
+            openId: {},
+            avatar: {},
+            city: {},
+            address: {},
+            passwordResetDate: {},
+            status: {},
+            idFront: {},
+            idBack: {},
+            idNumber: {},
+            realName: {},
+            jgUsername: {},
+            memberId: {},
+            englishName: {},
+            certExpireDate: {},
+            selfieImage: {},
+            graduateDate: {},
+            sex: {},
+            passportNo: {},
+        }
+    });
+
+    function toggleRoleIdsSelection() {
+        if ($("#status").val() == 2) {
+            $("#roleIds").removeAttr('disabled');
+        } else {
+            $("#roleIds").prop('disabled', 'disabled');
+        }
+    }
+
+    $("#status").on("change", function () {
+        toggleRoleIdsSelection();
+    })
+
+    $(window).load(function () {
+        toggleRoleIdsSelection();
+
+          var myClubIds = $("#myClubIdsValue").val().split(',');
+        $("#myClubIds").val(myClubIds).change(); 
+         
+        var roleIds = $("#roleIdsValue").val().split(',');
+        $("#roleIds").val(roleIds).change();
+    });
+
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            var formdata = new FormData();
+            formdata.append("id", $("#id").val());
+            formdata.append("nickname", $("#nickname").val());
+            formdata.append("userName", $("#userName").val());
+            formdata.append("email", $("#email").val());
+            formdata.append("phone", $("#phone").val());
+            formdata.append("password", $("#password").val());
+            formdata.append("userType", $("#userType").val());
+            //formdata.append("openId", $("#openId").val());
+            formdata.append("city", $("#city").val());
+            formdata.append("address", $("#address").val());
+            formdata.append("passwordResetDate", $("#passwordResetDate").val());
+            formdata.append("status", $("#status").val());
+            formdata.append("idNumber", $("#idNumber").val());
+            formdata.append("realName", $("#realName").val());
+            formdata.append("memberId", $("#memberId").val());
+            formdata.append("englishName", $("#englishName").val());
+            formdata.append("certExpireDate", $("#certExpireDate").val());
+            formdata.append("graduateDate", $("#graduateDate").val());
+            formdata.append("sex", $("#sex").val());
+            formdata.append("passportNo", $("#passportNo").val());
+            formdata.append("roleIds", $("#roleIds").val());
+            formdata.append("myClubIds", $("#myClubIds").val());
+
+            var fileIdx = 0;
+            fileIdx = $('input[type=file]').length - 2;
+            formdata.append("selfieImageFile", $('input[type=file]')[fileIdx].files[0]);
+            fileIdx = $('input[type=file]').length - 1;
+            formdata.append("avatarFile", $('input[type=file]')[fileIdx].files[0]);
+            $.ajax({
+                url: prefix + "/edit",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    $.operate.saveSuccess(result);
+                }
+            })
+        }
+    }
+
+
+    $(window).load(function () {
+
+        var pictureselfie = '[[${clientUser.selfieImage}]]';
+        var optionsselfie = {
+            imgSrc: $.common.isEmpty(pictureselfie) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureselfie
+        }
+
+        if (!$.common.isEmpty(pictureselfie)) {
+            $('#imgpreviewselfie').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/clientUser" + optionsselfie.imgSrc);
+        }
+        $('#selfieImage').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsselfie.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsselfie.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewselfie').attr('src', e.target.result);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+        var pictureavatar = '[[${clientUser.avatar}]]';
+        var optionsavatar = {
+            imgSrc: $.common.isEmpty(pictureavatar) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureavatar
+        }
+
+        if (!$.common.isEmpty(pictureavatar)) {
+            $('#imgpreviewavatar').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/clientUser" + optionsavatar.imgSrc);
+        }
+        $('#avatar').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsavatar.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsavatar.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewavatar').attr('src', e.target.result);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+        // 身份证正面预览
+        var pictureIdfront = '[[${clientUser.idFront}]]';
+        var optionsIdfront = {
+            imgSrc: $.common.isEmpty(pictureIdfront) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureIdfront
+        }
+
+        if (!$.common.isEmpty(pictureIdfront)) {
+            $('#imgpreviewIdFront').attr('src', "/shooting/profile/" + '[[${clientUser.id}]]' + optionsIdfront.imgSrc);
+        }
+
+        // 身份证背面预览
+        var pictureIdback = '[[${clientUser.idBack}]]';
+        var optionsIdback = {
+            imgSrc: $.common.isEmpty(pictureIdback) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureIdback
+        }
+
+        if (!$.common.isEmpty(pictureIdback)) {
+            $('#imgpreviewIdBack').attr('src', "/shooting/profile/" + '[[${clientUser.id}]]' + optionsIdback.imgSrc);
+        }
+    });
+</script>
+</body>
+</html>

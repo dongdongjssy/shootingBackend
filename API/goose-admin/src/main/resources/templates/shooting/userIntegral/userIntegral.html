@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								姓名：<input type="text" name="name"/>
+							</li>
+							<li>
+								射手卡编号：<input type="text" name="member"/>
+							</li>
+							<!--<li>
+								状态：<select name="status" th:with="type=${@dict.getType('sys_common_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>-->
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:userIntegral:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:userIntegral:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>-->
+
+
+				<form id="import-form" method="post" style="display: inline" enctype="multipart/form-data" shiro:hasPermission="client:clientUser:add">
+
+				<a href="javascript:void(0)" class="btn btn-outline btn-success btn-rounded">
+					<label for="file">导入</label>
+				</a>
+
+				<input type="file" style='display:none' class="Btnsty_peyton import_button" name="file"
+					   id='file'/>
+				<a class="btn btn-warning" type="button" id="blobSubmit">
+					提交
+				</a>
+				<!-- <input type="button" id="blobSubmit" class="Btnsty_peyton_import" value="提交"/>-->
+				</form>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="shooting:userIntegral:export">
+					<i class="fa fa-download"></i> 导出
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:userIntegral:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:userIntegral:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:userIntegral:remove')}]];
+        var prefix = ctx + "shooting/userIntegral";
+        var datas_sys_common_status = [[${@dict.getType('sys_common_status')}]];
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "用户电子积分卡",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'name', 
+					title : '姓名',
+
+					sortable: true
+				},
+				{
+					field : 'member', 
+					title : '射手卡编号',
+
+					sortable: true
+				},
+				{
+					field : 'ageGroup', 
+					title : '年龄组',
+
+					sortable: true
+				},
+				{
+					field : 'gunGroup', 
+					title : '枪组',
+
+					sortable: true
+				},
+				{
+					field : 'totalScore', 
+					title : '总积分',
+
+					sortable: true
+				},
+				{
+					field : 'teamNo', 
+					title : '团队编号',
+
+					sortable: true
+				},
+				{
+					field : 'status', 
+					title : '状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_sys_common_status, value);
+		            }
+				},
+				/*{
+					field : 'createBy', 
+					title : '创建者',
+
+					sortable: true
+				},
+				{
+					field : 'createTime', 
+					title : '创建时间',
+
+					sortable: true
+				},
+				{
+					field : 'updateBy', 
+					title : '更新者',
+
+					sortable: true
+				},
+				{
+					field : 'updateTime', 
+					title : '更新时间',
+
+					sortable: true
+				},*/
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-detail"></i>详情</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+		$('#blobSubmit').on('click', function () {
+			debugger
+			var formdata = new FormData(document.getElementById("import-form"));
+			if ($(".import_button").val() === "") {
+				$.modal.alertWarning('请先选择文件');
+				return false;
+			}
+			layer.load(1);
+			$.ajax({
+				url: prefix + "/importUserIntegralExcel",
+				data: formdata,
+				type: "post",
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					if (data.code == '0') {
+						$.modal.msgSuccess(data.msg);
+						location.reload();
+					}
+					else {
+						$.modal.alertError(data.msg);
+					}
+					layer.closeAll('loading');
+				}
+			})
+		})
+        
+    </script>
+</body>
+</html>

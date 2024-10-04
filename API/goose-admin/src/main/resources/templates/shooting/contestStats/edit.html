@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-contestStats-edit" th:object="${contestStats}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			    <input id="clientUserId" name="clientUserId" th:field="*{clientUserId}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">射击类别：</label>
+				<div class="col-sm-8">
+					<select id="typeId" name="typeId" class="form-control">
+						<option th:each="fkRow:${ typeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{typeId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">组别ID：</label>
+				<div class="col-sm-8">
+					<select id="contestGroupId" name="contestGroupId" class="form-control">
+						<option th:each="fkRow:${ contestGroupIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{contestGroupId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年龄组别：</label>
+				<div class="col-sm-8">
+					<select id="ageGroup" name="ageGroup" class="form-control m-b" th:with="type=${@dict.getType('age_group')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{ageGroup}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年份：</label>
+				<div class="col-sm-8">
+					<input id="year" name="year" th:field="*{year}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">排名：</label>
+				<div class="col-sm-8">
+					<input id="rank" name="rank" th:field="*{rank}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">积分 ：</label>
+				<div class="col-sm-8">
+					<input id="point" name="point" th:field="*{point}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总分：</label>
+				<div class="col-sm-8">
+					<input id="totalScore" name="totalScore" th:field="*{totalScore}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总数：</label>
+				<div class="col-sm-8">
+					<input id="totalCount" name="totalCount" th:field="*{totalCount}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总平均分：</label>
+				<div class="col-sm-8">
+					<input id="totalAvgScore" name="totalAvgScore" th:field="*{totalAvgScore}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最高分数：</label>
+				<div class="col-sm-8">
+					<input id="bestScore" name="bestScore" th:field="*{bestScore}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最大总数：</label>
+				<div class="col-sm-8">
+					<input id="bestCount" name="bestCount" th:field="*{bestCount}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">最高平均分：</label>
+				<div class="col-sm-8">
+					<input id="bestAvgScore" name="bestAvgScore" th:field="*{bestAvgScore}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="note" name="note" th:field="*{note}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(contestStats.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(contestStats.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/contestStats"
+
+		$("#form-contestStats-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				typeId: {
+					required: false,
+				},
+				contestGroupId: {
+					required: false,
+				},
+				ageGroup: {
+					required: false,
+				},
+				year: {
+					required: false,
+				},
+				rank: {
+					required: false,
+				},
+				point: {
+					required: false,
+				},
+				totalScore: {
+					required: false,
+				},
+				totalCount: {
+					required: false,
+				},
+				totalAvgScore: {
+					required: false,
+				},
+				bestScore: {
+					required: false,
+				},
+				bestCount: {
+					required: false,
+				},
+				bestAvgScore: {
+					required: false,
+				},
+				note: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clientUserId: {
+				},		
+				typeId: {
+				},		
+				contestGroupId: {
+				},		
+				ageGroup: {
+				},		
+				year: {
+				},		
+				rank: {
+				},		
+				point: {
+				},		
+				totalScore: {
+				},		
+				totalCount: {
+				},		
+				totalAvgScore: {
+				},		
+				bestScore: {
+				},		
+				bestCount: {
+				},		
+				bestAvgScore: {
+				},		
+				note: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("clientUserId", $("#clientUserId").val());
+				formdata.append("typeId", $("#typeId").val());
+				formdata.append("contestGroupId", $("#contestGroupId").val());
+				formdata.append("ageGroup", $("#ageGroup").val());
+				formdata.append("year", $("#year").val());
+				formdata.append("rank", $("#rank").val());
+				formdata.append("point", $("#point").val());
+				formdata.append("totalScore", $("#totalScore").val());
+				formdata.append("totalCount", $("#totalCount").val());
+				formdata.append("totalAvgScore", $("#totalAvgScore").val());
+				formdata.append("bestScore", $("#bestScore").val());
+				formdata.append("bestCount", $("#bestCount").val());
+				formdata.append("bestAvgScore", $("#bestAvgScore").val());
+				formdata.append("note", $("#note").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

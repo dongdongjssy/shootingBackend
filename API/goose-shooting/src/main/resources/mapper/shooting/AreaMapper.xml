@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.AreaMapper">
+    
+    <resultMap type="Area" id="AreaResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+	
+	<sql id="selectAreaVoNoJoin">
+        select tb.id, tb.name        from shooting_area tb
+    </sql>
+    
+	<sql id="selectAreaVo">
+           select tb.id, tb.name from shooting_area tb     </sql>
+    
+     <select id="selectAreaAll" parameterType="Area" resultMap="AreaResult">
+        <include refid="selectAreaVo"/>
+     </select>    
+	
+    <select id="selectAreaList" parameterType="Area" resultMap="AreaResult">
+        <include refid="selectAreaVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+        </where>
+    </select>
+    
+    <select id="selectAreaById" parameterType="Long" resultMap="AreaResult">
+        <include refid="selectAreaVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertArea" parameterType="Area" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateArea" parameterType="Area">
+        update shooting_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteAreaById" parameterType="Long">
+        delete from shooting_area where id = #{id}
+    </delete>
+	
+    <delete id="deleteAreaByIds" parameterType="String">
+        delete from shooting_area where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectAreaAssoc">
+        select tb.id, tb.name                 from shooting_area tb     </sql>
+    
+     <select id="selectAreaAllAssoc" parameterType="Area" resultMap="AreaResult">
+        <include refid="selectAreaAssoc"/>
+     </select>    
+	
+    <select id="selectAreaListAssoc" parameterType="Area" resultMap="AreaResult">
+        <include refid="selectAreaAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAreaByIdAssoc" parameterType="Long" resultMap="AreaResult">
+        <include refid="selectAreaAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

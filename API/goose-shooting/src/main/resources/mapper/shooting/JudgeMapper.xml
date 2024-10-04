@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.JudgeMapper">
+    
+    <resultMap type="Judge" id="JudgeResult">
+        <result property="id"    column="id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="name"    column="name"    />
+        <result property="contact"    column="contact"    />
+        <result property="category"    column="category"    />
+        <result property="nationality"    column="nationality"    />
+        <result property="rankings"    column="rankings"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="duty"    column="duty"    />
+    </resultMap>
+
+	
+	<sql id="selectJudgeVoNoJoin">
+        select tb.id, tb.nickname, tb.name, tb.contact, tb.category, tb.nationality, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.avatar ,tb.duty        from shooting_judge tb
+    </sql>
+    
+	<sql id="selectJudgeVo">
+           select tb.id, tb.nickname, tb.name, tb.contact, tb.category, tb.nationality, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.avatar,tb.duty  from shooting_judge tb     </sql>
+    
+     <select id="selectJudgeAll" parameterType="Judge" resultMap="JudgeResult">
+        <include refid="selectJudgeVo"/>
+     </select>    
+	
+    <select id="selectJudgeList" parameterType="Judge" resultMap="JudgeResult">
+        <include refid="selectJudgeVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="nickname != null  and nickname != '' "> and tb.nickname = #{nickname}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="contact != null  and contact != '' "> and tb.contact = #{contact}</if>
+            <if test="category != null "> and tb.category = #{category}</if>
+            <if test="nationality != null "> and tb.nationality = #{nationality}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="avatar != null  and avatar != '' "> and tb.avatar = #{avatar}</if>
+        </where>
+    </select>
+    
+    <select id="selectJudgeById" parameterType="Long" resultMap="JudgeResult">
+        <include refid="selectJudgeVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertJudge" parameterType="Judge" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_judge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="nickname != null  and nickname != ''  ">nickname,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="contact != null  and contact != ''  ">contact,</if>
+			<if test="category != null  ">category,</if>
+			<if test="nationality != null  ">nationality,</if>
+			<if test="rankings != null  ">rankings,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="avatar != null  and avatar != ''  ">avatar,</if>
+            <if test="duty != null  and duty != ''  ">duty,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="nickname != null  and nickname != ''  ">#{nickname},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="contact != null  and contact != ''  ">#{contact},</if>
+			<if test="category != null  ">#{category},</if>
+			<if test="nationality != null  ">#{nationality},</if>
+			<if test="rankings != null  ">#{rankings},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="avatar != null  and avatar != ''  ">#{avatar},</if>
+            <if test="duty != null  and duty != ''  ">#{duty},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateJudge" parameterType="Judge">
+        update shooting_judge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null  and nickname != ''  ">nickname = #{nickname},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="contact != null  and contact != ''  ">contact = #{contact},</if>
+            <if test="category != null  ">category = #{category},</if>
+            <if test="nationality != null  ">nationality = #{nationality},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+            <if test="avatar != null  and avatar != ''  ">avatar = #{avatar},</if>
+            <if test="duty != null  and duty != ''  ">duty=#{duty},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteJudgeById" parameterType="Long">
+        delete from shooting_judge where id = #{id}
+    </delete>
+	
+    <delete id="deleteJudgeByIds" parameterType="String">
+        delete from shooting_judge where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectJudgeAssoc">
+        select tb.id, tb.nickname, tb.name, tb.contact, tb.category, tb.nationality, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.avatar,tb.duty                 from shooting_judge tb     </sql>
+    
+     <select id="selectJudgeAllAssoc" parameterType="Judge" resultMap="JudgeResult">
+        <include refid="selectJudgeAssoc"/>
+     </select>    
+	
+    <select id="selectJudgeListAssoc" parameterType="Judge" resultMap="JudgeResult">
+        <include refid="selectJudgeAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="nickname != null  and nickname != '' "> and tb.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+            <if test="contact != null  and contact != '' "> and tb.contact like concat('%', #{contact}, '%')</if>
+            <if test="category != null "> and tb.category = #{category}</if>
+            <if test="nationality != null "> and tb.nationality = #{nationality}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+            <if test="avatar != null  and avatar != '' "> and tb.avatar = #{avatar}</if>
+        </where>
+    </select>
+    
+    <select id="selectJudgeByIdAssoc" parameterType="Long" resultMap="JudgeResult">
+        <include refid="selectJudgeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

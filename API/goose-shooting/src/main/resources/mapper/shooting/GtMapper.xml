@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GtMapper">
+    
+    <resultMap type="Gt" id="GtResult">
+        <result property="id"    column="id"    />
+        <result property="attributeId1"    column="attribute_id1"    />
+        <result property="attributeId2"    column="attribute_id2"    />
+        <result property="attributeId3"    column="attribute_id3"    />
+        <result property="attributeId4"    column="attribute_id4"    />
+        <result property="attributeId5"    column="attribute_id5"    />
+        <result property="attributeId6"    column="attribute_id6"    />
+        <result property="attributeId7"    column="attribute_id7"    />
+        <result property="attributeId8"    column="attribute_id8"    />
+        <result property="attributeId9"    column="attribute_id9"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="num"    column="num"    />
+        <result property="name1"    column="a_name"    />
+        <result property="name2"    column="b_name"    />
+        <result property="name3"    column="c_name"    />
+        <result property="name4"    column="d_name"    />
+        <result property="name5"    column="e_name"    />
+        <result property="name6"    column="f_name"    />
+        <result property="name7"    column="g_name"    />
+        <result property="name8"    column="h_name"    />
+        <result property="name9"    column="i_name"    />
+        <result property="createBy"    column="create_by"    />
+
+    </resultMap>
+
+	
+	<sql id="selectGtVoNoJoin">
+        select tb.id,tb.create_by, tb.attribute_id1, tb.attribute_id2, tb.attribute_id3, tb.attribute_id4, tb.attribute_id5, tb.attribute_id6, tb.attribute_id7, tb.attribute_id8, tb.attribute_id9, tb.goods_id, tb.num        from shooting_gt tb
+    </sql>
+    
+	<sql id="selectGtVo">
+           select tb.id,tb.create_by, tb.attribute_id1, tb.attribute_id2, tb.attribute_id3, tb.attribute_id4, tb.attribute_id5, tb.attribute_id6, tb.attribute_id7, tb.attribute_id8, tb.attribute_id9, tb.goods_id, tb.num from shooting_gt tb     </sql>
+
+     <select id="selectGtAll" parameterType="Gt" resultMap="GtResult">
+        <include refid="selectGtVo"/>
+     </select>    
+	
+    <select id="selectGtList" parameterType="Gt" resultMap="GtResult">
+        <include refid="selectGtVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="attributeId1 != null "> and tb.attribute_id1 = #{attributeId1}</if>
+            <if test="attributeId2 != null "> and tb.attribute_id2 = #{attributeId2}</if>
+            <if test="attributeId3 != null "> and tb.attribute_id3 = #{attributeId3}</if>
+            <if test="attributeId4 != null "> and tb.attribute_id4 = #{attributeId4}</if>
+            <if test="attributeId5 != null "> and tb.attribute_id5 = #{attributeId5}</if>
+            <if test="attributeId6 != null "> and tb.attribute_id6 = #{attributeId6}</if>
+            <if test="attributeId7 != null "> and tb.attribute_id7 = #{attributeId7}</if>
+            <if test="attributeId8 != null "> and tb.attribute_id8 = #{attributeId8}</if>
+            <if test="attributeId9 != null "> and tb.attribute_id9 = #{attributeId9}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  ">tb.create_by = #{createBy}</if>
+
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="num != null "> and tb.num = #{num}</if>
+        </where>
+    </select>
+    
+    <select id="selectGtById" parameterType="Long" resultMap="GtResult">
+        <include refid="selectGtVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGt" parameterType="Gt" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_gt
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="attributeId1 != null  ">attribute_id1,</if>
+			<if test="attributeId2 != null  ">attribute_id2,</if>
+			<if test="attributeId3 != null  ">attribute_id3,</if>
+			<if test="attributeId4 != null  ">attribute_id4,</if>
+			<if test="attributeId5 != null  ">attribute_id5,</if>
+			<if test="attributeId6 != null  ">attribute_id6,</if>
+			<if test="attributeId7 != null  ">attribute_id7,</if>
+			<if test="attributeId8 != null  ">attribute_id8,</if>
+			<if test="attributeId9 != null  ">attribute_id9,</if>
+			<if test="goodsId != null  ">goods_id,</if>
+			<if test="num != null  ">num,</if>
+            <if test="createBy != null  and createBy != '' ">create_by,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="attributeId1 != null  ">#{attributeId1},</if>
+			<if test="attributeId2 != null  ">#{attributeId2},</if>
+			<if test="attributeId3 != null  ">#{attributeId3},</if>
+			<if test="attributeId4 != null  ">#{attributeId4},</if>
+			<if test="attributeId5 != null  ">#{attributeId5},</if>
+			<if test="attributeId6 != null  ">#{attributeId6},</if>
+			<if test="attributeId7 != null  ">#{attributeId7},</if>
+			<if test="attributeId8 != null  ">#{attributeId8},</if>
+			<if test="attributeId9 != null  ">#{attributeId9},</if>
+			<if test="goodsId != null  ">#{goodsId},</if>
+			<if test="num != null  ">#{num},</if>
+            <if test="createBy != null  and createBy != '' ">#{createBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGt" parameterType="Gt">
+        update shooting_gt
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attributeId1 != null  ">attribute_id1 = #{attributeId1},</if>
+            <if test="attributeId2 != null  ">attribute_id2 = #{attributeId2},</if>
+            <if test="attributeId3 != null  ">attribute_id3 = #{attributeId3},</if>
+            <if test="attributeId4 != null  ">attribute_id4 = #{attributeId4},</if>
+            <if test="attributeId5 != null  ">attribute_id5 = #{attributeId5},</if>
+            <if test="attributeId6 != null  ">attribute_id6 = #{attributeId6},</if>
+            <if test="attributeId7 != null  ">attribute_id7 = #{attributeId7},</if>
+            <if test="attributeId8 != null  ">attribute_id8 = #{attributeId8},</if>
+            <if test="attributeId9 != null  ">attribute_id9 = #{attributeId9},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="num != null  ">num = #{num},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateGtNums" parameterType="Gt">
+        UPDATE shooting_gt SET num=(num-#{num}) WHERE id=#{id}
+    </update>
+
+    <update id="updateGtNum" parameterType="Gt">
+        UPDATE shooting_gt SET num=(num+#{num}) WHERE id=#{id}
+    </update>
+
+	<delete id="deleteGtById" parameterType="Long">
+        delete from shooting_gt where id = #{id}
+    </delete>
+	
+    <delete id="deleteGtByIds" parameterType="String">
+        delete from shooting_gt where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGtAssoc">
+        SELECT
+                    tb.id,
+                    tb.create_by,
+                    tb.attribute_id1,
+                    tb.attribute_id2,
+                    tb.attribute_id3,
+                    tb.attribute_id4,
+                    tb.attribute_id5,
+                    tb.attribute_id6,
+                    tb.attribute_id7,
+                    tb.attribute_id8,
+                    tb.attribute_id9,
+                    tb.goods_id,
+                    tb.num,
+                    sg.name AS goodsName,
+                    a. NAME AS a_name,
+                    a.parent_id AS b_parent_id,
+                    b. NAME AS b_name,
+                    b.parent_id AS b_parent_id,
+                    c. NAME AS c_name,
+                    c.parent_id AS c_parent_id,
+                    d. NAME AS d_name,
+                    d.parent_id AS d_parent_id,
+                    e. NAME AS e_name,
+                    e.parent_id AS e_parent_id,
+                    f. NAME AS f_name,
+                    f.parent_id AS f_parent_id,
+                    g. NAME AS g_name,
+                    g.parent_id AS g_parent_id,
+                    h. NAME AS h_name,
+                    h.parent_id AS h_parent_id,
+                    i. NAME AS i_name,
+                    i.parent_id AS i_parent_id
+                FROM
+                    shooting_gt tb
+                LEFT JOIN shooting_goods sg on tb.goods_id=sg.id
+                LEFT JOIN shooting_goods_attribute a ON tb.attribute_id1 = a.id
+                LEFT JOIN shooting_goods_attribute b ON tb.attribute_id2 = b.id
+                LEFT JOIN shooting_goods_attribute c ON tb.attribute_id3 = c.id
+                LEFT JOIN shooting_goods_attribute d ON tb.attribute_id4 = d.id
+                LEFT JOIN shooting_goods_attribute e ON tb.attribute_id5 = e.id
+                LEFT JOIN shooting_goods_attribute f ON tb.attribute_id6 = f.id
+                LEFT JOIN shooting_goods_attribute g ON tb.attribute_id7 = g.id
+                LEFT JOIN shooting_goods_attribute h ON tb.attribute_id8 = h.id
+                LEFT JOIN shooting_goods_attribute i ON tb.attribute_id9 = i.id
+    </sql>
+    
+     <select id="selectGtAllAssoc" parameterType="Gt" resultMap="GtResult">
+        <include refid="selectGtAssoc"/>
+     </select>    
+	
+    <select id="selectGtListAssoc" parameterType="Gt" resultMap="GtResult">
+        <include refid="selectGtAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="attributeId1 != null "> and tb.attribute_id1 = #{attributeId1}</if>
+            <if test="attributeId2 != null "> and tb.attribute_id2 = #{attributeId2}</if>
+            <if test="attributeId3 != null "> and tb.attribute_id3 = #{attributeId3}</if>
+            <if test="attributeId4 != null "> and tb.attribute_id4 = #{attributeId4}</if>
+            <if test="attributeId5 != null "> and tb.attribute_id5 = #{attributeId5}</if>
+            <if test="attributeId6 != null "> and tb.attribute_id6 = #{attributeId6}</if>
+            <if test="attributeId7 != null "> and tb.attribute_id7 = #{attributeId7}</if>
+            <if test="attributeId8 != null "> and tb.attribute_id8 = #{attributeId8}</if>
+            <if test="attributeId9 != null "> and tb.attribute_id9 = #{attributeId9}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  ">tb.create_by = #{createBy}</if>
+
+            <if test="num != null "> and tb.num = #{num}</if>
+        </where>
+    </select>
+    
+    <select id="selectGtByIdAssoc" parameterType="Long" resultMap="GtResult">
+        <include refid="selectGtAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+    <select id="selectGtByGoodsIdAndAttribute" parameterType="Gt" resultMap="GtResult">
+        select tb.id,tb.create_by, tb.attribute_id1, tb.attribute_id2, tb.attribute_id3, tb.attribute_id4, tb.attribute_id5, tb.attribute_id6, tb.attribute_id7, tb.attribute_id8, tb.attribute_id9, tb.goods_id, tb.num
+        from shooting_gt tb
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="attributeId1 != null "> and tb.attribute_id1 = #{attributeId1}</if>
+            <if test="attributeId2 != null "> and tb.attribute_id2 = #{attributeId2}</if>
+            <if test="attributeId3 != null "> and tb.attribute_id3 = #{attributeId3}</if>
+            <if test="attributeId4 != null "> and tb.attribute_id4 = #{attributeId4}</if>
+            <if test="attributeId5 != null "> and tb.attribute_id5 = #{attributeId5}</if>
+            <if test="attributeId6 != null "> and tb.attribute_id6 = #{attributeId6}</if>
+            <if test="attributeId7 != null "> and tb.attribute_id7 = #{attributeId7}</if>
+            <if test="attributeId8 != null "> and tb.attribute_id8 = #{attributeId8}</if>
+            <if test="attributeId9 != null "> and tb.attribute_id9 = #{attributeId9}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="createBy != null  and createBy != '' and createBy != 'admin'  ">tb.create_by = #{createBy}</if>
+            <if test="num != null "> and tb.num = #{num}</if>
+        </where>
+        limit 1
+    </select>
+
+    
+</mapper>

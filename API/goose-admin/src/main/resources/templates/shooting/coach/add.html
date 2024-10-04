@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-coach-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">昵称：</label>
+				<div class="col-sm-8">
+					<input id="nickname" name="nickname" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">姓名：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系：</label>
+				<div class="col-sm-8">
+					<input id="contact" name="contact" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">职责：</label>
+				<div class="col-sm-8">
+					<input id="duty" name="duty" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">教官类别：</label>
+				<div class="col-sm-8">
+					<select id="category" name="category" class="form-control m-b" th:with="type=${@dict.getType('shooting_coach_category')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<!--  
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">排名：</label>
+				<div class="col-sm-8">
+					<input id="rankings" name="rankings" class="form-control" type="text">
+				</div>
+			</div>
+			-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">头像：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="avatar" id="avatar" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewavatar" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/coach"
+	    		
+		$("#form-coach-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				nickname: {
+					required: false,
+				},
+				name: {
+					required: false,
+				},
+				contact: {
+					required: false,
+				},
+				duty: {
+					required: false,
+				},
+				category: {
+					required: false,
+				},
+				rankings: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+				avatar: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				nickname: {
+				},		
+				name: {
+				},		
+				contact: {
+				},
+				duty: {
+				},
+				category: {
+				},		
+				rankings: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+				avatar: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("nickname", $("#nickname").val());
+				formdata.append("name", $("#name").val());
+				formdata.append("contact", $("#contact").val());
+				formdata.append("duty", $("#duty").val());
+				formdata.append("category", $("#category").val());
+				// formdata.append("rankings", $("#rankings").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("avatarFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+		$(window).load(function() {		
+			var optionsavatar = {	
+			}	
+		    $('#avatar').on('change', function() {	    
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionsavatar.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsavatar.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewavatar').attr('src', e.target.result);
+		            	$('#imgpreviewavatar').attr('hidden', false);		            	
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })	
+
+
+		});
+
+	    
+	</script>
+</body>
+</html>

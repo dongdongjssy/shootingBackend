@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-contestRankingCoeffDefault-edit" th:object="${contestRankingCoeffDefault}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">年份 ：</label>
+				<div class="col-sm-8">
+					<input id="year" name="year" th:field="*{year}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">科目：</label>
+				<div class="col-sm-8">
+					<select id="courseId" name="courseId" class="form-control">
+						<option th:each="fkRow:${ courseIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{courseId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">射击类别：</label>
+				<div class="col-sm-8">
+					<select id="typeId" name="typeId" class="form-control">
+						<option th:each="fkRow:${ typeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{typeId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">组别：</label>
+				<div class="col-sm-8">
+					<select id="groupId" name="groupId" class="form-control">
+						<option th:each="fkRow:${ groupIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{groupId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">默认系数：</label>
+				<div class="col-sm-8">
+					<input id="rankCoeff" name="rankCoeff" th:field="*{rankCoeff}" class="form-control" type="number">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/contestRankingCoeffDefault"
+
+		$("#form-contestRankingCoeffDefault-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				year: {
+					required: false,
+				},
+				courseId: {
+					required: false,
+				},
+				typeId: {
+					required: false,
+				},
+				groupId: {
+					required: false,
+				},
+				rankCoeff: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				year: {
+				},		
+				courseId: {
+				},		
+				typeId: {
+				},		
+				groupId: {
+				},		
+				rankCoeff: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("year", $("#year").val());
+				formdata.append("courseId", $("#courseId").val());
+				formdata.append("typeId", $("#typeId").val());
+				formdata.append("groupId", $("#groupId").val());
+				formdata.append("rankCoeff", $("#rankCoeff").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

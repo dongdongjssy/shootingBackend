@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-order-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单编号：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+			<input name="clientUserId"  type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">总价格：</label>
+				<div class="col-sm-8">
+					<input id="price" name="price" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">付款码：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="pictureUrl" id="pictureUrl" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewpictureUrl" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">支付状态：</label>
+				<div class="col-sm-8">
+					<select id="goodsOrderStatus" name="goodsOrderStatus" class="form-control m-b" th:with="type=${@dict.getType('goods_order_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">支付时间：</label>
+				<div class="col-sm-8">
+					<input id="payTime" name="payTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+-->
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/order"
+	    		
+		$("#form-order-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+				price: {
+					required: false,
+				},
+				pictureUrl: {
+					required: false,
+				},
+				goodsOrderStatus: {
+					required: false,
+				},
+				payTime: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				title: {
+				},		
+				clientUserId: {
+				},		
+				price: {
+				},		
+				pictureUrl: {
+				},		
+				goodsOrderStatus: {
+				},		
+				payTime: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("title", $("#title").val());
+				formdata.append("clientUserId", $("#treeId").val());
+				formdata.append("price", $("#price").val());
+				formdata.append("goodsOrderStatus", $("#goodsOrderStatus").val());
+				formdata.append("payTime", $("#payTime").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("pictureUrlFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+		$(window).load(function() {		
+			var optionspictureUrl = {	
+			}	
+		    $('#pictureUrl').on('change', function() {	    
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		            optionspictureUrl.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionspictureUrl.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewpictureUrl').attr('src', e.target.result);
+		            	$('#imgpreviewpictureUrl').attr('hidden', false);		            	
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })	
+
+
+		});
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

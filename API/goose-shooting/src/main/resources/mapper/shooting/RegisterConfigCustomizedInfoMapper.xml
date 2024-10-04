@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterConfigCustomizedInfoMapper">
+    
+    <resultMap type="RegisterConfigCustomizedInfo" id="RegisterConfigCustomizedInfoResult">
+        <result property="id"    column="id"    />
+        <result property="registerConfigId"    column="register_config_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="isRequired"    column="is_required"    />
+        <result property="isRemarkDisplay"    column="is_remark_display"    />
+        <result property="itemRemark"    column="item_remark"    />
+    </resultMap>
+
+	
+	<sql id="selectRegisterConfigCustomizedInfoVoNoJoin">
+        select tb.id, tb.register_config_id, tb.item_name, tb.item_type, tb.is_required, tb.is_remark_display, tb.item_remark        from shooting_register_config_customized_info tb
+    </sql>
+    
+	<sql id="selectRegisterConfigCustomizedInfoVo">
+           select tb.id, tb.register_config_id, tb.item_name, tb.item_type, tb.is_required, tb.is_remark_display, tb.item_remark from shooting_register_config_customized_info tb     </sql>
+    
+     <select id="selectRegisterConfigCustomizedInfoAll" parameterType="RegisterConfigCustomizedInfo" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoVo"/>
+     </select>    
+	
+    <select id="selectRegisterConfigCustomizedInfoList" parameterType="RegisterConfigCustomizedInfo" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerConfigId != null "> and tb.register_config_id = #{registerConfigId}</if>
+            <if test="itemName != null  and itemName != '' "> and tb.item_name = #{itemName}</if>
+            <if test="itemType != null  and itemType != '' "> and tb.item_type = #{itemType}</if>
+            <if test="isRequired != null "> and tb.is_required = #{isRequired}</if>
+            <if test="isRemarkDisplay != null "> and tb.is_remark_display = #{isRemarkDisplay}</if>
+            <if test="itemRemark != null  and itemRemark != '' "> and tb.item_remark = #{itemRemark}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterConfigCustomizedInfoById" parameterType="Long" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <select id="selectRegisterConfigCustomizedInfoByConfigId" parameterType="Long" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoVo"/>
+        where tb.register_config_id = #{id}
+    </select>
+        
+    <insert id="insertRegisterConfigCustomizedInfo" parameterType="RegisterConfigCustomizedInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_register_config_customized_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="registerConfigId != null  ">register_config_id,</if>
+			<if test="itemName != null  and itemName != ''  ">item_name,</if>
+			<if test="itemType != null  and itemType != ''  ">item_type,</if>
+			<if test="isRequired != null  ">is_required,</if>
+			<if test="isRemarkDisplay != null  ">is_remark_display,</if>
+			<if test="itemRemark != null  and itemRemark != ''  ">item_remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="registerConfigId != null  ">#{registerConfigId},</if>
+			<if test="itemName != null  and itemName != ''  ">#{itemName},</if>
+			<if test="itemType != null  and itemType != ''  ">#{itemType},</if>
+			<if test="isRequired != null  ">#{isRequired},</if>
+			<if test="isRemarkDisplay != null  ">#{isRemarkDisplay},</if>
+			<if test="itemRemark != null  and itemRemark != ''  ">#{itemRemark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRegisterConfigCustomizedInfo" parameterType="RegisterConfigCustomizedInfo">
+        update shooting_register_config_customized_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registerConfigId != null  ">register_config_id = #{registerConfigId},</if>
+            <if test="itemName != null  and itemName != ''  ">item_name = #{itemName},</if>
+            <if test="itemType != null  and itemType != ''  ">item_type = #{itemType},</if>
+            <if test="isRequired != null  ">is_required = #{isRequired},</if>
+            <if test="isRemarkDisplay != null  ">is_remark_display = #{isRemarkDisplay},</if>
+            <if test="itemRemark != null  and itemRemark != ''  ">item_remark = #{itemRemark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRegisterConfigCustomizedInfoById" parameterType="Long">
+        delete from shooting_register_config_customized_info where id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterConfigCustomizedInfoByConfigId" parameterType="Long">
+        delete from shooting_register_config_customized_info where register_config_id = #{id}
+    </delete>
+	
+    <delete id="deleteRegisterConfigCustomizedInfoByIds" parameterType="String">
+        delete from shooting_register_config_customized_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectRegisterConfigCustomizedInfoAssoc">
+        select tb.id, tb.register_config_id, tb.item_name, tb.item_type, tb.is_required, tb.is_remark_display, tb.item_remark                 from shooting_register_config_customized_info tb     </sql>
+    
+     <select id="selectRegisterConfigCustomizedInfoAllAssoc" parameterType="RegisterConfigCustomizedInfo" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoAssoc"/>
+     </select>    
+	
+    <select id="selectRegisterConfigCustomizedInfoListAssoc" parameterType="RegisterConfigCustomizedInfo" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerConfigId != null "> and tb.register_config_id = #{registerConfigId}</if>
+            <if test="itemName != null  and itemName != '' "> and tb.item_name = #{itemName}</if>
+            <if test="itemType != null  and itemType != '' "> and tb.item_type = #{itemType}</if>
+            <if test="isRequired != null "> and tb.is_required = #{isRequired}</if>
+            <if test="isRemarkDisplay != null "> and tb.is_remark_display = #{isRemarkDisplay}</if>
+            <if test="itemRemark != null  and itemRemark != '' "> and tb.item_remark = #{itemRemark}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterConfigCustomizedInfoByIdAssoc" parameterType="Long" resultMap="RegisterConfigCustomizedInfoResult">
+        <include refid="selectRegisterConfigCustomizedInfoAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

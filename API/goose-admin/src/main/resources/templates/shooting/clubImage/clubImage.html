@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								俱乐部：
+								<select id="clubId" name="clubId" >
+									<option value="">所有</option>
+									<option th:each="fkRow:${ clubIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}"></option>
+								</select>
+							</li>
+ 
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:clubImage:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:clubImage:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:clubImage:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+<!-- 				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="shooting:clubImage:export">
+						<i class="fa fa-download"></i> 导出
+				 </a> -->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:clubImage:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:clubImage:remove')}]];
+        var prefix = ctx + "shooting/clubImage";
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "俱乐部图片",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'club.title',
+					title : '俱乐部',
+					sortable: false
+				},
+				{
+					field : 'image1', 
+					title : '图集链接1',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image2', 
+					title : '图集链接2',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image3', 
+					title : '图集链接3',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image4', 
+					title : '图集链接4',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image5', 
+					title : '图集链接5',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image6', 
+					title : '图集链接6',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image7', 
+					title : '图集链接7',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image8', 
+					title : '图集链接8',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+				{
+					field : 'image9', 
+					title : '图集链接9',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/shooting/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;		            	
+		            }		         						
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        
+    </script>
+</body>
+</html>

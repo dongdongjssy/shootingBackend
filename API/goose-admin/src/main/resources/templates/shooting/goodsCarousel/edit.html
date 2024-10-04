@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsCarousel-edit" th:object="${goodsCarousel}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否关联商品：</label>
+				<div class="col-sm-8">
+					<select id="connectGoods" name="connectGoods" class="form-control m-b" th:with="type=${@dict.getType('shooting_connect_goods')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{connectGoods}"></option>
+					</select>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">商品类别：</label>
+				<div class="col-sm-8">
+					<select id="goodsType" name="goodsType" class="form-control m-b" th:with="type=${@dict.getType('goods_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{goodsType}"></option>
+					</select>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">关联的商品：</label>
+				<div class="col-sm-8">
+					<select id="goodsId" name="goodsId" class="form-control">
+						<option value="">请选择</option>
+						<option th:each="fkRow:${ goodsIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{goodsId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-8">
+				    <input id="subTitle" name="subTitle" th:field="*{subTitle}" type="hidden">
+				    <div id="subTitleId" class="summernote"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">上传图片：</label>
+				<div class="col-sm-8">
+			       <div class="new-contentarea">
+			           <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a> 
+			           <input type="file" class="" name="mediaUrl" id="mediaUrl" accept="image/*"/>
+			       </div>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<div class="container"> 
+			       		<img id="imgpreviewmediaUrl" class='imageBox' />
+			        </div>				
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<!--			<div class="form-group" style="display: none;">
+                            <label class="col-sm-3 control-label">创建者：</label>
+                            <div class="col-sm-8">
+                                <input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" style="display: none;">
+                            <label class="col-sm-3 control-label">创建时间：</label>
+                            <div class="col-sm-8">
+                                <input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsCarousel.createTime, 'yyyy-MM-dd')}" disabled>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" style="display: none;">
+                            <label class="col-sm-3 control-label">更新者：</label>
+                            <div class="col-sm-8">
+                                <input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" style="display: none;">
+                            <label class="col-sm-3 control-label">更新时间：</label>
+                            <div class="col-sm-8">
+                                <input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsCarousel.updateTime, 'yyyy-MM-dd')}" disabled>
+                            </div>
+                        </div>
+            -->
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+    <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsCarousel"
+	    $("#subTitleId").summernote({
+			height : '220px',
+			lang : 'zh-CN',
+		    toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture']],
+		        ['view', ['fullscreen',  'help']]
+			  ]		,
+			placeholder: '请输入通知的内容',
+			callbacks:{
+				onImageUpload:function(files, editor, $editable) {
+					var fd = new FormData();
+					fd.append("file", files[0]);
+					fd.append("type",21);
+					$.ajax({
+						type:"POST",
+						url:ctx + "shooting/oss/uploadRichText",
+						data: fd,
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+							$("#contentId").summernote('insertImage',data)
+						}
+					});
+
+				}
+			}
+	    }); 
+		var content = $("#subTitle").val();
+		$('#subTitleId').summernote("code",content);
+
+		$("#form-goodsCarousel-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				connectGoods: {
+					required: false,
+				},
+				goodsType: {
+					required: false,
+				},
+				goodsId: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				subTitle: {
+					required: false,
+				},
+				mediaUrl: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				connectGoods: {
+				},		
+				goodsType: {
+				},		
+				goodsId: {
+				},		
+				title: {
+				},		
+				subTitle: {
+				},		
+				mediaUrl: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+				var sHTMLsubTitle = $("#subTitleId").summernote('code');
+				$("#subTitle").val(sHTMLsubTitle);
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("connectGoods", $("#connectGoods").val());
+				formdata.append("goodsId", $("#goodsId").val());
+				formdata.append("title", $("#title").val());
+				formdata.append("subTitle", $("#subTitle").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+	   
+
+
+				var fileIdx = 0;
+				fileIdx = $('input[type=file]').length-1;		
+		        formdata.append("mediaUrlFile", $('input[type=file]')[fileIdx].files[0]);
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+		$(window).load(function() {		
+
+debugger
+			var picturemediaUrl = '[[${goodsCarousel.mediaUrl}]]';
+			var optionsmediaUrl = {	
+			    imgSrc: $.common.isEmpty(picturemediaUrl) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + picturemediaUrl
+			}
+
+			if(! $.common.isEmpty(picturemediaUrl) ) {
+				$('#imgpreviewmediaUrl').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/goodsCarousel"+optionsmediaUrl.imgSrc);
+			}				
+		    $('#mediaUrl').on('change', function() {	    
+		        var reader = new FileReader();
+		        reader.onload = function(e) {
+		             optionsmediaUrl.imgSrc = e.target.result;
+		            //根据MIME判断上传的文件是不是图片类型
+		            if((optionsmediaUrl.imgSrc).indexOf("image/")==-1){
+		                parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2,title:"系统提示"});
+		            } else {
+		            	$('#imgpreviewmediaUrl').attr('src', e.target.result);
+		            }
+		        }
+		        reader.readAsDataURL(this.files[0]);
+		    })	
+
+		});
+    
+	    		
+	</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								发票类型：<select name="invoiceType" th:with="type=${@dict.getType('goods_invoice_type')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								状态：<select name="status" th:with="type=${@dict.getType('sys_common_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="shooting:goodsInvoice:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="shooting:goodsInvoice:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="shooting:goodsInvoice:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="shooting:goodsInvoice:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('shooting:goodsInvoice:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('shooting:goodsInvoice:remove')}]];
+        var prefix = ctx + "shooting/goodsInvoice";
+        var datas_goods_invoice_type = [[${@dict.getType('goods_invoice_type')}]];
+        var datas_goods_invoice_default = [[${@dict.getType('goods_invoice_default')}]];
+        var datas_sys_common_status = [[${@dict.getType('sys_common_status')}]];
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "发票",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键',
+					visible: false
+				},
+				{
+					field : 'clientUser.userName',
+					title : '用户id',
+					sortable: false
+				},
+				{
+					field : 'invoiceType', 
+					title : '发票类型',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_goods_invoice_type, value);
+		            }
+				},
+				{
+					field : 'head', 
+					title : '发票抬头',
+
+					sortable: true
+				},
+				{
+					field : 'code', 
+					title : '发票税号',
+
+					sortable: true
+				},
+				{
+					field : 'bank', 
+					title : '开户行',
+
+					sortable: true
+				},
+				{
+					field : 'bankAccount', 
+					title : '银行账号',
+
+					sortable: true
+				},
+				{
+					field : 'address', 
+					title : '企业地址',
+
+					sortable: true
+				},
+				{
+					field : 'phone', 
+					title : '企业电话',
+
+					sortable: true
+				},
+				{
+					field : 'defaultInvoice', 
+					title : '是否默认发票',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_goods_invoice_default, value);
+		            }
+				},
+				{
+					field : 'status', 
+					title : '状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_sys_common_status, value);
+		            }
+				},
+				{
+					field : 'createBy', 
+					title : '创建者',
+
+					sortable: true
+				},
+				{
+					field : 'createTime', 
+					title : '创建时间',
+
+					sortable: true
+				},
+				{
+					field : 'updateBy', 
+					title : '更新者',
+
+					sortable: true
+				},
+				{
+					field : 'updateTime', 
+					title : '更新时间',
+
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        
+    </script>
+</body>
+</html>

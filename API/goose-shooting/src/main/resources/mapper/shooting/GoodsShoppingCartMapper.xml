@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.GoodsShoppingCartMapper">
+    
+    <resultMap type="GoodsShoppingCart" id="GoodsShoppingCartResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="nums"    column="nums"    />
+        <result property="inventory"    column="inventory"    />
+        <result property="attributes"    column="attributes"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+        <association property="goods" column="goods_id"  javaType="Goods"  resultMap="GoodsResult" />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="b_id"    />
+        <result property="name"    column="b_name"    />
+        <result property="pictureUrl1"    column="b_picture_url1"    />
+        <result property="price"    column="b_price"    />
+        <result property="memberPrice"    column="b_member_price"    />
+        <result property="status"    column="b_status"    />
+    </resultMap>
+
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+        <result property="status"    column="a_status"    />
+        <result property="idFront"    column="a_id_front"    />
+        <result property="idBack"    column="a_id_back"    />
+        <result property="idNumber"    column="a_id_number"    />
+        <result property="realName"    column="a_real_name"    />
+        <result property="jgUsername"    column="a_jg_username"    />
+        <result property="memberId"    column="a_member_id"    />
+        <result property="englishName"    column="a_english_name"    />
+        <result property="certExpireDate"    column="a_cert_expire_date"    />
+        <result property="selfieImage"    column="a_selfie_image"    />
+        <result property="graduateDate"    column="a_graduate_date"    />
+        <result property="sex"    column="a_sex"    />
+        <result property="passportNo"    column="a_passport_no"    />
+        <result property="roleIds"    column="a_role_ids"    />
+        <result property="age"    column="a_age"    />
+        <result property="bloodType"    column="a_blood_type"    />
+        <result property="introduction"    column="a_introduction"    />
+    </resultMap>
+	
+	<sql id="selectGoodsShoppingCartVoNoJoin">
+        select tb.id, tb.client_user_id,tb.attributes, tb.goods_id, tb.nums, tb.inventory, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_goods_shopping_cart tb
+    </sql>
+    
+	<sql id="selectGoodsShoppingCartVo">
+           select tb.id, tb.client_user_id,tb.attributes, tb.goods_id, tb.nums, tb.inventory, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , a.id_number as a_id_number , a.real_name as a_real_name , a.jg_username as a_jg_username , a.member_id as a_member_id , a.english_name as a_english_name , a.cert_expire_date as a_cert_expire_date , a.selfie_image as a_selfie_image , a.graduate_date as a_graduate_date , a.sex as a_sex , a.passport_no as a_passport_no , a.role_ids as a_role_ids , a.age as a_age , a.blood_type as a_blood_type , a.introduction as a_introduction,b.name AS b_name,b.price AS b_price,b.member_price AS b_member_price,b.id as b_id	  from shooting_goods_shopping_cart tb left join client_user a on tb.client_user_id = a.id JOIN shooting_goods b ON tb.goods_id=b.id
+    </sql>
+    
+     <select id="selectGoodsShoppingCartAll" parameterType="GoodsShoppingCart" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartVo"/>
+     </select>    
+	
+    <select id="selectGoodsShoppingCartList" parameterType="GoodsShoppingCart" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="nums != null "> and tb.nums = #{nums}</if>
+            <if test="inventory != null "> and tb.inventory = #{inventory}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsShoppingCartById" parameterType="Long" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertGoodsShoppingCart" parameterType="GoodsShoppingCart" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_goods_shopping_cart
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="goodsId != null  ">goods_id,</if>
+			<if test="nums != null  ">nums,</if>
+			<if test="inventory != null  ">inventory,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+            <if test="attributes != null  ">attributes,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="goodsId != null  ">#{goodsId},</if>
+			<if test="nums != null  ">#{nums},</if>
+			<if test="inventory != null  ">#{inventory},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+            <if test="attributes != null  ">#{attributes},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsShoppingCart" parameterType="GoodsShoppingCart">
+        update shooting_goods_shopping_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="nums != null  ">nums = #{nums},</if>
+            <if test="inventory != null  ">inventory = #{inventory},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+            <if test="attributes != null  ">attributes=#{attributes},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsShoppingCartById" parameterType="Long">
+        delete from shooting_goods_shopping_cart where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsShoppingCartByIds" parameterType="String">
+        delete from shooting_goods_shopping_cart where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectGoodsShoppingCartAssoc">
+        select tb.id, tb.client_user_id,tb.attributes, tb.goods_id, tb.nums, tb.inventory, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status , a.id_front as a_id_front , a.id_back as a_id_back , a.id_number as a_id_number , a.real_name as a_real_name , a.jg_username as a_jg_username , a.member_id as a_member_id , a.english_name as a_english_name , a.cert_expire_date as a_cert_expire_date , a.selfie_image as a_selfie_image , a.graduate_date as a_graduate_date , a.sex as a_sex , a.passport_no as a_passport_no , a.role_ids as a_role_ids , a.age as a_age , a.blood_type as a_blood_type , a.introduction as a_introduction ,b.name AS b_name,b.price AS b_price,b.member_price AS b_member_price,b.id as b_id		                from shooting_goods_shopping_cart tb  join client_user a on tb.client_user_id = a.id JOIN shooting_goods b ON tb.goods_id=b.id   </sql>
+    
+     <select id="selectGoodsShoppingCartAllAssoc" parameterType="GoodsShoppingCart" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartAssoc"/>
+     </select>    
+	
+    <select id="selectGoodsShoppingCartListAssoc" parameterType="GoodsShoppingCart" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="goodsId != null "> and tb.goods_id = #{goodsId}</if>
+            <if test="nums != null "> and tb.nums = #{nums}</if>
+            <if test="inventory != null "> and tb.inventory = #{inventory}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsShoppingCartByIdAssoc" parameterType="Long" resultMap="GoodsShoppingCartResult">
+        <include refid="selectGoodsShoppingCartAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

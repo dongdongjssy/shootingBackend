@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubJoinApplicationMapper">
+
+    <resultMap type="ClubJoinApplication" id="ClubJoinApplicationResult">
+        <result property="id" column="id"/>
+        <result property="clientUserId" column="client_user_id"/>
+        <result property="clubId" column="club_id"/>
+        <result property="status" column="status"/>
+        <association property="club" column="club_id" javaType="Club" resultMap="ClubResult"/>
+        <association property="clientUser" column="client_user_id" javaType="ClientUser" resultMap="ClientUserResult"/>
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id" column="a_id"/>
+        <result property="areaId" column="a_area_id"/>
+        <result property="title" column="a_title"/>
+        <result property="profile" column="a_profile"/>
+        <result property="avatar" column="a_avatar"/>
+        <result property="image" column="a_image"/>
+        <result property="coachCount" column="a_coach_count"/>
+        <result property="studentCount" column="a_student_count"/>
+        <result property="fansCount" column="a_fans_count"/>
+        <result property="category" column="a_category"/>
+        <result property="rankings" column="a_rankings"/>
+        <result property="status" column="a_status"/>
+        <result property="createBy" column="a_create_by"/>
+        <result property="createTime" column="a_create_time"/>
+        <result property="updateBy" column="a_update_by"/>
+        <result property="updateTime" column="a_update_time"/>
+        <result property="jgUsername" column="a_jg_username"/>
+        <result property="jgGroupId" column="a_jg_groupId"/>
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id" column="b_id"/>
+        <result property="nickname" column="b_nickname"/>
+        <result property="userName" column="b_user_name"/>
+        <result property="email" column="b_email"/>
+        <result property="phone" column="b_phone"/>
+        <result property="password" column="b_password"/>
+        <result property="userType" column="b_user_type"/>
+        <result property="openId" column="b_open_id"/>
+        <result property="avatar" column="b_avatar"/>
+        <result property="city" column="b_city"/>
+        <result property="address" column="b_address"/>
+        <result property="passwordResetDate" column="b_password_reset_date"/>
+        <result property="status" column="b_status"/>
+        <result property="idFront" column="b_id_front"/>
+        <result property="idBack" column="b_id_back"/>
+        <result property="idNumber" column="b_id_number"/>
+        <result property="realName" column="b_real_name"/>
+        <result property="jgUsername" column="b_jg_username"/>
+        <result property="certExpireDate" column="b_cert_expire_date"/>
+        <result property="memberId" column="b_member_id"/>
+        <result property="englishName" column="b_english_name"/>
+    </resultMap>
+
+    <sql id="selectClubJoinApplicationVoNoJoin">
+        SELECT tb.id, tb.client_user_id, tb.club_id, tb.status
+        FROM shooting_club_join_application tb
+    </sql>
+
+    <sql id="selectClubJoinApplicationVo">
+        SELECT tb.id, tb.client_user_id, tb.club_id, tb.status
+        FROM shooting_club_join_application tb     </sql>
+
+    <select id="selectClubJoinApplicationAll" parameterType="ClubJoinApplication" resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationVo"/>
+    </select>
+
+    <select id="selectClubJoinApplicationList" parameterType="ClubJoinApplication"
+            resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+             <if test="ids != null and ids !=''">and tb.id in (${ids})</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectClubJoinApplicationById" parameterType="Long" resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertClubJoinApplication" parameterType="ClubJoinApplication" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club_join_application
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="clientUserId != null  ">client_user_id,</if>
+            <if test="clubId != null  ">club_id,</if>
+            <if test="status != null  ">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="clientUserId != null  ">#{clientUserId},</if>
+            <if test="clubId != null  ">#{clubId},</if>
+            <if test="status != null  ">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateClubJoinApplication" parameterType="ClubJoinApplication">
+        update shooting_club_join_application
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClubJoinApplicationById" parameterType="Long">
+        DELETE
+        FROM shooting_club_join_application
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteClubJoinApplicationByIds" parameterType="String">
+        delete from shooting_club_join_application where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectClubJoinApplicationAssoc">
+        SELECT tb.id,
+               tb.client_user_id,
+               tb.club_id,
+               tb.status,
+               a.id                  AS a_id,
+               a.area_id             AS a_area_id,
+               a.title               AS a_title,
+               a.profile             AS a_profile,
+               a.avatar              AS a_avatar,
+               a.image               AS a_image,
+               a.coach_count         AS a_coach_count,
+               a.student_count       AS a_student_count,
+               a.fans_count          AS a_fans_count,
+               a.category            AS a_category,
+               a.rankings            AS a_rankings,
+               a.status              AS a_status,
+               a.create_by           AS a_create_by,
+               a.create_time         AS a_create_time,
+               a.update_by           AS a_update_by,
+               a.update_time         AS a_update_time,
+               a.jg_username         AS a_jg_username,
+               a.jg_groupId          AS a_jg_groupId,
+               b.id                  AS b_id,
+               b.nickname            AS b_nickname,
+               b.user_name           AS b_user_name,
+               b.email               AS b_email,
+               b.phone               AS b_phone,
+               b.password            AS b_password,
+               b.user_type           AS b_user_type,
+               b.open_id             AS b_open_id,
+               b.avatar              AS b_avatar,
+               b.city                AS b_city,
+               b.address             AS b_address,
+               b.password_reset_date AS b_password_reset_date,
+               b.status              AS b_status,
+               b.id_front            AS b_id_front,
+               b.id_back             AS b_id_back,
+               b.id_number           AS b_id_number,
+               b.real_name           AS b_real_name,
+               b.jg_username         AS b_jg_username,
+               b.cert_expire_date    AS b_cert_expire_date,
+               b.member_id           AS b_member_id,
+               b.english_name        AS b_english_name
+        FROM shooting_club_join_application tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+                 JOIN client_user b ON tb.client_user_id = b.id
+    </sql>
+
+    <select id="selectClubJoinApplicationAllAssoc" parameterType="ClubJoinApplication"
+            resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationAssoc"/>
+    </select>
+
+    <select id="selectClubJoinApplicationListAssoc" parameterType="ClubJoinApplication"
+            resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectClubJoinApplicationByIdAssoc" parameterType="Long" resultMap="ClubJoinApplicationResult">
+        <include refid="selectClubJoinApplicationAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

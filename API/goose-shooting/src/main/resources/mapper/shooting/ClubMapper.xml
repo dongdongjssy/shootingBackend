@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubMapper">
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id" column="id"/>
+        <result property="areaId" column="area_id"/>
+        <result property="title" column="title"/>
+        <result property="profile" column="profile"/>
+        <result property="avatar" column="avatar"/>
+        <result property="image" column="image"/>
+        <result property="coachCount" column="coach_count"/>
+        <result property="studentCount" column="student_count"/>
+        <result property="fansCount" column="fans_count"/>
+        <result property="category" column="category"/>
+        <result property="rankings" column="rankings"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="jgUsername" column="jg_username"/>
+        <result property="jgGroupId" column="jg_groupId"/>
+        <result property="isUserFollow" column="is_user_follow"/>
+        <association property="area" column="area_id" javaType="Area" resultMap="AreaResult"/>
+    </resultMap>
+
+    <resultMap type="Area" id="AreaResult">
+        <result property="id" column="a_id"/>
+        <result property="name" column="a_name"/>
+    </resultMap>
+
+    <sql id="selectClubVoNoJoin">
+        select tb.id,
+               tb.area_id,
+               tb.title,
+               tb.profile,
+               tb.avatar,
+               tb.image,
+               tb.coach_count,
+               tb.student_count,
+               tb.fans_count,
+               tb.category,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.jg_username,
+               tb.jg_groupId
+        from shooting_club tb
+    </sql>
+
+    <sql id="selectClubVo">
+        select tb.id,
+               tb.area_id,
+               tb.title,
+               tb.profile,
+               tb.avatar,
+               tb.image,
+               tb.coach_count,
+               tb.student_count,
+               tb.fans_count,
+               tb.category,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.jg_username,
+               tb.jg_groupId
+        from shooting_club tb     </sql>
+
+    <select id="selectClubAll" parameterType="Club" resultMap="ClubResult">
+        <include refid="selectClubVo"/>
+        where tb.status = 0
+    </select>
+
+    <select id="selectClubListWithUserId" parameterType="Long" resultMap="ClubResult">
+        select tb.id,
+               tb.area_id,
+               tb.title,
+               tb.profile,
+               tb.avatar,
+               tb.image,
+               tb.coach_count,
+               tb.student_count,
+               tb.fans_count,
+               tb.category,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.jg_username,
+               tb.jg_groupId,
+               (SELECT EXISTS(SELECT 1
+                              FROM shooting_user_follow sul
+                              WHERE sul.follow_type = 'club'
+                                AND sul.follow_id = tb.id
+                                AND sul.client_user_id = #{userId})) AS is_user_follow
+        from shooting_club tb
+    </select>
+
+    <select id="selectClubList" parameterType="Club" resultMap="ClubResult">
+        <include refid="selectClubVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="ids != null  and ids != '' ">and tb.id in (${ids})</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+            <if test="profile != null  and profile != '' ">and tb.profile = #{profile}</if>
+            <if test="avatar != null  and avatar != '' ">and tb.avatar = #{avatar}</if>
+            <if test="image != null  and image != '' ">and tb.image = #{image}</if>
+            <if test="coachCount != null ">and tb.coach_count = #{coachCount}</if>
+            <if test="studentCount != null ">and tb.student_count = #{studentCount}</if>
+            <if test="fansCount != null ">and tb.fans_count = #{fansCount}</if>
+            <if test="category != null ">and tb.category = #{category}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="jgUsername != null  and jgUsername != '' ">AND tb.jg_username = #{jgUsername}</if>
+        </where>
+        order by  tb.create_time desc
+    </select>
+
+    <select id="selectClubById" parameterType="Long" resultMap="ClubResult">
+        <include refid="selectClubVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertClub" parameterType="Club" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="areaId != null  ">area_id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="profile != null  and profile != ''  ">profile,</if>
+            <if test="avatar != null  and avatar != ''  ">avatar,</if>
+            <if test="image != null  and image != ''  ">image,</if>
+            <if test="coachCount != null  ">coach_count,</if>
+            <if test="studentCount != null  ">student_count,</if>
+            <if test="fansCount != null  ">fans_count,</if>
+            <if test="category != null  ">category,</if>
+            <if test="rankings != null  ">rankings,</if>
+            <if test="status != null  ">status,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time,
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="jgUsername != null  ">jg_username,</if>
+            <if test="jgGroupId != null  ">jg_groupId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="areaId != null  ">#{areaId},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="profile != null  and profile != ''  ">#{profile},</if>
+            <if test="avatar != null  and avatar != ''  ">#{avatar},</if>
+            <if test="image != null  and image != ''  ">#{image},</if>
+            <if test="coachCount != null  ">#{coachCount},</if>
+            <if test="studentCount != null  ">#{studentCount},</if>
+            <if test="fansCount != null  ">#{fansCount},</if>
+            <if test="category != null  ">#{category},</if>
+            <if test="rankings != null  ">#{rankings},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="jgUsername != null  and jgUsername != ''  ">#{jgUsername},</if>
+            <if test="jgGroupId != null  and jgGroupId != ''  ">#{jgGroupId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateClub" parameterType="Club">
+        update shooting_club
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null  ">area_id = #{areaId},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="profile != null  and profile != ''  ">profile = #{profile},</if>
+            <if test="avatar != null  and avatar != ''  ">avatar = #{avatar},</if>
+            <if test="image != null  and image != ''  ">image = #{image},</if>
+            <if test="coachCount != null  ">coach_count = #{coachCount},</if>
+            <if test="studentCount != null  ">student_count = #{studentCount},</if>
+            <if test="fansCount != null  ">fans_count = #{fansCount},</if>
+            <if test="category != null  ">category = #{category},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="jgUsername != null  ">jg_username = #{jgUsername},</if>
+            <if test="jgGroupId != null  ">jg_groupId = #{jgGroupId},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClubById" parameterType="Long">
+        delete
+        from shooting_club
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteClubByIds" parameterType="String">
+        delete from shooting_club where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectClubAssoc">
+        select tb.id,
+               tb.area_id,
+               tb.title,
+               tb.profile,
+               tb.avatar,
+               tb.image,
+               tb.coach_count,
+               tb.student_count,
+               tb.fans_count,
+               tb.category,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.jg_username,
+               tb.jg_groupId,
+               a.id   as a_id,
+               a.name as a_name
+        from shooting_club tb
+                 join shooting_area a on tb.area_id = a.id    </sql>
+
+    <select id="selectClubAllAssoc" parameterType="Club" resultMap="ClubResult">
+        <include refid="selectClubAssoc"/>
+        where tb.status = 0
+    </select>
+
+    <select id="selectClubListAssoc" parameterType="Club" resultMap="ClubResult">
+        <include refid="selectClubAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+            <if test="title != null  and title != '' ">and tb.title like concat('%', #{title}, '%')</if>
+            <if test="profile != null  and profile != '' ">and tb.profile like concat('%', #{profile}, '%')</if>
+            <if test="avatar != null  and avatar != '' ">and tb.avatar = #{avatar}</if>
+            <if test="image != null  and image != '' ">and tb.image = #{image}</if>
+            <if test="coachCount != null ">and tb.coach_count like concat('%', #{coachCount}, '%')</if>
+            <if test="studentCount != null ">and tb.student_count like concat('%', #{studentCount}, '%')</if>
+            <if test="fansCount != null ">and tb.fans_count like concat('%', #{fansCount}, '%')</if>
+            <if test="category != null ">and tb.category = #{category}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="jgUsername != null ">and tb.jg_username = #{jgUsername}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+           order by  tb.create_time desc
+    </select>
+
+
+    <select id="selectClubListByAreaOrFans" parameterType="Club" resultMap="ClubResult">
+        <include refid="selectClubAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="areaId != null ">and tb.area_id = #{areaId}</if>
+        </where>
+        order by  tb.fans_count desc limit 4
+    </select>
+
+    <select id="selectClubByIdAssoc" parameterType="Long" resultMap="ClubResult">
+        <include refid="selectClubAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.UserLikeMapper">
+
+    <resultMap type="UserLike" id="UserLikeResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="likeId"    column="like_id"    />
+        <result property="likeType"    column="like_type"    />
+    </resultMap>
+
+
+	<sql id="selectUserLikeVoNoJoin">
+        select tb.id, tb.client_user_id, tb.like_id, tb.like_type        from shooting_user_like tb
+    </sql>
+
+	<sql id="selectUserLikeVo">
+           select tb.id, tb.client_user_id, tb.like_id, tb.like_type from shooting_user_like tb     </sql>
+
+     <select id="selectUserLikeAll" parameterType="UserLike" resultMap="UserLikeResult">
+        <include refid="selectUserLikeVo"/>
+     </select>
+
+    <select id="selectUserLikeList" parameterType="UserLike" resultMap="UserLikeResult">
+        <include refid="selectUserLikeVo"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="likeId != null "> and tb.like_id = #{likeId}</if>
+            <if test="likeType != null  and likeType != '' "> and tb.like_type = #{likeType}</if>
+        </where>
+    </select>
+
+    <select id="selectUserLikeById" parameterType="Long" resultMap="UserLikeResult">
+        <include refid="selectUserLikeVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertUserLike" parameterType="UserLike" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_user_like
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="likeId != null  ">like_id,</if>
+			<if test="likeType != null  and likeType != ''  ">like_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="likeId != null  ">#{likeId},</if>
+			<if test="likeType != null  and likeType != ''  ">#{likeType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLike" parameterType="UserLike">
+        update shooting_user_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="likeId != null  ">like_id = #{likeId},</if>
+            <if test="likeType != null  and likeType != ''  ">like_type = #{likeType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserLike" parameterType="UserLike">
+        delete from shooting_user_like
+        where
+            client_user_id = #{clientUserId} and
+            like_id = #{likeId} and
+            like_type = #{likeType}
+    </delete>
+
+	<delete id="deleteUserLikeById" parameterType="Long">
+        delete from shooting_user_like where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLikeByIds" parameterType="String">
+        delete from shooting_user_like where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+	<sql id="selectUserLikeAssoc">
+        select tb.id, tb.client_user_id, tb.like_id, tb.like_type                 from shooting_user_like tb     </sql>
+
+     <select id="selectUserLikeAllAssoc" parameterType="UserLike" resultMap="UserLikeResult">
+        <include refid="selectUserLikeAssoc"/>
+     </select>
+
+    <select id="selectUserLikeListAssoc" parameterType="UserLike" resultMap="UserLikeResult">
+        <include refid="selectUserLikeAssoc"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="likeId != null "> and tb.like_id = #{likeId}</if>
+            <if test="likeType != null  and likeType != '' "> and tb.like_type = #{likeType}</if>
+        </where>
+    </select>
+
+    <select id="selectUserLikeByIdAssoc" parameterType="Long" resultMap="UserLikeResult">
+        <include refid="selectUserLikeAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

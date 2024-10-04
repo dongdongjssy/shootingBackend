@@ -1,0 +1,95 @@
+# 项目相关配置
+goose:
+  # 名称
+  name: goose
+  # 版本
+  version: 3.1
+  # 版权年份
+  copyrightYear: 2018
+  # 文件上传路径
+  profile: /home/centos/shooting/upload
+  # 获取ip地址开关
+  addressEnabled: false
+
+# 数据源配置
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        druid:
+            # 主库数据源
+            master:
+                url: jdbc:mysql://ls-0840afa95a4b2bc854e4a3348665d1308eb8a66f.ccnpga9aytpn.ap-southeast-1.rds.amazonaws.com:3306/shooting?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: dbmasteruser
+                password: RJ`8|tG{iUQK)VZ:e>F{A7$OrL?Mu7c[
+            # 从库数据源
+            slave:
+                # 从数据源开关/默认关闭
+                enabled: false
+                url:
+                username:
+                password:
+            # 初始连接数
+            initial-size: 10
+            # 最大连接池数量
+            max-active: 100
+            # 最小连接池数量
+            min-idle: 10
+            # 配置获取连接等待超时的时间
+            max-wait: 60000
+            # 打开PSCache，并且指定每个连接上PSCache的大小
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            timeBetweenEvictionRunsMillis: 60000
+            # 配置一个连接在池中最小生存的时间，单位是毫秒
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /monitor/druid/*
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: false
+                wall:
+                    config:
+                        multi-statement-allow: true
+  # 邮件设置
+    mail:
+        host: smtp.qq.com
+        username: xxx@xxx.com
+        password: xxxxx
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+# 关闭多数据源配置
+multipleDs:
+  disabled: false
+
+#hystrix的超时时间
+hystrix:
+    command:
+        default:
+            execution:
+              timeout:
+                enabled: true
+              isolation:
+                    thread:
+                        timeoutInMilliseconds: 90000
+#ribbon的超时时间
+ribbon:
+  ReadTimeout: 90000
+  ConnectTimeout: 90000
+#临时文件存储路径
+tmp:
+  data:
+    path: /home/centos/shooting/tmp

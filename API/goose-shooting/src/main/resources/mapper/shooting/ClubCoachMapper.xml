@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubCoachMapper">
+    
+    <resultMap type="ClubCoach" id="ClubCoachResult">
+        <result property="id"    column="id"    />
+        <result property="clubId"    column="club_id"    />
+        <result property="coachId"    column="coach_id"    />
+        <association property="club" column="club_id"  javaType="Club"  resultMap="ClubResult" />
+        <association property="coach" column="coach_id"  javaType="Coach"  resultMap="CoachResult" />
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id"    column="a_id"    />
+        <result property="areaId"    column="a_area_id"    />
+        <result property="title"    column="a_title"    />
+        <result property="profile"    column="a_profile"    />
+        <result property="image"    column="a_image"    />
+        <result property="coachCount"    column="a_coach_count"    />
+        <result property="studentCount"    column="a_student_count"    />
+        <result property="fansCount"    column="a_fans_count"    />
+        <result property="category"    column="a_category"    />
+        <result property="rankings"    column="a_rankings"    />
+        <result property="status"    column="a_status"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+    </resultMap>
+    <resultMap type="Coach" id="CoachResult">
+        <result property="id"    column="b_id"    />
+        <result property="nickname"    column="b_nickname"    />
+        <result property="name"    column="b_name"    />
+        <result property="contact"    column="b_contact"    />
+        <result property="category"    column="b_category"    />
+        <result property="rankings"    column="b_rankings"    />
+        <result property="status"    column="b_status"    />
+        <result property="avatar"    column="b_avatar"    />
+        <result property="createBy"    column="b_create_by"    />
+        <result property="createTime"    column="b_create_time"    />
+        <result property="updateBy"    column="b_update_by"    />
+        <result property="updateTime"    column="b_update_time"    />
+        <result property="duty"    column="b_duty"    />
+    </resultMap>
+	
+	<sql id="selectClubCoachVoNoJoin">
+        select tb.id, tb.club_id, tb.coach_id        from shooting_club_coach tb
+    </sql>
+    
+	<sql id="selectClubCoachVo">
+           select tb.id, tb.club_id, tb.coach_id from shooting_club_coach tb     </sql>
+    
+     <select id="selectClubCoachAll" parameterType="ClubCoach" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachVo"/>
+     </select>    
+	
+    <select id="selectClubCoachList" parameterType="ClubCoach" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+             <if test="ids != null and ids != ''"> and tb.id in (${ids})</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="coachId != null "> and tb.coach_id = #{coachId}</if>
+        </where>
+    </select>
+    
+    <select id="selectClubCoachById" parameterType="Long" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertClubCoach" parameterType="ClubCoach" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club_coach
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clubId != null  ">club_id,</if>
+			<if test="coachId != null  ">coach_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clubId != null  ">#{clubId},</if>
+			<if test="coachId != null  ">#{coachId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateClubCoach" parameterType="ClubCoach">
+        update shooting_club_coach
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+            <if test="coachId != null  ">coach_id = #{coachId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteClubCoachById" parameterType="Long">
+        delete from shooting_club_coach where id = #{id}
+    </delete>
+	
+    <delete id="deleteClubCoachByIds" parameterType="String">
+        delete from shooting_club_coach where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectClubCoachAssoc">
+        select tb.id, tb.club_id, tb.coach_id ,         a.id as a_id , a.area_id as a_area_id , a.title as a_title , a.profile as a_profile , a.image as a_image , a.coach_count as a_coach_count , a.student_count as a_student_count , a.fans_count as a_fans_count , a.category as a_category , a.rankings as a_rankings , a.status as a_status , a.create_by as a_create_by , a.create_time as a_create_time , a.update_by as a_update_by , a.update_time as a_update_time 		,         b.id as b_id , b.nickname as b_nickname , b.name as b_name , b.contact as b_contact , b.category as b_category , b.rankings as b_rankings , b.status as b_status , b.avatar as b_avatar, b.create_by as b_create_by , b.create_time as b_create_time , b.update_by as b_update_by , b.update_time as b_update_time ,b.duty as b_duty		                from shooting_club_coach tb  join shooting_club a on tb.club_id = a.id  join shooting_coach b on tb.coach_id = b.id    </sql>
+    
+     <select id="selectClubCoachAllAssoc" parameterType="ClubCoach" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachAssoc"/>
+     </select>    
+	
+    <select id="selectClubCoachListAssoc" parameterType="ClubCoach" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clubId != null "> and tb.club_id = #{clubId}</if>
+            <if test="coachId != null "> and tb.coach_id = #{coachId}</if>
+        </where>
+    </select>
+    
+    <select id="selectClubCoachByIdAssoc" parameterType="Long" resultMap="ClubCoachResult">
+        <include refid="selectClubCoachAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

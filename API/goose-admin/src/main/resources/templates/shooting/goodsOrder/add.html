@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsOrder-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单编号：</label>
+				<div class="col-sm-8">
+					<input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+			<input name="clientUserId"  type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="clientUserId" onclick="selectUserTree()" readonly="true" id="treeName">					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">发票：</label>
+				<div class="col-sm-8">
+					<select id="invoiceId" name="invoiceId" class="form-control">
+						<option th:each="fkRow:${ invoiceIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.head}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商品：</label>
+				<div class="col-sm-8">
+					<select id="goodsId" name="goodsId" class="form-control">
+						<option th:each="fkRow:${ goodsIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">收货地址：</label>
+				<div class="col-sm-8">
+					<select id="goodsAddressId" name="goodsAddressId" class="form-control">
+						<option th:each="fkRow:${ goodsAddressIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品名称：</label>
+				<div class="col-sm-8">
+					<input id="name" name="name" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品数量：</label>
+				<div class="col-sm-8">
+					<input id="num" name="num" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">价格：</label>
+				<div class="col-sm-8">
+					<input id="price" name="price" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">邮费：</label>
+				<div class="col-sm-8">
+					<input id="postage" name="postage" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="description" name="description" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">快递公司：</label>
+				<div class="col-sm-8">
+					<input id="courierCompany" name="courierCompany" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">快递单号：</label>
+				<div class="col-sm-8">
+					<input id="courierNumber" name="courierNumber" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">下单时间：</label>
+				<div class="col-sm-8">
+					<input id="placeTime" name="placeTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">取消时间：</label>
+				<div class="col-sm-8">
+					<input id="cancelTime" name="cancelTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">付款时间：</label>
+				<div class="col-sm-8">
+					<input id="payTime" name="payTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发货时间：</label>
+				<div class="col-sm-8">
+					<input id="deliveryTime" name="deliveryTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收货时间：</label>
+				<div class="col-sm-8">
+					<input id="goodsTime" name="goodsTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">退货时间：</label>
+				<div class="col-sm-8">
+					<input id="ungoodsTime" name="ungoodsTime" class="form-control time-input" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">退款时间：</label>
+				<div class="col-sm-8">
+					<input id="unpayTime" name="unpayTime" class="form-control time-input" type="text">
+				</div>
+			</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单状态：</label>
+				<div class="col-sm-8">
+					<select id="goodsOrderStatus" name="goodsOrderStatus" class="form-control m-b" th:with="type=${@dict.getType('goods_order_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control time-input" type="text" disabled>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsOrder"
+	    		
+		$("#form-goodsOrder-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+
+				goodsId: {
+					required: false,
+				},
+				goodsAddressId: {
+					required: false,
+				},
+				name: {
+					required: false,
+				},
+				num: {
+					required: false,
+				},
+				price: {
+					required: false,
+				},
+				postage: {
+					required: false,
+				},
+				description: {
+					required: false,
+				},
+				courierCompany: {
+					required: false,
+				},
+				courierNumber: {
+					required: false,
+				},
+				placeTime: {
+					required: false,
+				},
+				cancelTime: {
+					required: false,
+				},
+				payTime: {
+					required: false,
+				},
+				deliveryTime: {
+					required: false,
+				},
+				goodsTime: {
+					required: false,
+				},
+				ungoodsTime: {
+					required: false,
+				},
+				unpayTime: {
+					required: false,
+				},
+				goodsOrderStatus: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				title: {
+				},		
+				clientUserId: {
+				},		
+
+				goodsId: {
+				},		
+				goodsAddressId: {
+				},		
+				name: {
+				},		
+				num: {
+				},		
+				price: {
+				},		
+				postage: {
+				},		
+				description: {
+				},		
+				courierCompany: {
+				},		
+				courierNumber: {
+				},		
+				placeTime: {
+				},		
+				cancelTime: {
+				},		
+				payTime: {
+				},		
+				deliveryTime: {
+				},		
+				goodsTime: {
+				},		
+				ungoodsTime: {
+				},		
+				unpayTime: {
+				},		
+				goodsOrderStatus: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("title", $("#title").val());
+				formdata.append("clientUserId", $("#treeId").val());
+				formdata.append("goodsId", $("#goodsId").val());
+				formdata.append("goodsAddressId", $("#goodsAddressId").val());
+				formdata.append("name", $("#name").val());
+				formdata.append("num", $("#num").val());
+				formdata.append("price", $("#price").val());
+				formdata.append("postage", $("#postage").val());
+				formdata.append("description", $("#description").val());
+				formdata.append("courierCompany", $("#courierCompany").val());
+				formdata.append("courierNumber", $("#courierNumber").val());
+				formdata.append("placeTime", $("#placeTime").val());
+				formdata.append("cancelTime", $("#cancelTime").val());
+				formdata.append("payTime", $("#payTime").val());
+				formdata.append("deliveryTime", $("#deliveryTime").val());
+				formdata.append("goodsTime", $("#goodsTime").val());
+				/*formdata.append("ungoodsTime", $("#ungoodsTime").val());
+				formdata.append("unpayTime", $("#unpayTime").val());*/
+				formdata.append("goodsOrderStatus", $("#goodsOrderStatus").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+        function selectUserTree() {
+        	//var treeId = $("#treeId").val();
+        	//var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        	//var url = ctx + "/clientUser/searchUserList/" + deptId;
+			var options = {
+				title: '选择用户',
+				width: "380",
+				url: ctx + "loc/clientUser/searchPopup" ,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			var body = layer.getChildFrame('body', index);
+   			$("#treeId").val(body.find('#treeId').val());
+   			$("#treeName").val(body.find('#treeName').val());
+   			layer.close(index);
+		}	
+	    
+	</script>
+</body>
+</html>

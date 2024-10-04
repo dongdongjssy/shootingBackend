@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.CommentMapper">
+
+    <resultMap type="Comment" id="CommentResult">
+        <result property="id"    column="id"    />
+        <result property="fkId"    column="fk_id"    />
+        <result property="fkTable"    column="fk_table"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="content"    column="content"    />
+        <result property="rankings"    column="rankings"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+        <result property="status"    column="a_status"    />
+    </resultMap>
+
+	<sql id="selectCommentVoNoJoin">
+        select tb.id, tb.fk_id, tb.fk_table, tb.client_user_id, tb.content, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_comment tb
+    </sql>
+
+	<sql id="selectCommentVo">
+           select tb.id, tb.fk_id, tb.fk_table, tb.client_user_id, tb.content, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status  from shooting_comment tb join client_user a on tb.client_user_id = a.id
+    </sql>
+
+     <select id="selectCommentAll" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+     </select>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="fkId != null "> and tb.fk_id = #{fkId}</if>
+            <if test="fkTable != null "> and tb.fk_table = #{fkTable}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content = #{content}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+        ORDER BY tb.create_time DESC
+    </select>
+
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_comment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="fkId != null  ">fk_id,</if>
+			<if test="fkTable != null  ">fk_table,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="rankings != null  ">rankings,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="fkId != null  ">#{fkId},</if>
+			<if test="fkTable != null  ">#{fkTable},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="rankings != null  ">#{rankings},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update shooting_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fkId != null  ">fk_id = #{fkId},</if>
+            <if test="fkTable != null  ">fk_table = #{fkTable},</if>
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCommentById" parameterType="Long">
+        delete from shooting_comment where id = #{id}
+    </delete>
+
+    <delete id="deleteCommentByIds" parameterType="String">
+        delete from shooting_comment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+	<sql id="selectCommentAssoc">
+        select tb.id, tb.fk_id, tb.fk_table, tb.client_user_id, tb.content, tb.rankings, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date , a.status as a_status 		                from shooting_comment tb  join client_user a on tb.client_user_id = a.id    </sql>
+
+     <select id="selectCommentAllAssoc" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentAssoc"/>
+     </select>
+
+    <select id="selectCommentListAssoc" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentAssoc"/>
+        <where>
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="fkId != null "> and tb.fk_id = #{fkId}</if>
+            <if test="fkTable != null "> and tb.fk_table = #{fkTable}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content like concat('%', #{content}, '%')</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+                        order by tb.create_time desc
+        
+    </select>
+
+    <select id="selectCommentByIdAssoc" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

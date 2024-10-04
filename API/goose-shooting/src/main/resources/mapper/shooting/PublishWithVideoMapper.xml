@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.PublishWithVideoMapper">
+    
+    <resultMap type="PublishWithVideo" id="PublishWithVideoResult">
+        <result property="id"    column="id"    />
+        <result property="clientUserId"    column="client_user_id"    />
+        <result property="content"    column="content"    />
+        <result property="video"    column="video"    />
+        <result property="rankings"    column="rankings"    />
+        <result property="status"    column="status"    />
+        <association property="clientUser" column="client_user_id"  javaType="ClientUser"  resultMap="ClientUserResult" />
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id"    column="a_id"    />
+        <result property="nickname"    column="a_nickname"    />
+        <result property="userName"    column="a_user_name"    />
+        <result property="email"    column="a_email"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="password"    column="a_password"    />
+        <result property="userType"    column="a_user_type"    />
+        <result property="openId"    column="a_open_id"    />
+        <result property="avatar"    column="a_avatar"    />
+        <result property="city"    column="a_city"    />
+        <result property="address"    column="a_address"    />
+        <result property="passwordResetDate"    column="a_password_reset_date"    />
+    </resultMap>
+	
+	<sql id="selectPublishWithVideoVoNoJoin">
+        select tb.id, tb.client_user_id, tb.content, tb.video, tb.rankings, tb.status        from shooting_publish_with_video tb
+    </sql>
+    
+	<sql id="selectPublishWithVideoVo">
+           select tb.id, tb.client_user_id, tb.content, tb.video, tb.rankings, tb.status, a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date  from shooting_publish_with_video tb join client_user a on tb.client_user_id = a.id
+    </sql>
+    
+     <select id="selectPublishWithVideoAll" parameterType="PublishWithVideo" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoVo"/>
+     </select>    
+	
+    <select id="selectPublishWithVideoList" parameterType="PublishWithVideo" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content = #{content}</if>
+            <if test="video != null  and video != '' "> and tb.video = #{video}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPublishWithVideoById" parameterType="Long" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertPublishWithVideo" parameterType="PublishWithVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_publish_with_video
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="clientUserId != null  ">client_user_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="video != null  and video != ''  ">video,</if>
+			<if test="rankings != null  ">rankings,</if>
+			<if test="status != null  ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="clientUserId != null  ">#{clientUserId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="video != null  and video != ''  ">#{video},</if>
+			<if test="rankings != null  ">#{rankings},</if>
+			<if test="status != null  ">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePublishWithVideo" parameterType="PublishWithVideo">
+        update shooting_publish_with_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="video != null  and video != ''  ">video = #{video},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePublishWithVideoById" parameterType="Long">
+        delete from shooting_publish_with_video where id = #{id}
+    </delete>
+	
+    <delete id="deletePublishWithVideoByIds" parameterType="String">
+        delete from shooting_publish_with_video where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectPublishWithVideoAssoc">
+        select tb.id, tb.client_user_id, tb.content, tb.video, tb.rankings, tb.status ,         a.id as a_id , a.nickname as a_nickname , a.user_name as a_user_name , a.email as a_email , a.phone as a_phone , a.password as a_password , a.user_type as a_user_type , a.open_id as a_open_id , a.avatar as a_avatar , a.city as a_city , a.address as a_address , a.password_reset_date as a_password_reset_date 		                from shooting_publish_with_video tb  join client_user a on tb.client_user_id = a.id    </sql>
+    
+     <select id="selectPublishWithVideoAllAssoc" parameterType="PublishWithVideo" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoAssoc"/>
+     </select>    
+	
+    <select id="selectPublishWithVideoListAssoc" parameterType="PublishWithVideo" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="clientUserId != null "> and tb.client_user_id = #{clientUserId}</if>
+            <if test="content != null  and content != '' "> and tb.content like concat('%', #{content}, '%')</if>
+            <if test="video != null  and video != '' "> and tb.video = #{video}</if>
+            <if test="rankings != null "> and tb.rankings = #{rankings}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPublishWithVideoByIdAssoc" parameterType="Long" resultMap="PublishWithVideoResult">
+        <include refid="selectPublishWithVideoAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

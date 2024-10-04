@@ -1,0 +1,52 @@
+
+spring:
+  profiles:
+    active: native
+
+#  application:
+#    name: config-server
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: ssh://@192.168.0.243:22/data/git/
+#          search-paths: config-repo                              # git仓库地址下的相对地址，可以配置多个，用,分割。
+#          username: git                                          # git仓库的账号
+#          password: gitdddd                                    # git仓库的密码
+#
+
+# Configure this Discovery Server
+eureka:
+  client:
+#    enabled: true
+    # Not a client, don't register with yourself.but if we combine registry and config togther, we have to set them to true
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+  # 默认90，配置可加快注册服务被发现的时间，生产环境不建议使用
+  #instance:
+    #leaseRenewalIntervalInSeconds:30
+#  server :
+#    enable-self-preservation: false
+#    eviction-interval-timer-in-ms: 4000
+
+
+#spring:
+#  cloud:
+#    config:
+#      server:
+#        svn:
+#          uri: https://......./config-repo
+#          username: qinyonghong
+#          password: qyh123
+#        default-label: trunk
+#  profiles:
+#    active: subversion
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+

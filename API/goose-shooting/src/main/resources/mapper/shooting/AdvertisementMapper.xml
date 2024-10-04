@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.AdvertisementMapper">
+
+    <resultMap type="Advertisement" id="AdvertisementResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="detail" column="detail"/>
+        <result property="mediaUrl" column="media_url"/>
+        <result property="mediaType" column="media_type"/>
+        <result property="rankings" column="rankings"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <sql id="selectAdvertisementVoNoJoin">
+        select tb.id,
+               tb.title,
+               tb.detail,
+               tb.media_url,
+               tb.media_type,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time
+        from shooting_advertisement tb
+    </sql>
+
+    <sql id="selectAdvertisementVo">
+        select tb.id,
+               tb.title,
+               tb.detail,
+               tb.media_url,
+               tb.media_type,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time
+        from shooting_advertisement tb
+    </sql>
+
+    <select id="selectAdvertisementAll" parameterType="Advertisement" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementVo"/>
+        order by tb.create_time desc
+    </select>
+
+    <select id="selectAdvertisementList" parameterType="Advertisement" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="ids != null and ids !='' ">and tb.id in (${id})</if>
+            
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+            <if test="detail != null  and detail != '' ">and tb.detail = #{detail}</if>
+            <if test="mediaUrl != null  and mediaUrl != '' ">and tb.media_url = #{mediaUrl}</if>
+            <if test="mediaType != null ">and tb.media_type = #{mediaType}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by tb.create_time desc
+    </select>
+
+    <select id="selectAdvertisementById" parameterType="Long" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertAdvertisement" parameterType="Advertisement" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_advertisement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="detail != null  and detail != ''  ">detail,</if>
+            <if test="mediaUrl != null  and mediaUrl != ''  ">media_url,</if>
+            <if test="mediaType != null  ">media_type,</if>
+            <if test="rankings != null  ">rankings,</if>
+            <if test="status != null  ">status,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time,
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="detail != null  and detail != ''  ">#{detail},</if>
+            <if test="mediaUrl != null  and mediaUrl != ''  ">#{mediaUrl},</if>
+            <if test="mediaType != null  ">#{mediaType},</if>
+            <if test="rankings != null  ">#{rankings},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdvertisement" parameterType="Advertisement">
+        update shooting_advertisement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="detail != null  and detail != ''  ">detail = #{detail},</if>
+            <if test="mediaUrl != null  and mediaUrl != ''  ">media_url = #{mediaUrl},</if>
+            <if test="mediaType != null  ">media_type = #{mediaType},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdvertisementById" parameterType="Long">
+        delete
+        from shooting_advertisement
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAdvertisementByIds" parameterType="String">
+        delete from shooting_advertisement where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectAdvertisementAssoc">
+        select tb.id,
+               tb.title,
+               tb.detail,
+               tb.media_url,
+               tb.media_type,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time
+        from shooting_advertisement tb
+    </sql>
+
+    <select id="selectAdvertisementAllAssoc" parameterType="Advertisement" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementAssoc"/>
+        order by tb.create_time desc
+    </select>
+
+    <select id="selectAdvertisementListAssoc" parameterType="Advertisement" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="title != null  and title != '' ">and tb.title like concat('%', #{title}, '%')</if>
+            <if test="detail != null  and detail != '' ">and tb.detail like concat('%', #{detail}, '%')</if>
+            <if test="mediaUrl != null  and mediaUrl != '' ">and tb.media_url = #{mediaUrl}</if>
+            <if test="mediaType != null ">and tb.media_type = #{mediaType}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.create_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- ?????? -->
+                AND date_format(tb.update_time ,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+        order by tb.create_time desc
+    </select>
+
+    <select id="selectAdvertisementByIdAssoc" parameterType="Long" resultMap="AdvertisementResult">
+        <include refid="selectAdvertisementAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

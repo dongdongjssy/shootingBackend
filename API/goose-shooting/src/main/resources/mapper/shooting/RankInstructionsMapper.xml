@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RankInstructionsMapper">
+    
+    <resultMap type="RankInstructions" id="RankInstructionsResult">
+        <result property="id"    column="id"    />
+        <result property="myRank"    column="my_rank"    />
+        <result property="matchRank"    column="match_rank"    />
+        <result property="annualIntegral"    column="annual_integral"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	
+	<sql id="selectRankInstructionsVoNoJoin">
+        select tb.id, tb.my_rank, tb.match_rank, tb.annual_integral, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time        from shooting_rank_instructions tb
+    </sql>
+    
+	<sql id="selectRankInstructionsVo">
+           select tb.id, tb.my_rank, tb.match_rank, tb.annual_integral, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time from shooting_rank_instructions tb     </sql>
+    
+     <select id="selectRankInstructionsAll" parameterType="RankInstructions" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsVo"/>
+     </select>    
+	
+    <select id="selectRankInstructionsList" parameterType="RankInstructions" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="myRank != null  and myRank != '' "> and tb.my_rank = #{myRank}</if>
+            <if test="matchRank != null  and matchRank != '' "> and tb.match_rank = #{matchRank}</if>
+            <if test="annualIntegral != null  and annualIntegral != '' "> and tb.annual_integral = #{annualIntegral}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectRankInstructionsById" parameterType="Long" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertRankInstructions" parameterType="RankInstructions" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_rank_instructions
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="myRank != null  and myRank != ''  ">my_rank,</if>
+			<if test="matchRank != null  and matchRank != ''  ">match_rank,</if>
+			<if test="annualIntegral != null  and annualIntegral != ''  ">annual_integral,</if>
+			<if test="status != null  ">status,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="myRank != null  and myRank != ''  ">#{myRank},</if>
+			<if test="matchRank != null  and matchRank != ''  ">#{matchRank},</if>
+			<if test="annualIntegral != null  and annualIntegral != ''  ">#{annualIntegral},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRankInstructions" parameterType="RankInstructions">
+        update shooting_rank_instructions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="myRank != null  and myRank != ''  ">my_rank = #{myRank},</if>
+            <if test="matchRank != null  and matchRank != ''  ">match_rank = #{matchRank},</if>
+            <if test="annualIntegral != null  and annualIntegral != ''  ">annual_integral = #{annualIntegral},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRankInstructionsById" parameterType="Long">
+        delete from shooting_rank_instructions where id = #{id}
+    </delete>
+	
+    <delete id="deleteRankInstructionsByIds" parameterType="String">
+        delete from shooting_rank_instructions where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectRankInstructionsAssoc">
+        select tb.id, tb.my_rank, tb.match_rank, tb.annual_integral, tb.status, tb.create_by, tb.create_time, tb.update_by, tb.update_time                 from shooting_rank_instructions tb     </sql>
+    
+     <select id="selectRankInstructionsAllAssoc" parameterType="RankInstructions" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsAssoc"/>
+     </select>    
+	
+    <select id="selectRankInstructionsListAssoc" parameterType="RankInstructions" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="myRank != null  and myRank != '' "> and tb.my_rank = #{myRank}</if>
+            <if test="matchRank != null  and matchRank != '' "> and tb.match_rank = #{matchRank}</if>
+            <if test="annualIntegral != null  and annualIntegral != '' "> and tb.annual_integral = #{annualIntegral}</if>
+            <if test="status != null "> and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' "> and tb.create_by = #{createBy}</if>
+            <if test="createTime != null "> and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and tb.update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectRankInstructionsByIdAssoc" parameterType="Long" resultMap="RankInstructionsResult">
+        <include refid="selectRankInstructionsAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

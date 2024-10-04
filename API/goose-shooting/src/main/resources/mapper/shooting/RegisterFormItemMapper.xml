@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterFormItemMapper">
+    
+    <resultMap type="RegisterFormItem" id="RegisterFormItemResult">
+        <result property="id"    column="id"    />
+        <result property="registerId"    column="register_id"    />
+        <result property="name"    column="name"    />
+        <result property="category"    column="category"    />
+        <result property="type"    column="type"    />
+        <result property="value"    column="value"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+	
+	<sql id="selectRegisterFormItemVoNoJoin">
+        select tb.id, tb.register_id, tb.name, tb.category, tb.type, tb.value, tb.remark        from shooting_register_form_item tb
+    </sql>
+    
+	<sql id="selectRegisterFormItemVo">
+           select tb.id, tb.register_id, tb.name, tb.category, tb.type, tb.value, tb.remark from shooting_register_form_item tb     </sql>
+    
+     <select id="selectRegisterFormItemAll" parameterType="RegisterFormItem" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemVo"/>
+     </select>    
+	
+    <select id="selectRegisterFormItemList" parameterType="RegisterFormItem" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerId != null "> and tb.register_id = #{registerId}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="category != null  and category != '' "> and tb.category = #{category}</if>
+            <if test="type != null  and type != '' "> and tb.type = #{type}</if>
+            <if test="value != null  and value != '' "> and tb.value = #{value}</if>
+            <if test="remark != null  and remark != '' "> and tb.remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterFormItemById" parameterType="Long" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertRegisterFormItem" parameterType="RegisterFormItem" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_register_form_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="registerId != null  ">register_id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="category != null  and category != ''  ">category,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="value != null  and value != ''  ">value,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="registerId != null  ">#{registerId},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="category != null  and category != ''  ">#{category},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="value != null  and value != ''  ">#{value},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertRegisterFormItems" parameterType="RegisterFormItem" useGeneratedKeys="true">
+        insert into shooting_register_form_item
+        (
+            register_id,
+            name,
+            category,
+            type,
+            value,
+            remark
+        )
+        values
+        <foreach collection="items" item="item" separator=",">
+            (
+                #{item.registerId},
+                #{item.name},
+                #{item.category},
+                #{item.type},
+                #{item.value},
+                #{item.remark}
+            )
+        </foreach>
+    </insert>
+	 
+    <update id="updateRegisterFormItem" parameterType="RegisterFormItem">
+        update shooting_register_form_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="registerId != null  ">register_id = #{registerId},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="category != null  and category != ''  ">category = #{category},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="value != null  and value != ''  ">value = #{value},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRegisterFormItemById" parameterType="Long">
+        delete from shooting_register_form_item where id = #{id}
+    </delete>
+	
+    <delete id="deleteRegisterFormItemByIds" parameterType="String">
+        delete from shooting_register_form_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectRegisterFormItemAssoc">
+        select tb.id, tb.register_id, tb.name, tb.category, tb.type, tb.value, tb.remark                 from shooting_register_form_item tb     </sql>
+    
+     <select id="selectRegisterFormItemAllAssoc" parameterType="RegisterFormItem" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemAssoc"/>
+     </select>    
+	
+    <select id="selectRegisterFormItemListAssoc" parameterType="RegisterFormItem" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="registerId != null "> and tb.register_id = #{registerId}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="category != null  and category != '' "> and tb.category = #{category}</if>
+            <if test="type != null  and type != '' "> and tb.type = #{type}</if>
+            <if test="value != null  and value != '' "> and tb.value = #{value}</if>
+            <if test="remark != null  and remark != '' "> and tb.remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegisterFormItemByIdAssoc" parameterType="Long" resultMap="RegisterFormItemResult">
+        <include refid="selectRegisterFormItemAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>

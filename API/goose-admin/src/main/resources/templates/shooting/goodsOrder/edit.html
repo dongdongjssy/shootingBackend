@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-goodsOrder-edit" th:object="${goodsOrder}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单编号：</label>
+				<div class="col-sm-8">
+					<input id="title" readonly name="title" th:field="*{title}" class="form-control" type="text">
+				</div>
+			</div>
+			    <input id="clientUserId" name="clientUserId" th:field="*{clientUserId}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">发票抬头：</label>
+				<div class="col-sm-8">
+					<input id="goodsInvoice" disabled name="goodsInvoice" th:field="*{goodsInvoice.head}" class="form-control" type="text">
+
+					<!--<select id="invoiceId" disabled="disabled" name="invoiceId" class="form-control">
+						<option th:each="fkRow:${ invoiceIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.head}" th:field="*{invoiceId}"></option>
+					</select>	-->
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">发票税号：</label>
+				<div class="col-sm-8">
+					<input id="goodsInvoice" disabled name="goodsInvoice" th:field="*{goodsInvoice.code}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商品：</label>
+				<div class="col-sm-8">
+					<select id="goodsId" disabled="disabled" name="goodsId" class="form-control">
+						<option th:each="fkRow:${ goodsIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{goodsId}"></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">收货地址：</label>
+				<div class="col-sm-8">
+					<input id="address" disabled name="address" th:field="*{goodsAddress.address}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">收货人：</label>
+				<div class="col-sm-8">
+					<input id="address" disabled name="address" th:field="*{goodsAddress.name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">收货人电话：</label>
+				<div class="col-sm-8">
+					<input id="address" disabled name="address" th:field="*{goodsAddress.phone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品名称：</label>
+				<div class="col-sm-8">
+					<input id="name" readonly name="name" th:field="*{name}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">商品数量：</label>
+				<div class="col-sm-8">
+					<input id="num" readonly name="num" th:field="*{num}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">价格：</label>
+				<div class="col-sm-8">
+					<input id="price" readonly name="price" th:field="*{price}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">邮费：</label>
+				<div class="col-sm-8">
+					<input id="postage" readonly name="postage" th:field="*{postage}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input id="description" readonly name="description" th:field="*{description}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">快递公司：</label>
+				<div class="col-sm-8">
+					<input id="courierCompany" name="courierCompany" th:field="*{courierCompany}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">快递单号：</label>
+				<div class="col-sm-8">
+					<input id="courierNumber" name="courierNumber" th:field="*{courierNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">下单时间：</label>
+				<div class="col-sm-8">
+					<input id="placeTime" disabled="disabled"  name="placeTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.placeTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">取消时间：</label>
+				<div class="col-sm-8">
+					<input id="cancelTime" disabled="disabled"  name="cancelTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.cancelTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">付款时间：</label>
+				<div class="col-sm-8">
+					<input id="payTime" disabled="disabled"  name="payTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.payTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">发货时间：</label>
+				<div class="col-sm-8">
+					<input id="deliveryTime" disabled="disabled"  name="deliveryTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.deliveryTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收货时间：</label>
+				<div class="col-sm-8">
+					<input id="goodsTime" disabled="disabled"  name="goodsTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.goodsTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-sm-3 control-label">退货时间：</label>
+				<div class="col-sm-8">
+					<input id="ungoodsTime" disabled="disabled"  name="ungoodsTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.ungoodsTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">退款时间：</label>
+				<div class="col-sm-8">
+					<input id="unpayTime" disabled="disabled"  name="unpayTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.unpayTime, 'yyyy-MM-dd HH:mm:ss')}">
+				</div>
+			</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">订单状态：</label>
+				<div class="col-sm-8">
+					<select id="goodsOrderStatus"  name="goodsOrderStatus" class="form-control m-b" th:with="type=${@dict.getType('goods_order_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{goodsOrderStatus}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select id="status" disabled="disabled" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建者：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime"  name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.createTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新者：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+				</div>
+			</div>
+
+
+			<div class="form-group" style="display: none;">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime"  name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(goodsOrder.updateTime, 'yyyy-MM-dd')}" disabled>
+				</div>
+			</div>
+
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/goodsOrder"
+
+		$("#form-goodsOrder-edit").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				title: {
+					required: false,
+				},
+				clientUserId: {
+					required: false,
+				},
+
+				goodsId: {
+					required: false,
+				},
+
+				name: {
+					required: false,
+				},
+				num: {
+					required: false,
+				},
+				price: {
+					required: false,
+				},
+				postage: {
+					required: false,
+				},
+				description: {
+					required: false,
+				},
+				courierCompany: {
+					required: false,
+				},
+				courierNumber: {
+					required: false,
+				},
+				placeTime: {
+					required: false,
+				},
+				cancelTime: {
+					required: false,
+				},
+				payTime: {
+					required: false,
+				},
+				deliveryTime: {
+					required: false,
+				},
+				goodsTime: {
+					required: false,
+				},
+				ungoodsTime: {
+					required: false,
+				},
+				unpayTime: {
+					required: false,
+				},
+				goodsOrderStatus: {
+					required: false,
+				},
+				status: {
+					required: false,
+				},
+				createBy: {
+					required: false,
+				},
+				createTime: {
+					required: false,
+				},
+				updateBy: {
+					required: false,
+				},
+				updateTime: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				title: {
+				},		
+				clientUserId: {
+				},		
+
+				goodsId: {
+				},		
+
+				name: {
+				},		
+				num: {
+				},		
+				price: {
+				},		
+				postage: {
+				},		
+				description: {
+				},		
+				courierCompany: {
+				},		
+				courierNumber: {
+				},		
+				placeTime: {
+				},		
+				cancelTime: {
+				},		
+				payTime: {
+				},		
+				deliveryTime: {
+				},		
+				goodsTime: {
+				},		
+				ungoodsTime: {
+				},		
+				unpayTime: {
+				},		
+				goodsOrderStatus: {
+				},		
+				status: {
+				},		
+				createBy: {
+				},		
+				createTime: {
+				},		
+				updateBy: {
+				},		
+				updateTime: {
+				},		
+		    }				
+		});
+		
+
+	    
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+		        formdata.append("id", $("#id").val());		        
+				formdata.append("title", $("#title").val());
+				formdata.append("clientUserId", $("#clientUserId").val());
+				formdata.append("goodsId", $("#goodsId").val());
+				formdata.append("name", $("#name").val());
+				formdata.append("num", $("#num").val());
+				formdata.append("price", $("#price").val());
+				formdata.append("postage", $("#postage").val());
+				formdata.append("description", $("#description").val());
+				formdata.append("courierCompany", $("#courierCompany").val());
+				formdata.append("courierNumber", $("#courierNumber").val());
+				formdata.append("placeTime", $("#placeTime").val());
+				formdata.append("cancelTime", $("#cancelTime").val());
+				formdata.append("payTime", $("#payTime").val());
+				formdata.append("deliveryTime", $("#deliveryTime").val());
+				formdata.append("goodsTime", $("#goodsTime").val());
+				/*formdata.append("ungoodsTime", $("#ungoodsTime").val());
+				formdata.append("unpayTime", $("#unpayTime").val());*/
+				formdata.append("goodsOrderStatus", $("#goodsOrderStatus").val());
+				formdata.append("status", $("#status").val());
+				formdata.append("createBy", $("#createBy").val());
+				formdata.append("createTime", $("#createTime").val());
+				formdata.append("updateBy", $("#updateBy").val());
+				formdata.append("updateTime", $("#updateTime").val());
+	   
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/edit",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })	        
+	   		}	
+		}	    
+		
+	    
+    
+	    		
+	</script>
+</body>
+</html>

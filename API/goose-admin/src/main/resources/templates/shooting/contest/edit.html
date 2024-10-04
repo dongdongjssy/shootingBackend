@@ -1,0 +1,791 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/cropbox/cropbox.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-contest-edit" th:object="${contest}">
+        <input id="id" name="id" th:field="*{id}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">赛事名称：</label>
+            <div class="col-sm-8">
+                <input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">赛事级别：</label>
+            <div class="col-sm-8">
+                <select id="levelId" name="levelId" class="form-control">
+                    <option th:each="fkRow:${ levelIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.levelName}" th:field="*{levelId}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地区：</label>
+            <div class="col-sm-8">
+                <select id="areaId" name="areaId" class="form-control">
+                    <option th:each="fkRow:${ areaIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{areaId}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">科目：</label>
+            <div class="col-sm-8">
+                <select id="courseId" name="courseId" class="form-control">
+                    <option th:each="fkRow:${ courseIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{courseId}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">射击类别：</label>
+            <div class="col-sm-8">
+                <select id="typeId" name="typeId" class="form-control">
+                    <option th:each="fkRow:${ typeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.name}" th:field="*{typeId}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片：</label>
+            <div class="col-sm-8">
+                <div class="new-contentarea">
+                    <a href="javascript:void(0)" class="upload-img"> <label for="picture">上传图像</label> </a>
+                    <input type="file" class="" name="imageUrl" id="imageUrl" accept="image/*"/>
+                </div>
+                <div>
+                    <p style="display:inline;margin-left:20px; line-height: 35px;">推荐尺寸：710*360,格式：jpg、png、gif</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图片预览：</label>
+            <div class="col-sm-8">
+                <div class="container">
+                    <img id="imgpreviewimageUrl" class='imageBox'/>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="schedule">
+            <label class="col-sm-3 control-label">起始日期：</label>
+            <div th:each="schedule,iter : ${contest.schedules}"
+                 th:id="'schedule_'+${iter.index}">
+                <label class="col-sm-3 control-label" th:if="${iter.index > 0}"></label>
+                <div class="col-sm-3" style="margin: 10px 0 0 0;">
+                    <input th:if="${iter.index == 0}" id="startDate" name="startDate"
+                           class="form-control time-input" type="text"
+                           th:value="${#dates.format(schedule.startDate, 'yyyy-MM-dd')}">
+
+                    <input th:if="${iter.index > 0}"
+                           th:id="'startDate_'+${iter.index}"
+                           th:name="'startDate_'+${iter.index}"
+                           class="form-control time-input" type="text"
+                           th:value="${#dates.format(schedule.startDate, 'yyyy-MM-dd')}">
+                </div>
+                <div class="col-sm-1" style="margin:16px 0 0 0;text-align:center;">-</div>
+                <div class="col-sm-3" style="margin: 10px 0 0 0;">
+                    <input th:if="${iter.index == 0}" id="endDate" th:name="endDate"
+                           class="form-control time-input" type="text"
+                           th:value="${#dates.format(schedule.endDate, 'yyyy-MM-dd')}">
+
+                    <input th:if="${iter.index > 0}" th:id="'endDate_'+${iter.index}"
+                           th:name="'endDate_'+${iter.index}"
+                           class="form-control time-input" type="text"
+                           th:value="${#dates.format(schedule.endDate, 'yyyy-MM-dd')}">
+                </div>
+                <div class="col-sm-1" th:if="${iter.index == 0}"
+                     style="margin: 10px 0 0 0;">
+                    <input type="button" id="addScheduleBtn" name="addScheduleBtn"
+                           value="+" style="font-size:20px;border:none;background-color:transparent;color:#367fa9;outline:none;">
+                </div>
+
+                <div class="col-sm-1" th:unless="${iter.index == 0}"
+                     style="margin: 16px 0 0 0;">
+                    <input type="button" th:id="'delScheduleBtn_'+${iter.index}"
+                           th:name="'delScheduleBtn_'+${iter.index}" value="X"
+                           th:onclick="'javascript:removeSchedule(' + ${iter.index} + ');'"
+                           style="border:none;background-color:transparent;color:red;outline:none;font-size:14px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">报名截止日期：</label>
+            <div class="col-sm-8">
+                <input id="enrollDeadline" name="enrollDeadline" class="form-control time-input" type="text" th:value="${#dates.format(contest.enrollDeadline, 'yyyy-MM-dd')}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">价格：</label>
+            <div class="col-sm-8">
+                <input id="price" name="price" th:field="*{price}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-sm-3 control-label">选择付款码：</label>
+            <div class="col-sm-8">
+                <select id="paymentCodeId" name="paymentCodeId" class="form-control">
+                    <option th:each="fkRow:${ paymentList}" th:value="${ fkRow.id}"  th:field="*{paymentCodeId}" th:text="${ fkRow.title}" ></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地址(分号;隔开多个地址)：</label>
+            <div class="col-sm-8">
+                <input id="address" name="address" th:field="*{address}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">活动内容：</label>
+            <div class="col-sm-8">
+                <input id="content" name="content" th:field="*{content}" type="hidden">
+                <div id="contentId" class="summernote"></div>
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label">排名：</label>
+            <div class="col-sm-8">
+                <input id="rankings" name="rankings" th:field="*{rankings}" class="form-control" type="text">
+            </div>
+        </div>
+         -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">状态：</label>
+            <div class="col-sm-8">
+                <select id="status" name="status" class="form-control m-b" th:with="type=${@dict.getType('sys_common_status')}">
+                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{status}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建者：</label>
+            <div class="col-sm-8">
+                <input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">创建时间：</label>
+            <div class="col-sm-8">
+                <input id="createTime" name="createTime" class="form-control time-input" type="text" th:value="${#dates.format(contest.createTime, 'yyyy-MM-dd')}" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新者：</label>
+            <div class="col-sm-8">
+                <input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text" disabled>
+            </div>
+        </div>
+
+
+        <div class="form-group" style="display: none;">
+            <label class="col-sm-3 control-label">更新时间：</label>
+            <div class="col-sm-8">
+                <input id="updateTime" name="updateTime" class="form-control time-input" type="text" th:value="${#dates.format(contest.updateTime, 'yyyy-MM-dd')}" disabled>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">是否推荐：</label>
+            <div class="col-sm-8">
+                <div>
+                    <label class="radio-inline"><input type="radio" id="recommendYes" name="recommend" value="1" th:checked="*{recommend} == 1">是</label>
+                    <label class="radio-inline"><input type="radio" id="recommendNo" name="recommend" value="0" th:checked="*{recommend} == 0">否</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" th:hidden="*{draft} == 0">
+            <label class="col-sm-3 control-label">是否存为草稿：</label>
+            <div class="col-sm-8">
+                <div>
+                    <label class="radio-inline"><input type="radio" id="draftYes" name="draft" value="1"  th:checked="*{draft} == 1">是</label>
+                    <label class="radio-inline"><input type="radio" id="draftNo" name="draft" value="0" th:checked="*{draft} == 0">否</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">报名表配置：</label>
+            <div class="col-sm-8" style="padding: 0 30px;">
+                <!--是否允许非认证用户报名-->
+                <div class="form-group">
+                    <label class="control-label">是否允许非认证用户报名</label>
+                    <div>
+                        <label class="radio-inline"><input type="radio" id="unauthUserAllowedYes" name="unauthUserAllowed" value="1"
+                                                           th:checked="${contest.registerConfig.isUnauthAllowed} == 1">允许</label>
+                        <label class="radio-inline"><input type="radio" id="unauthUserAllowedNo" name="unauthUserAllowed" value="0"
+                                                           th:checked="${contest.registerConfig.isUnauthAllowed} == 0">不允许</label>
+                    </div>
+                </div>
+
+                <!--角色-->
+                <div class="form-group">
+                    <label class="control-label">选择可以报名的射手角色</label>
+                    <div>
+                        <label th:each="role: ${roleList}" class="checkbox-inline">
+                            <input type="checkbox" name="registerConfigRoles" th:text="${role.description}+ ':' +${role.name}" th:value="${role.name} + ':' + ${role.id}"
+                                   th:checked="${#arrays.contains(rInfoValues, role.name)}">
+                        </label>
+                    </div>
+                </div>
+
+                <!--报名所需的个人信息-->
+                <div class="form-group">
+                    <label class="control-label">选择报名所需的个人信息</label>
+                    <div>
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoRealName" name="registerFormPersonalInfo" value="realName"
+                                           th:checked="${#arrays.contains(pInfoValues, 'realName')}">真实姓名
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoRealNameRequired" th:checked="${#arrays.contains(pInfoRequired, 'realName1')}">必填
+                                </label>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoSex" value="sex" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'sex')}">性别
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoSexRequired" th:checked="${#arrays.contains(pInfoRequired, 'sex1')}">必填
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoEmail" value="email" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'email')}">电子邮箱
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoEmailRequired" th:checked="${#arrays.contains(pInfoRequired, 'email1')}">必填
+                                </label>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoPhone" value="phone" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'phone')}">联系电话
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoPhoneRequired" th:checked="${#arrays.contains(pInfoRequired, 'phone1')}">必填
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoCity" value="city" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'city')}">所在城市
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoCityRequired" th:checked="${#arrays.contains(pInfoRequired, 'city1')}">必填
+                                </label>
+                            </div>
+                            <!--<div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoAddress" value="address" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'address')}">地址
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoAddressRequired" th:checked="${#arrays.contains(pInfoRequired, 'address1')}">必填
+                                </label>
+                            </div>-->
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoId" value="idNumber" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'idNumber')}">身份证号
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoIdRequired" th:checked="${#arrays.contains(pInfoRequired, 'idNumber1')}">必填
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoEnglishName" value="englishName" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'englishName')}">英文名
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoEnglishNameRequired" th:checked="${#arrays.contains(pInfoRequired, 'englishName1')}">必填
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoMemberId" value="memberId" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'memberId')}">射手编号
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoMemberIdRequired" th:checked="${#arrays.contains(pInfoRequired, 'memberId1')}">必填
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoCertExpireDate" value="certExpireDate" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'certExpireDate')}">认证有效期
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoCertExpireDateRequired" th:checked="${#arrays.contains(pInfoRequired, 'certExpireDate1')}">必填
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoGraduateDate" value="graduateDate" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'graduateDate')}">结业日期
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoGraduateDateRequired" th:checked="${#arrays.contains(pInfoRequired, 'graduateDate1')}">必填
+                                </label>
+                            </div>
+                            <!--<div class="col-sm-6">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoPassNo" value="passportNo" name="registerFormPersonalInfo"
+                                           th:checked="${#arrays.contains(pInfoValues, 'passportNo')}">护照号码
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="personalInfoPassNoRequired" th:checked="${#arrays.contains(pInfoRequired, 'passportNo1')}">必填
+                                </label>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+                <!--自定义报名所需信息-->
+                <div class="form-group">
+                    <label class="control-label">自定义报名所需信息(最多可添加6项)</label>
+                    <input type="button" id="addCustomizeItemBtn" name="addScheduleBtn" value="+"
+                           style="font-size:20px;border:none;background-color:transparent;color:#367fa9;outline:none;display: inline-block;margin-left:30px">
+                    <div id="registerFormCustomizeDiv">
+                        <div th:each="custInfo,iter : ${contest.registerConfig.customizedInfos}" th:id="'customizeItem_'+${iter.index}"
+                             style="border-width:1px;border-color:#aaaaaa;border-style:solid;padding:10px;margin-bottom:20px;position:relative;border-radius:5px;">
+                            <input type="button" th:id="'delCustomerBtn_'+${iter.index}" value="x"
+                                   th:onclick="'javascript:removeCustInfo(' + ${iter.index} + ');'"
+                                   style="width:26px;height:26px;border:none;border-radius:13px;font-size:18px;position:absolute;right:-15px;top:-15px;outline:none;">
+                            <input th:id="'customizeName_'+${iter.index}" type="text" class="form-control" placeholder="名称" style="margin-bottom:10px;"
+                                   th:value="${custInfo.itemName}">
+                            <select class="form-control" th:id="'customizeType_'+${iter.index}">
+                                <option value="none" th:selected="${custInfo.itemType} == 'none'">选择输入类型...</option>
+                                <option value="radio" th:selected="${custInfo.itemType} == 'radio'">单选值</option>
+                                <option value="text" th:selected="${custInfo.itemType} == 'text'">用户自己输入</option>
+                            </select>
+                            <label class="checkbox-inline"><input type="checkbox" th:id="'customizeRequired_'+${iter.index}" th:checked="${custInfo.isRequired} == 1">必填</label>
+                            <label class="checkbox-inline"><input type="checkbox" th:id="'customizeRemarkRequired_'+${iter.index}" th:checked="${custInfo.isRemarkDisplay} == 1">需要填写备注</label>
+                            <textarea class="form-control" rows="3" placeholder="备注信息（例如：请填写队服尺寸和数量）" th:id="'customizeRemark_' +${iter.index}"
+                                      th:text="${custInfo.itemRemark}"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
+<script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
+<script type="text/javascript">
+    var prefix = ctx + "shooting/contest"
+
+    $("#contentId").summernote({
+        height: '320px',
+        lang: 'zh-CN',
+        dialogsInBody: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'help']]
+        ],
+        placeholder: '请输入通知的内容',
+        callbacks: {
+            onImageUpload: function (files, editor, $editable) {
+                var fd = new FormData();
+                fd.append("file", files[0]);
+                fd.append("type", 7);
+                $.ajax({
+                    type: "POST",
+                    url: ctx + "shooting/oss/uploadRichText",
+                    data: fd,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $("#contentId").summernote('insertImage', data)
+                    }
+                });
+
+            }
+        }
+    });
+    var content = $("#content").val();
+    $('#contentId').summernote("code", content);
+
+
+    $("#form-contest-edit").validate({
+        rules: {
+            id: {
+                required: false,
+            },
+            areaId: {
+                required: false,
+            },
+            courseId: {
+                required: false,
+            },
+            typeId: {
+                required: false,
+            },
+            title: {
+                required: false,
+            },
+            imageUrl: {
+                required: false,
+            },
+            startDate: {
+                required: false,
+            },
+            endDate: {
+                required: false,
+            },
+            price: {
+                required: false,
+            },
+            address: {
+                required: false,
+            },
+            content: {
+                required: false,
+            },
+            rankings: {
+                required: false,
+            },
+            status: {
+                required: false,
+            },
+            createBy: {
+                required: false,
+            },
+            createTime: {
+                required: false,
+            },
+            updateBy: {
+                required: false,
+            },
+            updateTime: {
+                required: false,
+            },
+            levelId: {
+                required: false,
+            },
+        },
+        messages: {
+            id: {},
+            areaId: {},
+            courseId: {},
+            typeId: {},
+            title: {},
+            imageUrl: {},
+            startDate: {},
+            endDate: {},
+            price: {},
+            address: {},
+            content: {},
+            rankings: {},
+            status: {},
+            createBy: {},
+            createTime: {},
+            updateBy: {},
+            updateTime: {},
+            levelId: {},
+        }
+    });
+
+
+    function submitHandler() {
+        schedules = [];
+        if ($.validate.form()) {
+            var sHTMLcontent = $("#contentId").summernote('code');
+            $("#content").val(sHTMLcontent);
+            var formdata = new FormData();
+            formdata.append("id", $("#id").val());
+            formdata.append("areaId", $("#areaId").val());
+            formdata.append("courseId", $("#courseId").val());
+            formdata.append("typeId", $("#typeId").val());
+            formdata.append("title", $("#title").val());
+            formdata.append("startDate", $("#startDate").val());
+            formdata.append("endDate", $("#endDate").val());
+            formdata.append("price", $("#price").val());
+            formdata.append("address", $("#address").val());
+            formdata.append("content", $("#content").val());
+            //	formdata.append("rankings", $("#rankings").val());
+            formdata.append("status", $("#status").val());
+            formdata.append("createBy", $("#createBy").val());
+            formdata.append("createTime", $("#createTime").val());
+            formdata.append("updateBy", $("#updateBy").val());
+            formdata.append("updateTime", $("#updateTime").val());
+            formdata.append("levelId", $("#levelId").val());
+            formdata.append("enrollDeadline", $("#enrollDeadline").val());
+            formdata.append("draft",$("input[name='draft']:checked").val())
+            formdata.append("recommend",$("input[name='recommend']:checked").val())
+            formdata.append("paymentCodeId",$("#paymentCodeId").val())
+
+            // only one file input here
+            formdata.append("imageUrlFile", $('input[type=file]')[0].files[0]);
+
+            // retrieve all start and end dates
+            var lastStartDate = $("#endDate").val();
+            var startDates = $('input[name^="startDate"]');
+
+            for (var i = 0; i < startDates.length; i++) {
+                var startDate = $("#" + startDates[i].id).val();
+                var endDate = "";
+                if (startDates[i].id.indexOf("_") >= 0) {
+                    var dateId = startDates[i].id.split("_")[1];
+                    endDate = $("#endDate_" + dateId).val();
+                } else {
+                    endDate = $("#endDate").val();
+                }
+
+                if (!validateSchedule(startDate, endDate)) {
+                    return;
+                } else {
+                    schedules.push({startDate: startDate, endDate: endDate});
+                }
+
+                if (startDate > lastStartDate) {
+                    lastStartDate = startDate;
+                }
+            }
+
+            for (var i = 0; i < schedules.length; i++) {
+                formdata.append("schedules[" + i + "].startDate", schedules[i].startDate);
+                formdata.append("schedules[" + i + "].endDate", schedules[i].endDate);
+            }
+
+            var enrollDeadline = $("#enrollDeadline").val();
+            if (enrollDeadline > lastStartDate) {
+                parent.layer.alert("报名截止时间必须早于最晚的那个开始时间。", {icon: 2, title: "系统提示"});
+                return;
+            }
+
+            // retrieve register configs
+            var unauthUserAllowed = $("input[name='unauthUserAllowed']:checked").val()
+            formdata.append("registerConfig.isUnauthAllowed", unauthUserAllowed)
+
+            var allowedRoles = $("input[name='registerConfigRoles']:checked")
+            $.each(allowedRoles, function (index) {
+                var value = $(this).val()
+                if (value.split(":").length === 2) {
+                    var roleName = value.split(":")[0]
+                    var roleId = value.split(":")[1]
+
+                    formdata.append("registerConfig.roleInfos[" + index + "].roleName", roleName)
+                    formdata.append("registerConfig.roleInfos[" + index + "].roleId", roleId)
+                }
+            })
+
+            var checkedPersonalInfos = $("input[name='registerFormPersonalInfo']:checked")
+            $.each(checkedPersonalInfos, function (index) {
+                var name = $(this).val()
+                var requiredId = $(this).attr("id") + "Required"
+                var displayText = $(this).parent().text().trim()
+
+                formdata.append("registerConfig.personalInfos[" + index + "].infoName", name)
+                formdata.append("registerConfig.personalInfos[" + index + "].infoText", displayText)
+                if ($("#" + requiredId + ":checked")[0]) {
+                    formdata.append("registerConfig.personalInfos[" + index + "].isRequired", 1)
+                } else {
+                    formdata.append("registerConfig.personalInfos[" + index + "].isRequired", 0)
+                }
+            })
+
+            var customizedInfos = $("div[id^='customizeItem']")
+            var hasError = false
+            $.each(customizedInfos, function (index) {
+                if ($(this).attr("id").split("_").length === 2) {
+                    var genId = $(this).attr("id").split("_")[1]
+
+                    var name = $('#customizeName_' + genId).val()
+                    var type = $('#customizeType_' + genId).find(":selected").val()
+                    var isRequired = $('#customizeRequired_' + genId + ':checked')[0] ? 1 : 0
+                    var isRemarkRequired = $('#customizeRemarkRequired_' + genId + ':checked')[0] ? 1 : 0
+                    var remark = $('#customizeRemark_' + genId).val()
+
+                    if (!name || !type) {
+                        parent.layer.alert("自定义项目信息不完整，名称和类型不能为空。", {icon: 2, title: "系统提示"})
+                        hasError = true
+                        return
+                    }
+
+                    formdata.append("registerConfig.customizedInfos[" + index + "].itemName", name)
+                    formdata.append("registerConfig.customizedInfos[" + index + "].itemType", type)
+                    formdata.append("registerConfig.customizedInfos[" + index + "].isRequired", isRequired)
+                    formdata.append("registerConfig.customizedInfos[" + index + "].isRemarkDisplay", isRemarkRequired)
+                    formdata.append("registerConfig.customizedInfos[" + index + "].itemRemark", remark)
+                }
+            })
+
+            if (hasError) return
+
+            $.ajax({
+                url: prefix + "/edit",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                beforeSend: function (XMLHttpRequest) {
+                    //注意，layer.msg默认3秒自动关闭，如果数据加载耗时比较长，需要设置time
+                    $.modal.loading("提交中...");
+                },
+                success: function (result) {
+                    $.modal.closeLoading();
+                    $.operate.saveSuccess(result);
+                }
+            })
+        }
+    }
+
+    function removeSchedule(scheduleId) {
+        $('#schedule_' + scheduleId).remove();
+    }
+
+    function removeCustInfo(custInfoId) {
+        $('#customizeItem_' + custInfoId).remove();
+    }
+
+    function validateSchedule(start, end) {
+        if (!start || start === "" || !end || end === "") {
+            parent.layer.alert("起始日期填写不完整", {icon: 2, title: "系统提示"});
+            return false;
+        }
+        if (start > end) {
+            parent.layer.alert("开始时间(" + start + ")必须早于或等于结束时间(" + end + ")", {icon: 2, title: "系统提示"});
+            return false;
+        }
+
+        return true;
+    }
+
+    $(window).load(function () {
+        var pictureimageUrl = '[[${contest.imageUrl}]]';
+        var optionsimageUrl = {
+            imgSrc: $.common.isEmpty(pictureimageUrl) ? ctx + 'img/missing.jpg' : ctx + '[[${imageUrlPrefix}]]' + pictureimageUrl
+        }
+
+        if (!$.common.isEmpty(pictureimageUrl)) {
+            $('#imgpreviewimageUrl').attr('src', "https://cpsa-oss.oss-cn-beijing.aliyuncs.com/shooting/contest" + optionsimageUrl.imgSrc);
+        }
+        $('#imageUrl').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                optionsimageUrl.imgSrc = e.target.result;
+                //根据MIME判断上传的文件是不是图片类型
+                if ((optionsimageUrl.imgSrc).indexOf("image/") == -1) {
+                    parent.layer.alert("文件格式错误，请上传图片类型,如：JPG,JEPG，PNG后缀的文件。", {icon: 2, title: "系统提示"});
+                } else {
+                    $('#imgpreviewimageUrl').attr('src', e.target.result);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        })
+
+        $('#addScheduleBtn').click(function () {
+            var genId = Math.floor(Math.random() * 100000000);
+            var newRow =
+                '<div id="schedule_' + genId + '">\n' +
+                '<label class="col-sm-3 control-label"></label>\n' +
+                '<div class="col-sm-3" style="margin:10px 0 0 0;">\n' +
+                '<input id="startDate_' + genId + '" name="startDate_' + genId + '" class="form-control time-input" type="text">\n' +
+                '</div>\n' +
+                '<div class="col-sm-1" style="margin:18px 0 0 0;text-align:center;">-</div>\n' +
+                '<div class="col-sm-3" style="margin:10px 0 0 0;">\n' +
+                '<input id="endDate_' + genId + '" name="endDate_' + genId + '" class="form-control time-input" type="text">\n' +
+                '</div>\n' +
+                '<div class="col-sm-1" style="margin:16px 0 0 0;">\n' +
+                '<input type="button" id="delScheduleBtn_' + genId + '" name="delScheduleBtn_' + genId + '" value="X" style="border:none;background-color:transparent;color:red;outline:none;font-size:14px;">\n' +
+                '</div>\n' +
+                '</div>';
+
+            $('#schedule').append(newRow);
+
+            $('#delScheduleBtn_' + genId).click(function () {
+                $('#schedule_' + genId).remove();
+            });
+
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: '#startDate_' + genId,
+                    theme: 'molv',
+                    trigger: 'click'
+                });
+            });
+
+            layui.use('laydate', function () {
+                var laydate = layui.laydate;
+                laydate.render({
+                    elem: '#endDate_' + genId,
+                    theme: 'molv',
+                    trigger: 'click'
+                });
+            });
+        });
+
+        $('#addCustomizeItemBtn').click(function () {
+            var existingCutomizes = $('div[id^="customizeItem"]');
+
+            if (existingCutomizes.length === 6) {
+                parent.layer.alert("最多可添加6项自定义项目", {icon: 2, title: "系统提示"});
+                return
+            }
+
+            var genId = Math.floor(Math.random() * 100000000);
+            var newDiv =
+                '<div id="customizeItem_' + genId + '" style="border-width:1px;border-color:#aaaaaa;border-style:solid;padding:10px;margin-bottom:20px;position:relative;border-radius:5px;">\n' +
+                '   <input type="button" id="delCustomerBtn_' + genId + '" value="x" style="width:26px;height:26px;border:none;border-radius:13px;font-size:18px;position:absolute;right:-15px;top:-15px;outline:none;">\n' +
+                '   <input id="customizeName_' + genId + '" type="text" class="form-control" placeholder="名称" style="margin-bottom:10px;">\n' +
+                '   <select class="form-control" id="customizeType_' + genId + '">\n' +
+                '       <option value="none" selected>选择输入类型...</option>\n' +
+                '       <option value="radio">单选值</option>\n' +
+                '       <option value="text">用户自己输入</option>\n' +
+                '   </select>\n' +
+                '   <label class="checkbox-inline"><input type="checkbox" id="customizeRequired_' + genId + '">必填</label>\n' +
+                '   <label class="checkbox-inline"><input type="checkbox" id="customizeRemarkRequired_' + genId + '">需要填写备注</label>\n' +
+                '   <textarea class="form-control" rows="3" placeholder="备注信息（例如：请填写队服尺寸和数量）" id="customizeRemark_' + genId + '"></textarea>\n' +
+                '</div>';
+
+            $('#registerFormCustomizeDiv').append(newDiv);
+
+            $('#delCustomerBtn_' + genId).click(function () {
+                $('#customizeItem_' + genId).remove();
+            });
+        })
+
+
+    });
+
+
+</script>
+</body>
+</html>

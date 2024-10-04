@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-clubJudge-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">俱乐部：</label>
+				<div class="col-sm-8">
+					<select id="clubId" name="clubId" class="form-control">
+						<option th:each="fkRow:${ clubIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.title}" ></option>
+					</select>					
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">裁判：</label>
+				<div class="col-sm-8">
+					<select id="judgeId" name="judgeId" class="form-control">
+						<option th:each="fkRow:${ judgeIdList}" th:value="${ fkRow.id}" th:text="${ fkRow.nickname}" ></option>
+					</select>					
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "shooting/clubJudge"
+	    		
+		$("#form-clubJudge-add").validate({
+			rules:{
+				id: {
+					required: false,
+				},
+				clubId: {
+					required: false,
+				},
+				judgeId: {
+					required: false,
+				},
+			},
+			messages: {
+				id: {
+				},		
+				clubId: {
+				},		
+				judgeId: {
+				},		
+		    }				
+		});
+	
+		function submitHandler() {
+			if ($.validate.form()) {
+		        var formdata = new FormData();
+				formdata.append("clubId", $("#clubId").val());
+				formdata.append("judgeId", $("#judgeId").val());
+
+
+		        
+		        $.ajax({
+		            url: prefix + "/add",
+		            data: formdata,
+		            type: "post",
+		            processData: false,
+		            contentType: false,
+		            success: function(result) {
+		            	$.operate.saveSuccess(result);
+		            }
+		        })
+	        
+	   		}	
+		}
+		
+
+	    
+	</script>
+</body>
+</html>

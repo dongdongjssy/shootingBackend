@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.ClubPostMapper">
+
+    <resultMap type="ClubPost" id="ClubPostResult">
+        <result property="id" column="id"/>
+        <result property="clubId" column="club_id"/>
+        <result property="clientUserId" column="client_user_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="image1" column="image1"/>
+        <result property="image2" column="image2"/>
+        <result property="image3" column="image3"/>
+        <result property="image4" column="image4"/>
+        <result property="image5" column="image5"/>
+        <result property="image6" column="image6"/>
+        <result property="image7" column="image7"/>
+        <result property="image8" column="image8"/>
+        <result property="image9" column="image9"/>
+        <result property="video" column="video"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="readCount" column="read_count"/>
+        <result property="onTop" column="on_top"/>
+        <result property="rankings" column="rankings"/>
+        <result property="draft" column="draft"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isUserLike" column="is_user_like"/>
+        <result property="isUserCollect" column="is_user_collect"/>
+        <result property="isUserRead" column="is_user_read"/>
+        <result property="contentShort" column="content_short"/>
+        <result property="videoCover" column="video_cover"/>
+        <association property="club" column="club_id" javaType="Club" resultMap="ClubResult"/>
+    </resultMap>
+
+    <resultMap type="Club" id="ClubResult">
+        <result property="id" column="a_id"/>
+        <result property="areaId" column="a_area_id"/>
+        <result property="title" column="a_title"/>
+        <result property="profile" column="a_profile"/>
+        <result property="avatar" column="a_avatar"/>
+        <result property="image" column="a_image"/>
+        <result property="coachCount" column="a_coach_count"/>
+        <result property="studentCount" column="a_student_count"/>
+        <result property="fansCount" column="a_fans_count"/>
+        <result property="category" column="a_category"/>
+        <result property="rankings" column="a_rankings"/>
+        <result property="status" column="a_status"/>
+        <result property="createBy" column="a_create_by"/>
+        <result property="createTime" column="a_create_time"/>
+        <result property="updateBy" column="a_update_by"/>
+        <result property="updateTime" column="a_update_time"/>
+    </resultMap>
+
+    <sql id="selectClubPostVoNoJoin">
+        SELECT tb.id,
+               tb.club_id,
+               tb.draft,
+               tb.client_user_id,
+               tb.title,
+               tb.content,
+               tb.image1,
+               tb.image2,
+               tb.image3,
+               tb.image4,
+               tb.image5,
+               tb.image6,
+               tb.image7,
+               tb.image8,
+               tb.image9,
+               tb.video,
+               tb.like_count,
+               tb.comment_count,
+               tb.read_count,
+               tb.on_top,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.content_short,
+               tb.video_cover,
+               a.id            AS a_id,
+               a.area_id       AS a_area_id,
+               a.title         AS a_title,
+               a.profile       AS a_profile,
+               a.avatar        AS a_avatar,
+               a.image         AS a_image,
+               a.coach_count   AS a_coach_count,
+               a.student_count AS a_student_count,
+               a.fans_count    AS a_fans_count,
+               a.category      AS a_category,
+               a.rankings      AS a_rankings,
+               a.status        AS a_status,
+               a.create_by     AS a_create_by,
+               a.create_time   AS a_create_time,
+               a.update_by     AS a_update_by,
+               a.update_time   AS a_update_time
+        FROM shooting_club_post tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+    </sql>
+
+    <sql id="selectClubPostVo">
+        SELECT tb.id,
+        tb.club_id,
+        tb.draft,
+        tb.client_user_id,
+        tb.title,
+        tb.content,
+        tb.image1,
+        tb.image2,
+        tb.image3,
+        tb.image4,
+        tb.image5,
+        tb.image6,
+        tb.image7,
+        tb.image8,
+        tb.image9,
+        tb.video,
+        tb.like_count,
+        tb.comment_count,
+        tb.read_count,
+        tb.on_top,
+        tb.rankings,
+        tb.status,
+        tb.create_by,
+        tb.create_time,
+        tb.update_by,
+        tb.update_time,
+        tb.content_short,
+        tb.video_cover,
+        a.id AS a_id,
+        a.area_id AS a_area_id,
+        a.title AS a_title,
+        a.profile AS a_profile,
+        a.avatar AS a_avatar,
+        a.image AS a_image,
+        a.coach_count AS a_coach_count,
+        a.student_count AS a_student_count,
+        a.fans_count AS a_fans_count,
+        a.category AS a_category,
+        a.rankings AS a_rankings,
+        a.status AS a_status,
+        a.create_by AS a_create_by,
+        a.create_time AS a_create_time,
+        a.update_by AS a_update_by,
+        a.update_time AS a_update_time
+        <if test="userId != null ">
+            ,( SELECT EXISTS (
+            SELECT 1 FROM shooting_user_like sul
+            WHERE sul.like_id = tb.id AND sul.like_type = 'clubPost' AND sul.client_user_id = #{userId} )
+            ) AS is_user_like,
+            (SELECT EXISTS(
+            SELECT 1 FROM shooting.shooting_user_collection suc
+            WHERE suc.collection_id = tb.id AND suc.collection_type = 'clubPost' AND suc.client_user_id = #{userId})
+            ) AS is_user_collect,
+            (SELECT EXISTS(
+            SELECT 1 FROM shooting.shooting_user_read sur
+            WHERE sur.read_id = tb.id AND sur.read_type = 'clubPost' AND sur.client_user_id = #{userId})
+            ) AS is_user_read
+        </if>
+        FROM shooting_club_post tb
+        JOIN shooting_club a ON tb.club_id = a.id
+    </sql>
+
+    <select id="selectClubPostSummaryList" parameterType="Long" resultMap="ClubPostResult">
+        SELECT tb.id,
+               tb.club_id,
+               tb.client_user_id,
+               tb.title,
+               tb.content,
+               tb.image1,
+               tb.image2,
+               tb.image3,
+               tb.image4,
+               tb.image5,
+               tb.image6,
+               tb.image7,
+               tb.image8,
+               tb.image9,
+               tb.video,
+               tb.like_count,
+               tb.comment_count,
+               tb.read_count,
+               tb.on_top,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.content_short,
+               tb.video_cover,
+               tb.draft,
+               a.id                                                  AS a_id,
+               a.area_id                                             AS a_area_id,
+               a.title                                               AS a_title,
+               a.profile                                             AS a_profile,
+               a.avatar                                              AS a_avatar,
+               a.image                                               AS a_image,
+               a.coach_count                                         AS a_coach_count,
+               a.student_count                                       AS a_student_count,
+               a.fans_count                                          AS a_fans_count,
+               a.category                                            AS a_category,
+               a.rankings                                            AS a_rankings,
+               a.status                                              AS a_status,
+               a.create_by                                           AS a_create_by,
+               a.create_time                                         AS a_create_time,
+               a.update_by                                           AS a_update_by,
+               a.update_time                                         AS a_update_time,
+               (SELECT EXISTS(SELECT 1
+                              FROM shooting_user_like sul
+                              WHERE sul.like_id = tb.id
+                                AND sul.like_type = 'clubPost'
+                                AND sul.client_user_id = #{userId})) AS is_user_like,
+               (SELECT EXISTS(SELECT 1
+                              FROM shooting.shooting_user_collection suc
+                              WHERE suc.collection_id = tb.id
+                                AND suc.collection_type = 'clubPost'
+                                AND suc.client_user_id = #{userId})) AS is_user_collect,
+               (SELECT EXISTS(SELECT 1
+                              FROM shooting.shooting_user_read sur
+                              WHERE sur.read_id = tb.id
+                                AND sur.read_type = 'clubPost'
+                                AND sur.client_user_id = #{userId})) AS is_user_read
+        FROM shooting_club_post tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+        ORDER BY tb.create_time DESC
+    </select>
+
+    <select id="selectClubPostAll" parameterType="ClubPost" resultMap="ClubPostResult">
+        <include refid="selectClubPostVo"/>
+         where tb.draft=0;
+    </select>
+
+    <select id="selectClubPostList" parameterType="ClubPost" resultMap="ClubPostResult">
+        <include refid="selectClubPostVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+                        <if test="ids != null and ids !='' ">and tb.id in(${ids})</if>
+            
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="title != null  and title != '' ">and tb.title = #{title}</if>
+            <if test="content != null  and content != '' ">and tb.content = #{content}</if>
+            <if test="image1 != null  and image1 != '' ">and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' ">and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' ">and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' ">and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' ">and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' ">and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' ">and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' ">and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' ">and tb.image9 = #{image9}</if>
+            <if test="video != null  and video != '' ">and tb.video = #{video}</if>
+            <if test="likeCount != null ">and tb.like_count = #{likeCount}</if>
+            <if test="commentCount != null ">and tb.comment_count = #{commentCount}</if>
+            <if test="readCount != null ">and tb.read_count = #{readCount}</if>
+            <if test="onTop != null ">and tb.on_top = #{onTop}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+        </where>
+              order by  tb.create_time desc
+    </select>
+
+    <select id="selectClubPostById" parameterType="Long" resultMap="ClubPostResult">
+        <include refid="selectClubPostVoNoJoin"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertClubPost" parameterType="ClubPost" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_club_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="clubId != null  ">club_id,</if>
+            <if test="clientUserId != null  ">client_user_id,</if>
+            <if test="title != null  and title != ''  ">title,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="image1 != null  and image1 != ''  ">image1,</if>
+            <if test="image2 != null  and image2 != ''  ">image2,</if>
+            <if test="image3 != null  and image3 != ''  ">image3,</if>
+            <if test="image4 != null  and image4 != ''  ">image4,</if>
+            <if test="image5 != null  and image5 != ''  ">image5,</if>
+            <if test="image6 != null  and image6 != ''  ">image6,</if>
+            <if test="image7 != null  and image7 != ''  ">image7,</if>
+            <if test="image8 != null  and image8 != ''  ">image8,</if>
+            <if test="image9 != null  and image9 != ''  ">image9,</if>
+            <if test="video != null  and video != ''  ">video,</if>
+            <if test="likeCount != null  ">like_count,</if>
+            <if test="commentCount != null  ">comment_count,</if>
+            <if test="readCount != null  ">read_count,</if>
+            <if test="onTop != null  ">on_top,</if>
+            <if test="rankings != null  ">rankings,</if>
+            <if test="draft != null  ">draft,</if>
+            <if test="status != null  ">status,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time,
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="contentShort != null and contentShort != ''  ">content_short,</if>
+            <if test="videoCover != null and videoCover != '' ">video_cover,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="clubId != null  ">#{clubId},</if>
+            <if test="clientUserId != null  ">#{clientUserId},</if>
+            <if test="title != null  and title != ''  ">#{title},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="image1 != null  and image1 != ''  ">#{image1},</if>
+            <if test="image2 != null  and image2 != ''  ">#{image2},</if>
+            <if test="image3 != null  and image3 != ''  ">#{image3},</if>
+            <if test="image4 != null  and image4 != ''  ">#{image4},</if>
+            <if test="image5 != null  and image5 != ''  ">#{image5},</if>
+            <if test="image6 != null  and image6 != ''  ">#{image6},</if>
+            <if test="image7 != null  and image7 != ''  ">#{image7},</if>
+            <if test="image8 != null  and image8 != ''  ">#{image8},</if>
+            <if test="image9 != null  and image9 != ''  ">#{image9},</if>
+            <if test="video != null  and video != ''  ">#{video},</if>
+            <if test="likeCount != null  ">#{likeCount},</if>
+            <if test="commentCount != null  ">#{commentCount},</if>
+            <if test="readCount != null  ">#{readCount},</if>
+            <if test="onTop != null  ">#{onTop},</if>
+            <if test="rankings != null  ">#{rankings},</if>
+            <if test="draft != null  "> #{draft},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate(),
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="contentShort != null  and contentShort != ''  ">#{contentShort},</if>
+            <if test="videoCover != null  and videoCover != ''  ">#{videoCover},</if>
+        </trim>
+    </insert>
+
+    <update id="updateClubPost" parameterType="ClubPost">
+        update shooting_club_post
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clubId != null  ">club_id = #{clubId},</if>
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+             image1 = #{image1},
+             image2 = #{image2},
+             image3 = #{image3},
+             image4 = #{image4},
+             image5 = #{image5},
+             image6 = #{image6},
+             image7 = #{image7},
+             image8 = #{image8},
+             image9 = #{image9},
+            <if test="video != null  and video != ''  ">video = #{video},</if>
+            <if test="likeCount != null  ">like_count = #{likeCount},</if>
+            <if test="commentCount != null  ">comment_count = #{commentCount},</if>
+            <if test="readCount != null  ">read_count = #{readCount},</if>
+            <if test="onTop != null  ">on_top = #{onTop},</if>
+            <if test="rankings != null  ">rankings = #{rankings},</if>
+            <if test="draft != null  ">draft=#{draft},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="contentShort != null  and contentShort != ''  ">content_short = #{contentShort},</if>
+            <if test="videoCover != null  and videoCover != ''  ">video_cover = #{videoCover},</if>
+            update_time = sysdate(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClubPostById" parameterType="Long">
+        DELETE
+        FROM shooting_club_post
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteClubPostByIds" parameterType="String">
+        delete from shooting_club_post where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectClubPostAssoc">
+        SELECT tb.id,
+               tb.club_id,
+               tb.client_user_id,
+               tb.title,
+               tb.content,
+               tb.image1,
+               tb.image2,
+               tb.image3,
+               tb.image4,
+               tb.image5,
+               tb.image6,
+               tb.image7,
+               tb.image8,
+               tb.image9,
+               tb.video,
+               tb.like_count,
+               tb.comment_count,
+               tb.read_count,
+               tb.on_top,
+               tb.rankings,
+               tb.status,
+               tb.create_by,
+               tb.create_time,
+               tb.update_by,
+               tb.update_time,
+               tb.content_short,
+               tb.video_cover,
+               tb.draft,
+               a.id            AS a_id,
+               a.area_id       AS a_area_id,
+               a.title         AS a_title,
+               a.profile       AS a_profile,
+               a.avatar        AS a_avatar,
+               a.image         AS a_image,
+               a.coach_count   AS a_coach_count,
+               a.student_count AS a_student_count,
+               a.fans_count    AS a_fans_count,
+               a.category      AS a_category,
+               a.rankings      AS a_rankings,
+               a.status        AS a_status,
+               a.create_by     AS a_create_by,
+               a.create_time   AS a_create_time,
+               a.update_by     AS a_update_by,
+               a.update_time   AS a_update_time
+        FROM shooting_club_post tb
+                 JOIN shooting_club a ON tb.club_id = a.id
+    </sql>
+
+    <select id="selectClubPostAllAssoc" parameterType="ClubPost" resultMap="ClubPostResult">
+        <include refid="selectClubPostAssoc"/>
+        where  draft=0;
+    </select>
+
+    <select id="selectClubPostListAssoc" parameterType="ClubPost" resultMap="ClubPostResult">
+        <include refid="selectClubPostAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="clubId != null ">and tb.club_id = #{clubId}</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="title != null  and title != '' ">and tb.title like concat('%', #{title}, '%')</if>
+            <if test="content != null  and content != '' ">and tb.content like concat('%', #{content}, '%')</if>
+            <if test="image1 != null  and image1 != '' ">and tb.image1 = #{image1}</if>
+            <if test="image2 != null  and image2 != '' ">and tb.image2 = #{image2}</if>
+            <if test="image3 != null  and image3 != '' ">and tb.image3 = #{image3}</if>
+            <if test="image4 != null  and image4 != '' ">and tb.image4 = #{image4}</if>
+            <if test="image5 != null  and image5 != '' ">and tb.image5 = #{image5}</if>
+            <if test="image6 != null  and image6 != '' ">and tb.image6 = #{image6}</if>
+            <if test="image7 != null  and image7 != '' ">and tb.image7 = #{image7}</if>
+            <if test="image8 != null  and image8 != '' ">and tb.image8 = #{image8}</if>
+            <if test="image9 != null  and image9 != '' ">and tb.image9 = #{image9}</if>
+            <if test="video != null  and video != '' ">and tb.video = #{video}</if>
+            <if test="likeCount != null ">and tb.like_count like concat('%', #{likeCount}, '%')</if>
+            <if test="commentCount != null ">and tb.comment_count like concat('%', #{commentCount}, '%')</if>
+            <if test="readCount != null ">and tb.read_count like concat('%', #{readCount}, '%')</if>
+            <if test="onTop != null ">and tb.on_top = #{onTop}</if>
+            <if test="rankings != null ">and tb.rankings = #{rankings}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="draft != null ">and tb.draft = #{draft}</if>
+            <if test="draft == null ">and tb.draft = 0</if>
+            <if test="createBy != null  and createBy != '' ">and tb.create_by = #{createBy}</if>
+            <if test="createTime != null ">and tb.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and tb.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and tb.update_time = #{updateTime}</if>
+        </where>
+        order by tb.create_time desc
+    </select>
+
+    <select id="selectClubPostByIdAssoc" parameterType="Long" resultMap="ClubPostResult">
+        <include refid="selectClubPostAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

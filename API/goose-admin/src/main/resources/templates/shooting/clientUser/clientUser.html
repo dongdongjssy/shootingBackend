@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								用户昵称：<input type="text" name="nickname"/>
+							</li>
+							<li>
+								用户名：<input type="text" name="userName"/>
+							</li>
+							<li>
+								真实姓名：<input type="text" name="realName"/>
+							</li>
+							<li>
+								状态：<select name="status" th:with="type=${@dict.getType('client_user_status')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
+							<li>
+								会员号：<input type="text" name="memberId"/>
+							</li>
+							<li class="select-time">
+								<label>生效时间： </label>
+								<input type="text" class="time-input" id="startTime" placeholder="开始" name="params[beginTime]"/>
+								<span>-</span>
+								<input type="text" class="time-input" id="endTime" placeholder="结束" name="params[endTime]"/>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="client:clientUser:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="client:clientUser:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="client:clientUser:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.operate.exportSelected()" shiro:hasPermission="client:clientUser:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<!--<a class="btn btn-primary btn-edit " onclick="dateEdit()" shiro:hasPermission="client:clientUser:edit">
+					<i class="fa fa-edit"></i> 会员时间修改
+				</a>-->
+	            <form id="import-form" method="post" style="display: inline" enctype="multipart/form-data" shiro:hasPermission="client:clientUser:add">
+
+                    <a href="javascript:void(0)" class="btn btn-outline btn-success btn-rounded">
+                        <label for="file">导入</label>
+                    </a>
+
+                    <input type="file" style='display:none' class="Btnsty_peyton import_button" name="file"
+                           id='file'/>
+                <a class="btn btn-warning" type="button" id="blobSubmit">
+                    提交
+                </a>
+               <!-- <input type="button" id="blobSubmit" class="Btnsty_peyton_import" value="提交"/>-->
+	            </form>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('client:clientUser:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('client:clientUser:remove')}]];
+        var prefix = ctx + "client/clientUser";
+        var datas_client_user_status = [[${@dict.getType('client_user_status')}]];
+
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "客户端用户",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id',
+					title : '用户id',
+					visible: false
+				},
+				{
+					field : 'nickname',
+					title : '用户昵称',
+
+					sortable: true
+				},
+				{
+					field : 'userName',
+					title : '用户名',
+
+					sortable: true
+				},
+				{
+					field : 'avatar',
+					title : '用户头像',
+					sortable: false,
+					visible: false,
+					formatter: function(value, row, index) {
+						let isNetworkPic=value!=null&&(value.startsWith("https://")||value.startsWith("http://"));
+						let pic=isNetworkPic?value:'/client/picture/${value}'
+		            	return `<img src="${pic}" width="50px"></img>`;
+		            }
+				},
+				{
+					field : 'city',
+					title : '城市',
+
+					sortable: true
+				},
+				{
+					field : 'status',
+					title : '认证状态',
+					sortable: true,
+					formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas_client_user_status, value);
+		            }
+				},
+				{
+					field : 'realName',
+					title : '真实姓名',
+
+					sortable: true
+				},
+				{
+					field : 'memberId',
+					title : '会员号',
+
+					sortable: true
+				},
+				{
+					field : 'certExpireDate',
+					title : '认证有效期',
+
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        $('#blobSubmit').on('click', function () {
+            var formdata = new FormData(document.getElementById("import-form"));
+            if ($(".import_button").val() === "") {
+                $.modal.alertWarning('请先选择文件');
+                return false;
+            }
+            layer.load(1);
+            $.ajax({
+                url: prefix + "/importExcel",
+                data: formdata,
+                type: "post",
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.code == '0') {
+                        $.modal.msgSuccess(data.msg);
+                        location.reload();
+                    } else if (data.code == 505) { // 查重失败
+                        layer.confirm(data.msg, {
+                            btn: ['是', '否'] //按钮
+                        }, function () {
+                            layer.load(1);
+                            $.ajax({
+                                url: prefix + "/importExcel/afterCheck",
+                                data: formdata,
+                                type: "post",
+                                processData: false,
+                                contentType: false,
+                                success: function (uploadedFiles) {
+                                    if (uploadedFiles.code == '0') {
+                                        $.modal.msgSuccess(uploadedFiles.msg);
+                                        location.reload();
+                                    } else {
+                                        $.modal.msgError(uploadedFiles.msg);
+                                    }
+                                    layer.closeAll('loading');
+                                },
+                                error: function (res) {
+                                    $.modal.msgError(res);
+                                    layer.closeAll('loading');
+                                    return;
+                                }
+                            })
+                        }, function () {
+                            layer.closeAll('loading');
+                            return;
+                        });
+                    } else {
+                        $.modal.alertError(data.msg);
+                    }
+                    layer.closeAll('loading');
+                }
+            })
+        })
+
+        layui.use('upload', function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
+            //指定允许上传的文件类型
+            upload.render({
+                elem: '#upload'
+                , url: '/upload/'
+                , accept: 'file' //普通文件
+                , exts: 'xls|xlsx' //只允许上传excel
+                , done: function (res) {
+                    console.log(res)
+                }
+            });
+        });
+
+        function dateEdit(){
+		var	url = prefix + "/edit/editDate";
+		$.modal.open("批量修改会员日期" + $.table._option.modalName, url);
+		}
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RegisterMapper">
+
+    <resultMap type="Register" id="RegisterResult">
+        <result property="id" column="id"/>
+        <result property="fkId" column="fk_id"/>
+        <result property="fkTable" column="fk_table"/>
+        <result property="clientUserId" column="client_user_id"/>
+        <result property="status" column="status"/>
+        <result property="source" column="source"/>
+        <result property="schedules" column="schedules"/>
+        <association property="clientUser" column="client_user_id" javaType="ClientUser" resultMap="ClientUserResult"/>
+    </resultMap>
+
+    <resultMap type="ClientUser" id="ClientUserResult">
+        <result property="id" column="a_id"/>
+        <result property="nickname" column="a_nickname"/>
+        <result property="userName" column="a_user_name"/>
+        <result property="sex" column="a_sex"/>
+        <result property="email" column="a_email"/>
+        <result property="phone" column="a_phone"/>
+        <result property="password" column="a_password"/>
+        <result property="userType" column="a_user_type"/>
+        <result property="openId" column="a_open_id"/>
+        <result property="avatar" column="a_avatar"/>
+        <result property="city" column="a_city"/>
+        <result property="address" column="a_address"/>
+        <result property="passwordResetDate" column="a_password_reset_date"/>
+        <result property="status" column="a_status"/>
+        <result property="idFront" column="a_id_front"/>
+        <result property="idBack" column="a_id_back"/>
+        <result property="idNumber" column="a_id_number"/>
+        <result property="realName" column="a_real_name"/>
+        <result property="jgUsername" column="a_jg_username"/>
+        <result property="certExpireDate" column="a_cert_expire_date"/>
+        <result property="memberId" column="a_member_id"/>
+        <result property="englishName" column="a_english_name"/>
+    </resultMap>
+
+    <sql id="selectRegisterVoNoJoin">
+        SELECT tb.id, tb.fk_id, tb.fk_table, tb.client_user_id, tb.status, tb.source, tb.schedules
+        FROM shooting_register tb
+    </sql>
+
+    <sql id="selectRegisterVo">
+        SELECT tb.id,
+               tb.fk_id,
+               tb.fk_table,
+               tb.client_user_id,
+               tb.status,
+               tb.source,
+               tb.schedules,
+               a.id                  AS a_id,
+               a.nickname            AS a_nickname,
+               a.user_name           AS a_user_name,
+               a.email               AS a_email,
+               a.phone               AS a_phone,
+               a.password            AS a_password,
+               a.user_type           AS a_user_type,
+               a.open_id             AS a_open_id,
+               a.avatar              AS a_avatar,
+               a.city                AS a_city,
+               a.address             AS a_address,
+               a.password_reset_date AS a_password_reset_date,
+               a.status              AS a_status,
+               a.id_front            AS a_id_front,
+               a.id_back             AS a_id_back,
+               a.id_number           AS a_id_number,
+               a.real_name           AS a_real_name,
+               a.jg_username         AS a_jg_username,
+               a.cert_expire_date    AS a_cert_expire_date,
+               a.member_id           AS a_member_id,
+               a.english_name        AS a_english_name
+        FROM shooting_register tb
+                 JOIN client_user a ON tb.client_user_id = a.id
+    </sql>
+
+    <select id="selectRegisterAll" parameterType="Register" resultMap="RegisterResult">
+        <include refid="selectRegisterVo"/>
+    </select>
+
+    <select id="selectRegisterList" parameterType="Register" resultMap="RegisterResult">
+        <include refid="selectRegisterVo"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="ids != null and ids !=''">and tb.id in (${ids})</if>
+            <if test="fkId != null ">and tb.fk_id = #{fkId}</if>
+            <if test="fkTable != null ">and tb.fk_table = #{fkTable}</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="status != null ">and tb.status = #{status}</if>
+            <if test="source != null and source != ''">and tb.source = #{source}</if>
+            <if test="schedules != null and schedules != ''">and tb.schedules = #{schedules}</if>
+        </where>
+        order by tb.id desc
+
+    </select>
+
+    <select id="selectRegisterById" parameterType="Long" resultMap="RegisterResult">
+        <include refid="selectRegisterVo"/>
+        where tb.id = #{id}
+    </select>
+
+    <insert id="insertRegister" parameterType="Register" useGeneratedKeys="true" keyProperty="id">
+        insert into shooting_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">id,</if>
+            <if test="fkId != null  ">fk_id,</if>
+            <if test="fkTable != null  ">fk_table,</if>
+            <if test="clientUserId != null  ">client_user_id,</if>
+            <if test="status != null  ">status,</if>
+            <if test="source != null and source != '' ">source,</if>
+            <if test="schedules != null and schedules != '' ">schedules,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  ">#{id},</if>
+            <if test="fkId != null  ">#{fkId},</if>
+            <if test="fkTable != null  ">#{fkTable},</if>
+            <if test="clientUserId != null  ">#{clientUserId},</if>
+            <if test="status != null  ">#{status},</if>
+            <if test="source != null and source != '' ">#{source},</if>
+            <if test="schedules != null and schedules != '' ">#{schedules},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRegister" parameterType="Register">
+        update shooting_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fkId != null  ">fk_id = #{fkId},</if>
+            <if test="fkTable != null  ">fk_table = #{fkTable},</if>
+            <if test="clientUserId != null  ">client_user_id = #{clientUserId},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="source != null and source != '' ">source = #{source},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRegisterById" parameterType="Long">
+        DELETE
+        FROM shooting_register
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteRegisterByIds" parameterType="String">
+        delete from shooting_register where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <sql id="selectRegisterAssoc">
+        SELECT tb.id,
+               tb.fk_id,
+               tb.fk_table,
+               tb.client_user_id,
+               tb.status,
+               tb.source,
+               tb.schedules,
+               a.id                  AS a_id,
+               a.nickname            AS a_nickname,
+               a.user_name           AS a_user_name,
+               a.email               AS a_email,
+               a.phone               AS a_phone,
+               a.password            AS a_password,
+               a.user_type           AS a_user_type,
+               a.open_id             AS a_open_id,
+               a.avatar              AS a_avatar,
+               a.city                AS a_city,
+               a.address             AS a_address,
+               a.password_reset_date AS a_password_reset_date,
+               a.status              AS a_status,
+               a.id_front            AS a_id_front,
+               a.id_back             AS a_id_back,
+               a.id_number           AS a_id_number,
+               a.real_name           AS a_real_name,
+               a.jg_username         AS a_jg_username,
+               a.cert_expire_date    AS a_cert_expire_date,
+               a.member_id           AS a_member_id,
+               a.english_name        AS a_english_name,
+               a.sex                 AS a_sex
+        FROM shooting_register tb
+                 JOIN client_user a ON tb.client_user_id = a.id    </sql>
+
+    <select id="selectRegisterAllAssoc" parameterType="Register" resultMap="RegisterResult">
+        <include refid="selectRegisterAssoc"/>
+    </select>
+
+    <select id="selectRegisterListAssoc" parameterType="Register" resultMap="RegisterResult">
+        <include refid="selectRegisterAssoc"/>
+        <where>
+            <if test="id != null ">and tb.id = #{id}</if>
+            <if test="fkId != null ">and tb.fk_id = #{fkId}</if>
+            <if test="fkTable != null ">and tb.fk_table = #{fkTable}</if>
+            <if test="clientUserId != null ">and tb.client_user_id = #{clientUserId}</if>
+            <if test="status != null">and tb.status = #{status}</if>
+            <if test="source != null and source != ''">and tb.source = #{source}</if>
+            <if test="schedules != null and schedules != ''">and tb.schedules = #{schedules}</if>
+        </where>
+        order by tb.id desc
+
+    </select>
+
+    <select id="selectRegisterByIdAssoc" parameterType="Long" resultMap="RegisterResult">
+        <include refid="selectRegisterAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+
+</mapper>

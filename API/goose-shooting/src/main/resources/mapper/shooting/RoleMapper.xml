@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.goose.shooting.mapper.RoleMapper">
+    
+    <resultMap type="Role" id="RoleResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="description"    column="description"    />
+        <result property="pictureUrl"    column="picture_url"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+	
+	<sql id="selectRoleVoNoJoin">
+        select tb.id, tb.name, tb.description,tb.picture_url, tb.sort        from client_role tb
+    </sql>
+    
+	<sql id="selectRoleVo">
+           select tb.id, tb.name,tb.picture_url, tb.sort, tb.description from client_role tb     </sql>
+    
+     <select id="selectRoleAll" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+     </select>    
+	
+    <select id="selectRoleList" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+            <if test="name != null  and name != '' "> and tb.name = #{name}</if>
+            <if test="description != null  and description != '' "> and tb.description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectRoleById" parameterType="Integer" resultMap="RoleResult">
+        <include refid="selectRoleVo"/>
+        where tb.id = #{id}
+    </select>
+        
+    <insert id="insertRole" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        insert into client_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="description != null  and description != ''  ">description,</if>
+            <if test="pictureUrl != null  and pictureUrl != ''  ">picture_url,</if>
+            <if test="sort != null  ">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="description != null  and description != ''  ">#{description},</if>
+            <if test="pictureUrl != null  and pictureUrl != ''  ">#{pictureUrl},</if>
+            <if test="sort != null  ">#{sort},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRole" parameterType="Role">
+        update client_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="pictureUrl != null  and pictureUrl != ''  ">picture_url = #{pictureUrl},</if>
+            <if test="sort != null  ">sort = #{sort},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRoleById" parameterType="Integer">
+        delete from client_role where id = #{id}
+    </delete>
+	
+    <delete id="deleteRoleByIds" parameterType="String">
+        delete from client_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+ 
+
+	<sql id="selectRoleAssoc">
+        select tb.id, tb.name,tb.picture_url, tb.sort, tb.description                 from client_role tb     </sql>
+    
+     <select id="selectRoleAllAssoc" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleAssoc"/>
+     </select>    
+	
+    <select id="selectRoleListAssoc" parameterType="Role" resultMap="RoleResult">
+        <include refid="selectRoleAssoc"/>
+        <where>  
+            <if test="id != null "> and tb.id = #{id}</if>
+                        <if test="ids != null  and ids != '' "> and tb.id in (${ids})</if>
+            
+            <if test="name != null  and name != '' "> and tb.name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != '' "> and tb.description like concat('%', #{description}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRoleByIdAssoc" parameterType="Integer" resultMap="RoleResult">
+        <include refid="selectRoleAssoc"/>
+        where tb.id = #{id}
+    </select>
+
+    
+</mapper>
